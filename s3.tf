@@ -28,6 +28,15 @@ resource "aws_s3_bucket" "bucket" {
   }
 }
 
+resource "aws_s3_bucket_public_access_block" "bucket" {
+  bucket = aws_s3_bucket.bucket.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 module "observe_lambda_s3_bucket_subscription" {
   source = "github.com/observeinc/terraform-aws-lambda?ref=v0.5.0//s3_bucket_subscription"
   lambda = module.observe_lambda.lambda_function
