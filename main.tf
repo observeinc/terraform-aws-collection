@@ -4,4 +4,6 @@ locals {
   subscribed_log_group_names_firehose = var.cloudwatch_logs_subscribe_to_firehose ? var.subscribed_log_group_names : []
 }
 
+data "aws_region" "current" {}
+
 data "aws_caller_identity" "current" {}
