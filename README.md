@@ -22,7 +22,7 @@ The following snippet installs the Observe AWS collection stack to a single regi
 
 ```
 module "observe_collection" {
-  source           = "/Users/joao/Code/terraform-aws-collection"
+  source           = "github.com/observeinc/terraform-aws-collection"
   observe_customer = ""
   observe_token    = ""
 }
