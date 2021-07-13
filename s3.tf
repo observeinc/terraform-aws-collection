@@ -1,3 +1,7 @@
+locals {
+  bucket_name = format("%s-%s", var.name, random_string.bucket_suffix.result)
+}
+
 resource "random_string" "bucket_suffix" {
   length  = 8
   upper   = false
@@ -5,10 +9,15 @@ resource "random_string" "bucket_suffix" {
 }
 
 resource "aws_s3_bucket" "bucket" {
-  bucket        = format("%s-%s", var.name, random_string.bucket_suffix.result)
-  acl           = "private"
+  bucket        = local.bucket_name
+  acl           = "log-delivery-write"
   force_destroy = true
   tags          = var.tags
+
+  logging {
+    target_bucket = local.bucket_name
+    target_prefix = var.s3_exported_prefix
+  }
 
   server_side_encryption_configuration {
     rule {
