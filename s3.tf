@@ -60,6 +60,11 @@ data "aws_iam_policy_document" "s3_policy" {
 
     principals {
       type        = "Service"
+      identifiers = ["config.amazonaws.com"]
+    }
+
+    principals {
+      type        = "Service"
       identifiers = ["delivery.logs.amazonaws.com"]
     }
 
@@ -75,6 +80,11 @@ data "aws_iam_policy_document" "s3_policy" {
     principals {
       type        = "Service"
       identifiers = ["cloudtrail.amazonaws.com"]
+    }
+
+    principals {
+      type        = "Service"
+      identifiers = ["config.amazonaws.com"]
     }
 
     principals {
