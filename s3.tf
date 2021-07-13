@@ -82,11 +82,6 @@ data "aws_iam_policy_document" "s3_policy" {
       identifiers = ["delivery.logs.amazonaws.com"]
     }
 
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${lookup(local.elb_account_ids, data.aws_region.current.name, "missing")}:root"]
-    }
-
     resources = [
       "${aws_s3_bucket.bucket.arn}/${var.s3_exported_prefix}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
     ]
@@ -96,6 +91,20 @@ data "aws_iam_policy_document" "s3_policy" {
       variable = "s3:x-amz-acl"
       values   = ["bucket-owner-full-control"]
     }
+  }
+
+  statement {
+    sid     = "ElasticLoadBalancingWrite"
+    actions = ["s3:PutObject"]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${lookup(local.elb_account_ids, data.aws_region.current.name, "missing")}:root"]
+    }
+
+    resources = [
+      "${aws_s3_bucket.bucket.arn}/${var.s3_exported_prefix}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+    ]
   }
 }
 
