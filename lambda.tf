@@ -24,10 +24,13 @@ module "observe_lambda_cloudwatch_logs_subscription" {
   log_group_names = concat(local.subscribed_log_group_names_lambda, [
     aws_cloudwatch_log_group.group.name
   ])
+
+  # avoid racing with s3 bucket subscription
+  depends_on = [module.observe_lambda_s3_bucket_subscription]
 }
 
 module "observe_lambda_snapshot" {
   source                  = "github.com/observeinc/terraform-aws-lambda?ref=v0.5.0//snapshot"
   lambda                  = module.observe_lambda
-  eventbridge_name_prefix = format("%s-", var.name)
+  eventbridge_name_prefix = local.name_prefix
 }

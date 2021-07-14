@@ -29,7 +29,7 @@ variable "lambda_version" {
 variable "retention_in_days" {
   description = "Retention in days of cloudwatch log group"
   type        = number
-  default     = 14
+  default     = 365
 }
 
 variable "lambda_envvars" {
@@ -75,7 +75,19 @@ variable "cloudtrail_is_multi_region_trail" {
 }
 
 variable "s3_exported_prefix" {
-  description = "Key prefix which is subscribed to be sent to Observe Lambda. Must not be empty"
+  description = "Key prefix which is subscribed to be sent to Observe Lambda"
   type        = string
-  default     = "exported"
+  default     = ""
+}
+
+variable "s3_logging" {
+  description = "Enable S3 access log collection"
+  type        = bool
+  default     = false
+}
+
+variable "s3_lifecycle_rule" {
+  description = "List of maps containing configuration of object lifecycle management."
+  type        = any
+  default     = []
 }

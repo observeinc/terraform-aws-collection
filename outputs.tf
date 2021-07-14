@@ -10,5 +10,5 @@ output "observe_kinesis_firehose" {
 
 output "bucket" {
   description = "S3 bucket subscribed to Observe Lambda"
-  value       = aws_s3_bucket.bucket
+  value       = local.s3_bucket
 }
