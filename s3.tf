@@ -93,7 +93,7 @@ data "aws_iam_policy_document" "s3_policy" {
     }
 
     resources = [
-      "${aws_s3_bucket.bucket.arn}/${var.s3_exported_prefix}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+      "${aws_s3_bucket.bucket.arn}/${var.s3_exported_prefix}AWSLogs/${data.aws_caller_identity.current.account_id}/*"
     ]
 
     condition {
@@ -113,7 +113,7 @@ data "aws_iam_policy_document" "s3_policy" {
     }
 
     resources = [
-      "${aws_s3_bucket.bucket.arn}/${var.s3_exported_prefix}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+      "${aws_s3_bucket.bucket.arn}/${var.s3_exported_prefix}AWSLogs/${data.aws_caller_identity.current.account_id}/*"
     ]
   }
 }

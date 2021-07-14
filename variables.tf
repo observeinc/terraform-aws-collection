@@ -75,7 +75,7 @@ variable "cloudtrail_is_multi_region_trail" {
 }
 
 variable "s3_exported_prefix" {
-  description = "Key prefix which is subscribed to be sent to Observe Lambda. Must not be empty"
+  description = "Key prefix which is subscribed to be sent to Observe Lambda. If provided, must end with /"
   type        = string
-  default     = "exported"
+  default     = "exported/"
 }
