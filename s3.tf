@@ -138,7 +138,7 @@ data "aws_iam_policy_document" "bucket" {
 }
 
 module "observe_lambda_s3_bucket_subscription" {
-  source          = "github.com/observeinc/terraform-aws-lambda?ref=v0.5.0//s3_bucket_subscription"
+  source          = "github.com/observeinc/terraform-aws-lambda?ref=v0.6.0//s3_bucket_subscription"
   lambda          = module.observe_lambda.lambda_function
   bucket          = local.s3_bucket
   iam_name_prefix = local.name_prefix

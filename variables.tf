@@ -26,6 +26,15 @@ variable "lambda_version" {
   default     = "latest"
 }
 
+variable "lambda_s3_custom_rules" {
+  description = "List of rules to evaluate how to upload a given S3 object to Obsere."
+  type = list(object({
+    pattern = string
+    headers = map(string)
+  }))
+  default = []
+}
+
 variable "retention_in_days" {
   description = "Retention in days of cloudwatch log group"
   type        = number
