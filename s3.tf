@@ -51,6 +51,8 @@ module "s3_bucket" {
   tags = var.tags
 }
 
+data "aws_redshift_service_account" "this" {}
+
 data "aws_iam_policy_document" "bucket" {
   statement {
     sid    = "AWSCloudTrailWrite"
@@ -135,6 +137,43 @@ data "aws_iam_policy_document" "bucket" {
       local.bucket_arn,
     ]
   }
+
+  statement {
+    sid    = "AWSRedshiftWrite"
+    effect = "Allow"
+
+    principals {
+      type        = "AWS"
+      identifiers = data.aws_redshift_service_account.this.*.arn
+    }
+
+    actions = [
+      "s3:PutObject",
+    ]
+
+    resources = [
+      local.aws_logs_arn,
+    ]
+  }
+
+  statement {
+    sid    = "AWSRedshiftAclCheck"
+    effect = "Allow"
+
+    principals {
+      type        = "AWS"
+      identifiers = data.aws_redshift_service_account.this.*.arn
+    }
+
+    actions = [
+      "s3:GetBucketAcl",
+    ]
+
+    resources = [
+      local.bucket_arn,
+    ]
+  }
+
 }
 
 module "observe_lambda_s3_bucket_subscription" {
