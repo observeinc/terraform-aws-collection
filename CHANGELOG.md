@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v0.2.0"></a>
+## [v0.2.0] - 2021-08-23
+
+- feat: upgrade terraform-aws-lambda to 0.7.0
+
+
 <a name="v0.1.0"></a>
 ## v0.1.0 - 2021-07-22
 
@@ -17,4 +23,5 @@ All notable changes to this project will be documented in this file.
 - First commit
 
 
-[Unreleased]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.2.0...HEAD
+[v0.2.0]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.1.0...v0.2.0
