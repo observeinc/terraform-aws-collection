@@ -100,3 +100,43 @@ variable "s3_lifecycle_rule" {
   type        = any
   default     = []
 }
+
+variable "snapshot_action" {
+  description = "List of actions allow by policy and periodically triggered."
+  type        = list(string)
+  default = [
+    "dynamodb:Describe*",
+    "dynamodb:List*",
+    "ec2:Describe*",
+    "ecs:Describe*",
+    "ecs:List*",
+    "elasticache:Describe*",
+    "elasticloadbalancing:Describe*",
+    "firehose:Describe*",
+    "firehose:List*",
+    "iam:Get*",
+    "iam:List*",
+    "kinesis:Describe*",
+    "kinesis:List*",
+    "kms:Describe*",
+    "kms:List*",
+    "lambda:List*",
+    "logs:Describe*",
+    "organizations:Describe*",
+    "organizations:List*",
+    "rds:Describe*",
+    "redshift:Describe*",
+    "route53:List*",
+    "s3:List*",
+    "sns:Get*",
+    "sns:List*",
+    "sqs:Get*",
+    "sqs:List*",
+  ]
+}
+
+variable "snapshot_exclude" {
+  description = "List of actions to exclude from being executed on snapshot request."
+  type        = list(string)
+  default     = []
+}

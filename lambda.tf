@@ -34,4 +34,6 @@ module "observe_lambda_snapshot" {
   source                  = "github.com/observeinc/terraform-aws-lambda?ref=v0.7.0//snapshot"
   lambda                  = module.observe_lambda
   eventbridge_name_prefix = local.name_prefix
+  action                  = var.snapshot_action
+  exclude                 = var.snapshot_exclude
 }
