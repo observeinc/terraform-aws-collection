@@ -105,6 +105,8 @@ variable "snapshot_action" {
   description = "List of actions allow by policy and periodically triggered."
   type        = list(string)
   default = [
+    "autoscaling:Describe*",
+    "cloudformation:Describe*",
     "dynamodb:Describe*",
     "dynamodb:List*",
     "ec2:Describe*",
@@ -112,6 +114,7 @@ variable "snapshot_action" {
     "ecs:List*",
     "elasticache:Describe*",
     "elasticloadbalancing:Describe*",
+    "events:List*",
     "firehose:Describe*",
     "firehose:List*",
     "iam:Get*",
@@ -128,6 +131,7 @@ variable "snapshot_action" {
     "redshift:Describe*",
     "route53:List*",
     "s3:List*",
+    "secretsmanager:List*",
     "sns:Get*",
     "sns:List*",
     "sqs:Get*",
