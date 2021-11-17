@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 ### {{ .Title }}
 {{ range .Commits -}}
 {{/* SKIPPING RULES - START */ -}}
+{{- if not (hasPrefix .Subject "docs: update CHANGELOG") -}}
 {{- if not (hasPrefix .Subject "Updated CHANGELOG") -}}
 {{- if not (contains .Subject "[ci skip]") -}}
 {{- if not (contains .Subject "[skip ci]") -}}

@@ -7,6 +7,14 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v0.4.0"></a>
+## [v0.4.0] - 2021-11-17
+
+- fix: expand permissions to include s3:GetBucketTagging ([#6](https://github.com/observeinc/terraform-aws-lambda/issues/6))
+- ci: pre-commit bump and conventional commit check ([#7](https://github.com/observeinc/terraform-aws-lambda/issues/7))
+- ci: add github workflow ([#5](https://github.com/observeinc/terraform-aws-lambda/issues/5))
+
+
 <a name="v0.3.0"></a>
 ## [v0.3.0] - 2021-09-23
 
@@ -30,6 +38,7 @@ All notable changes to this project will be documented in this file.
 - First commit
 
 
-[Unreleased]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.4.0...HEAD
+[v0.4.0]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.1.0...v0.2.0
