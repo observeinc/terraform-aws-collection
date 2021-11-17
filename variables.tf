@@ -130,6 +130,7 @@ variable "snapshot_action" {
     "rds:Describe*",
     "redshift:Describe*",
     "route53:List*",
+    "s3:GetBucket*",
     "s3:List*",
     "secretsmanager:List*",
     "sns:Get*",
