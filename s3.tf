@@ -177,9 +177,9 @@ data "aws_iam_policy_document" "bucket" {
 }
 
 module "observe_lambda_s3_bucket_subscription" {
-  source          = "github.com/observeinc/terraform-aws-lambda?ref=v0.7.0//s3_bucket_subscription"
+  source          = "github.com/observeinc/terraform-aws-lambda?ref=v0.8.0//s3_bucket_subscription"
   lambda          = module.observe_lambda.lambda_function
-  bucket          = local.s3_bucket
+  bucket_arns     = concat([local.s3_bucket.arn], var.subscribed_s3_bucket_arns)
   iam_name_prefix = local.name_prefix
   filter_prefix   = local.s3_exported_prefix
 }
