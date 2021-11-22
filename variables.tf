@@ -27,7 +27,7 @@ variable "lambda_version" {
 }
 
 variable "lambda_s3_custom_rules" {
-  description = "List of rules to evaluate how to upload a given S3 object to Obsere."
+  description = "List of rules to evaluate how to upload a given S3 object to Observe."
   type = list(object({
     pattern = string
     headers = map(string)
@@ -55,6 +55,13 @@ variable "dead_letter_queue_destination" {
 
 variable "subscribed_log_group_names" {
   description = "Log groups to subscribe to"
+  type        = list(string)
+  default     = []
+}
+
+
+variable "subscribed_s3_bucket_arns" {
+  description = "List of additional S3 bucket ARNs to subscribe lambda to."
   type        = list(string)
   default     = []
 }
