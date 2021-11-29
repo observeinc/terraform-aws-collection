@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 {{ range .Commits -}}
 {{/* SKIPPING RULES - START */ -}}
 {{- if not (hasPrefix .Subject "docs: update CHANGELOG") -}}
+{{- if not (hasPrefix .Subject "chore: update CHANGELOG") -}}
 {{- if not (hasPrefix .Subject "Updated CHANGELOG") -}}
 {{- if not (contains .Subject "[ci skip]") -}}
 {{- if not (contains .Subject "[skip ci]") -}}
@@ -19,6 +20,8 @@ All notable changes to this project will be documented in this file.
 {{- /* SKIPPING RULES - END */ -}}
 - {{ if .Scope }}**{{ .Scope }}:** {{ end }}{{ .Subject }}
 {{/* SKIPPING RULES - START */ -}}
+{{ end -}}
+{{ end -}}
 {{ end -}}
 {{ end -}}
 {{ end -}}
