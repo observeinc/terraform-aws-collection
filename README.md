@@ -111,6 +111,7 @@ module "observe_collection" {
 | <a name="input_cloudwatch_logs_subscribe_to_firehose"></a> [cloudwatch\_logs\_subscribe\_to\_firehose](#input\_cloudwatch\_logs\_subscribe\_to\_firehose) | Subscribe cloudwatch logs to firehose | `bool` | `true` | no |
 | <a name="input_cloudwatch_logs_subscribe_to_lambda"></a> [cloudwatch\_logs\_subscribe\_to\_lambda](#input\_cloudwatch\_logs\_subscribe\_to\_lambda) | Subscribe cloudwatch logs to Lambda | `bool` | `false` | no |
 | <a name="input_dead_letter_queue_destination"></a> [dead\_letter\_queue\_destination](#input\_dead\_letter\_queue\_destination) | Send failed events/function executions to a dead letter queue arn sns or sqs | `string` | `null` | no |
+| <a name="input_kms_key_id"></a> [kms\_key\_id](#input\_kms\_key\_id) | KMS key ARN to use to encrypt the logs delivered by CloudTrail. | `string` | `""` | no |
 | <a name="input_lambda_envvars"></a> [lambda\_envvars](#input\_lambda\_envvars) | Environment variables | `map(any)` | `{}` | no |
 | <a name="input_lambda_s3_custom_rules"></a> [lambda\_s3\_custom\_rules](#input\_lambda\_s3\_custom\_rules) | List of rules to evaluate how to upload a given S3 object to Observe. | <pre>list(object({<br>    pattern = string<br>    headers = map(string)<br>  }))</pre> | `[]` | no |
 | <a name="input_lambda_version"></a> [lambda\_version](#input\_lambda\_version) | Lambda version | `string` | `"latest"` | no |

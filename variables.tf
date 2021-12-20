@@ -152,3 +152,9 @@ variable "snapshot_exclude" {
   type        = list(string)
   default     = []
 }
+
+variable "kms_key_id" {
+  description = "KMS key ARN to use to encrypt the logs delivered by CloudTrail."
+  type        = string
+  default     = ""
+}
