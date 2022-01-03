@@ -7,6 +7,13 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v0.6.0"></a>
+## [v0.6.0] - 2022-01-03
+
+- chore: update pre-commit
+- feat: add kms_key_id to cloudtrail ([#9](https://github.com/observeinc/terraform-aws-lambda/issues/9))
+
+
 <a name="v0.5.0"></a>
 ## [v0.5.0] - 2021-11-29
 
@@ -47,7 +54,8 @@ All notable changes to this project will be documented in this file.
 - First commit
 
 
-[Unreleased]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.6.0...HEAD
+[v0.6.0]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.5.0...v0.6.0
 [v0.5.0]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.4.0...v0.5.0
 [v0.4.0]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.2.0...v0.3.0
