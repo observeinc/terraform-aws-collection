@@ -107,6 +107,7 @@ module "observe_collection" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_cloudtrail_enable_log_file_validation"></a> [cloudtrail\_enable\_log\_file\_validation](#input\_cloudtrail\_enable\_log\_file\_validation) | Whether log file integrity validation is enabled for CloudTrail. Defalults to false. | `bool` | `false` | no |
 | <a name="input_cloudtrail_is_multi_region_trail"></a> [cloudtrail\_is\_multi\_region\_trail](#input\_cloudtrail\_is\_multi\_region\_trail) | Whether to enable multi region trail export | `bool` | `true` | no |
 | <a name="input_cloudwatch_logs_subscribe_to_firehose"></a> [cloudwatch\_logs\_subscribe\_to\_firehose](#input\_cloudwatch\_logs\_subscribe\_to\_firehose) | Subscribe cloudwatch logs to firehose | `bool` | `true` | no |
 | <a name="input_cloudwatch_logs_subscribe_to_lambda"></a> [cloudwatch\_logs\_subscribe\_to\_lambda](#input\_cloudwatch\_logs\_subscribe\_to\_lambda) | Subscribe cloudwatch logs to Lambda | `bool` | `false` | no |
