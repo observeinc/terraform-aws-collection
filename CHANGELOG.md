@@ -7,9 +7,17 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v0.7.0"></a>
+## [v0.7.0] - 2022-01-14
+
+- fix: update terraform-aws-lambda to v0.9.0 ([#11](https://github.com/observeinc/terraform-aws-lambda/issues/11))
+- feat: add `cloudtrail_enable_log_validation` option ([#10](https://github.com/observeinc/terraform-aws-lambda/issues/10))
+
+
 <a name="v0.6.0"></a>
 ## [v0.6.0] - 2022-01-03
 
+- chore: update CHANGELOG
 - chore: update pre-commit
 - feat: add kms_key_id to cloudtrail ([#9](https://github.com/observeinc/terraform-aws-lambda/issues/9))
 
@@ -54,7 +62,8 @@ All notable changes to this project will be documented in this file.
 - First commit
 
 
-[Unreleased]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.7.0...HEAD
+[v0.7.0]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.6.0...v0.7.0
 [v0.6.0]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.5.0...v0.6.0
 [v0.5.0]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.4.0...v0.5.0
 [v0.4.0]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.3.0...v0.4.0
