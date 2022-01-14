@@ -109,11 +109,12 @@ variable "s3_lifecycle_rule" {
 }
 
 variable "snapshot_action" {
-  description = "List of actions allow by policy and periodically triggered."
+  description = "List of actions allowed by policy and periodically triggered."
   type        = list(string)
   default = [
     "autoscaling:Describe*",
     "cloudformation:Describe*",
+    "cloudfront:List*",
     "dynamodb:Describe*",
     "dynamodb:List*",
     "ec2:Describe*",
