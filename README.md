@@ -126,6 +126,7 @@ module "observe_collection" {
 | <a name="input_s3_logging"></a> [s3\_logging](#input\_s3\_logging) | Enable S3 access log collection | `bool` | `false` | no |
 | <a name="input_snapshot_exclude"></a> [snapshot\_exclude](#input\_snapshot\_exclude) | List of actions to exclude from being executed on snapshot request. | `list(string)` | `[]` | no |
 | <a name="input_snapshot_include"></a> [snapshot\_include](#input\_snapshot\_include) | List of actions to include in snapshot request. | `list(string)` | `[]` | no |
+| <a name="input_snapshot_schedule_expression"></a> [snapshot\_schedule\_expression](#input\_snapshot\_schedule\_expression) | Rate at which snapshot is triggered. Must be valid EventBridge expression | `string` | `"rate(3 hours)"` | no |
 | <a name="input_subscribed_log_group_names"></a> [subscribed\_log\_group\_names](#input\_subscribed\_log\_group\_names) | Log groups to subscribe to | `list(string)` | `[]` | no |
 | <a name="input_subscribed_s3_bucket_arns"></a> [subscribed\_s3\_bucket\_arns](#input\_subscribed\_s3\_bucket\_arns) | List of additional S3 bucket ARNs to subscribe lambda to. | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |

@@ -120,6 +120,12 @@ variable "snapshot_exclude" {
   default     = []
 }
 
+variable "snapshot_schedule_expression" {
+  description = "Rate at which snapshot is triggered. Must be valid EventBridge expression"
+  type        = string
+  default     = "rate(3 hours)"
+}
+
 variable "kms_key_id" {
   description = "KMS key ARN to use to encrypt the logs delivered by CloudTrail."
   type        = string
@@ -131,3 +137,4 @@ variable "cloudtrail_enable_log_file_validation" {
   type        = bool
   default     = false
 }
+
