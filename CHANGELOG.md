@@ -7,9 +7,18 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v0.8.0"></a>
+## [v0.8.0] - 2022-01-31
+
+- feat: update lambda module to v0.11.0 ([#14](https://github.com/observeinc/terraform-aws-lambda/issues/14))
+- feat: allow overriding snapshot schedule expression ([#13](https://github.com/observeinc/terraform-aws-lambda/issues/13))
+- fix: remove action variable, allow falling back to default ([#12](https://github.com/observeinc/terraform-aws-lambda/issues/12))
+
+
 <a name="v0.7.0"></a>
 ## [v0.7.0] - 2022-01-14
 
+- chore: update CHANGELOG
 - fix: update terraform-aws-lambda to v0.9.0 ([#11](https://github.com/observeinc/terraform-aws-lambda/issues/11))
 - feat: add `cloudtrail_enable_log_validation` option ([#10](https://github.com/observeinc/terraform-aws-lambda/issues/10))
 
@@ -62,7 +71,8 @@ All notable changes to this project will be documented in this file.
 - First commit
 
 
-[Unreleased]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.8.0...HEAD
+[v0.8.0]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.7.0...v0.8.0
 [v0.7.0]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.6.0...v0.7.0
 [v0.6.0]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.5.0...v0.6.0
 [v0.5.0]: https://github.com/observeinc/terraform-aws-lambda/compare/v0.4.0...v0.5.0
