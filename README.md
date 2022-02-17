@@ -80,10 +80,10 @@ module "observe_collection" {
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_observe_cloudwatch_metrics"></a> [observe\_cloudwatch\_metrics](#module\_observe\_cloudwatch\_metrics) | github.com/observeinc/terraform-aws-kinesis-firehose | v0.3.0//cloudwatch_metrics |
-| <a name="module_observe_firehose_cloudwatch_logs_subscription"></a> [observe\_firehose\_cloudwatch\_logs\_subscription](#module\_observe\_firehose\_cloudwatch\_logs\_subscription) | github.com/observeinc/terraform-aws-kinesis-firehose | v0.3.0//cloudwatch_logs_subscription |
-| <a name="module_observe_firehose_eventbridge"></a> [observe\_firehose\_eventbridge](#module\_observe\_firehose\_eventbridge) | github.com/observeinc/terraform-aws-kinesis-firehose | v0.3.0//eventbridge |
-| <a name="module_observe_kinesis_firehose"></a> [observe\_kinesis\_firehose](#module\_observe\_kinesis\_firehose) | github.com/observeinc/terraform-aws-kinesis-firehose | v0.3.0 |
+| <a name="module_observe_cloudwatch_metrics"></a> [observe\_cloudwatch\_metrics](#module\_observe\_cloudwatch\_metrics) | github.com/observeinc/terraform-aws-kinesis-firehose | v0.4.0//cloudwatch_metrics |
+| <a name="module_observe_firehose_cloudwatch_logs_subscription"></a> [observe\_firehose\_cloudwatch\_logs\_subscription](#module\_observe\_firehose\_cloudwatch\_logs\_subscription) | github.com/observeinc/terraform-aws-kinesis-firehose | v0.4.0//cloudwatch_logs_subscription |
+| <a name="module_observe_firehose_eventbridge"></a> [observe\_firehose\_eventbridge](#module\_observe\_firehose\_eventbridge) | github.com/observeinc/terraform-aws-kinesis-firehose | v0.4.0//eventbridge |
+| <a name="module_observe_kinesis_firehose"></a> [observe\_kinesis\_firehose](#module\_observe\_kinesis\_firehose) | github.com/observeinc/terraform-aws-kinesis-firehose | v0.4.0 |
 | <a name="module_observe_lambda"></a> [observe\_lambda](#module\_observe\_lambda) | github.com/observeinc/terraform-aws-lambda | v0.11.0 |
 | <a name="module_observe_lambda_cloudwatch_logs_subscription"></a> [observe\_lambda\_cloudwatch\_logs\_subscription](#module\_observe\_lambda\_cloudwatch\_logs\_subscription) | github.com/observeinc/terraform-aws-lambda | v0.11.0//cloudwatch_logs_subscription |
 | <a name="module_observe_lambda_s3_bucket_subscription"></a> [observe\_lambda\_s3\_bucket\_subscription](#module\_observe\_lambda\_s3\_bucket\_subscription) | github.com/observeinc/terraform-aws-lambda | v0.11.0//s3_bucket_subscription |

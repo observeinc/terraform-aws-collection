@@ -7,7 +7,7 @@ resource "aws_cloudwatch_event_rule" "wildcard" {
 }
 
 module "observe_firehose_eventbridge" {
-  source           = "github.com/observeinc/terraform-aws-kinesis-firehose?ref=v0.3.0//eventbridge"
+  source           = "github.com/observeinc/terraform-aws-kinesis-firehose?ref=v0.4.0//eventbridge"
   kinesis_firehose = module.observe_kinesis_firehose
   iam_name_prefix  = local.name_prefix
   rules = [
