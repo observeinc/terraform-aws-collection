@@ -138,3 +138,15 @@ variable "cloudtrail_enable_log_file_validation" {
   default     = false
 }
 
+
+variable "cloudwatch_metrics_include_filters" {
+  description = "Namespaces to include. Mutually exclusive with cloudwatch_metrics_exclude_filters."
+  type        = list(string)
+  default     = []
+}
+
+variable "cloudwatch_metrics_exclude_filters" {
+  description = "Namespaces to exclude. Mutually exclusive with cloudwatch_metrics_include_filters."
+  type        = list(string)
+  default     = []
+}
