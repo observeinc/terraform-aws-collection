@@ -23,6 +23,8 @@ module "observe_cloudwatch_metrics" {
   name             = var.name
   iam_name_prefix  = local.name_prefix
   kinesis_firehose = module.observe_kinesis_firehose
+  include_filters  = var.cloudwatch_metrics_include_filters
+  exclude_filters  = var.cloudwatch_metrics_exclude_filters
 }
 
 module "observe_firehose_cloudwatch_logs_subscription" {
