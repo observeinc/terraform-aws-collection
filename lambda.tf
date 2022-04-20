@@ -9,6 +9,8 @@ module "observe_lambda" {
   lambda_version   = var.lambda_version
   tags             = var.tags
 
+  reserved_concurrent_executions = var.lambda_reserved_concurrent_executions
+
   lambda_s3_custom_rules        = var.lambda_s3_custom_rules
   lambda_envvars                = var.lambda_envvars
   retention_in_days             = var.retention_in_days

@@ -35,6 +35,12 @@ variable "lambda_s3_custom_rules" {
   default = []
 }
 
+variable "lambda_reserved_concurrent_executions" {
+  description = "The number of simultaneous executions to reserve for the function."
+  type        = number
+  default     = 100
+}
+
 variable "retention_in_days" {
   description = "Retention in days of cloudwatch log group"
   type        = number
