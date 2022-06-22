@@ -28,6 +28,25 @@ module "observe_collection" {
 }
 ```
 
+## Common Options
+
+The snippet below installs the Observe AWS collection stack so that all supported
+CloudWatch Logs, CloudWatch metrics, CloudTrail records, and AWS resource updates
+are collected, except for some excluded items:
+
+```
+module "observe_collection" {
+  source           = "github.com/observeinc/terraform-aws-collection"
+  observe_customer = ""
+  observe_token    = ""
+  subscribed_log_group_matches = [".*"]
+
+  subscribed_log_group_excludes = ["/aws/lambda/elasticbeanstalk/my-app.*"]
+  snapshot_exclude = ["kms:Describe*"]
+  cloudwatch_metrics_exclude_filters = ["AWS/KMS"]
+}
+```
+
 # Diagram
 
      ┌──────────────────┐                          ┌───────────────┐    ┌─────────────┐
@@ -132,7 +151,7 @@ module "observe_collection" {
 | <a name="input_snapshot_schedule_expression"></a> [snapshot\_schedule\_expression](#input\_snapshot\_schedule\_expression) | Rate at which snapshot is triggered. Must be valid EventBridge expression | `string` | `"rate(3 hours)"` | no |
 | <a name="input_subscribed_log_group_excludes"></a> [subscribed\_log\_group\_excludes](#input\_subscribed\_log\_group\_excludes) | A list of regex patterns describing CloudWatch log groups to NOT subscribe to.<br><br>See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_excludes for more info" | `list(string)` | `[]` | no |
 | <a name="input_subscribed_log_group_filter_pattern"></a> [subscribed\_log\_group\_filter\_pattern](#input\_subscribed\_log\_group\_filter\_pattern) | A filter pattern for a CloudWatch Logs subscription filter.<br><br>See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_filter_pattern or<br>https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html for more info" | `string` | `""` | no |
-| <a name="input_subscribed_log_group_matches"></a> [subscribed\_log\_group\_matches](#input\_subscribed\_log\_group\_matches) | A list of regex patterns describing CloudWatch log groups to subscribe to.<br><br>See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_matches for more info" | `list(string)` | <pre>[<br>  ".*"<br>]</pre> | no |
+| <a name="input_subscribed_log_group_matches"></a> [subscribed\_log\_group\_matches](#input\_subscribed\_log\_group\_matches) | A list of regex patterns describing CloudWatch log groups to subscribe to.<br><br>See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_matches for more info" | `list(string)` | `[]` | no |
 | <a name="input_subscribed_log_group_names"></a> [subscribed\_log\_group\_names](#input\_subscribed\_log\_group\_names) | Log groups to subscribe to. This is deprecated. Prefer subscribed\_log\_group\_matches | `list(string)` | `[]` | no |
 | <a name="input_subscribed_s3_bucket_arns"></a> [subscribed\_s3\_bucket\_arns](#input\_subscribed\_s3\_bucket\_arns) | List of additional S3 bucket ARNs to subscribe lambda to. | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |

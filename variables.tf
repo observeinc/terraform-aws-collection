@@ -78,7 +78,7 @@ variable "subscribed_log_group_matches" {
     See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_matches for more info"
   EOF
   type        = list(string)
-  default     = [".*"]
+  default     = []
 }
 
 variable "subscribed_log_group_excludes" {
