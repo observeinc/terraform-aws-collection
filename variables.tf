@@ -138,6 +138,16 @@ variable "kms_key_id" {
   default     = ""
 }
 
+variable "cloudtrail_enable" {
+  description = <<-EOF
+    Whether to create a CloudTrail trail.
+    
+    Useful for avoiding the 'trails per region' quota of 5, such as when testing.
+  EOF
+  type        = bool
+  default     = true
+}
+
 variable "cloudtrail_enable_log_file_validation" {
   description = "Whether log file integrity validation is enabled for CloudTrail. Defalults to false."
   type        = bool
