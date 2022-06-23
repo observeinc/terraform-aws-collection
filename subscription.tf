@@ -1,5 +1,6 @@
 module "observe_cloudwatch_logs_subscription" {
-  source           = "github.com/observeinc/terraform-aws-cloudwatch-logs-subscription?ref=v0.2.0"
+  source           = "observeinc/cloudwatch-logs-subscription/aws"
+  version          = "0.2.0"
   kinesis_firehose = module.observe_kinesis_firehose
   iam_name_prefix  = local.name_prefix
 
@@ -7,7 +8,7 @@ module "observe_cloudwatch_logs_subscription" {
   filter_pattern = var.subscribed_log_group_filter_pattern
 
   log_group_matches = concat(
-    [aws_cloudwatch_log_group.firehose.name, format("/aws/lambda/%s", var.name)], # Note: Data from firehose will go to itself. There is a cycle.
+    [aws_cloudwatch_log_group.group.name, format("/aws/lambda/%s", var.name)], # Note: Data from firehose will go to itself. There is a cycle.
     var.subscribed_log_group_matches,
     local.subscribed_log_group_names_firehose,
   )
