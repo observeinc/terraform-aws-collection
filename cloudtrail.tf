@@ -1,4 +1,6 @@
 resource "aws_cloudtrail" "trail" {
+  count = var.cloudtrail_enable ? 1 : 0
+
   name                       = var.name
   s3_bucket_name             = local.s3_bucket.id
   s3_key_prefix              = trimsuffix(local.s3_exported_prefix, "/")
