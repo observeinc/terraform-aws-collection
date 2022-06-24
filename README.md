@@ -39,9 +39,9 @@ module "observe_collection" {
   source           = "github.com/observeinc/terraform-aws-collection"
   observe_customer = ""
   observe_token    = ""
+  
   subscribed_log_group_matches = [".*"]
-
-  subscribed_log_group_excludes = ["/aws/lambda/elasticbeanstalk/my-app.*"]
+  subscribed_log_group_excludes = ["/aws/elasticbeanstalk/my-app.*"]
   snapshot_exclude = ["kms:Describe*"]
   cloudwatch_metrics_exclude_filters = ["AWS/KMS"]
 }
