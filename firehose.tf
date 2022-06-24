@@ -27,11 +27,3 @@ module "observe_cloudwatch_metrics" {
   exclude_filters  = var.cloudwatch_metrics_exclude_filters
 }
 
-module "observe_firehose_cloudwatch_logs_subscription" {
-  source           = "github.com/observeinc/terraform-aws-kinesis-firehose?ref=v0.4.0//cloudwatch_logs_subscription"
-  kinesis_firehose = module.observe_kinesis_firehose
-  iam_name_prefix  = local.name_prefix
-  log_group_names = concat(local.subscribed_log_group_names_firehose, [
-    format("/aws/lambda/%s", var.name)
-  ])
-}

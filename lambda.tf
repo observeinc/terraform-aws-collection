@@ -18,15 +18,15 @@ module "observe_lambda" {
 }
 
 module "observe_lambda_cloudwatch_logs_subscription" {
+  count = length(local.subscribed_log_group_names_lambda) > 0 ? 1 : 0
+
   source = "github.com/observeinc/terraform-aws-lambda?ref=v0.13.0//cloudwatch_logs_subscription"
   lambda = module.observe_lambda.lambda_function
 
   allow_all_log_groups = true
 
   statement_id_prefix = local.name_prefix
-  log_group_names = concat(local.subscribed_log_group_names_lambda, [
-    aws_cloudwatch_log_group.group.name
-  ])
+  log_group_names     = local.subscribed_log_group_names_lambda
 
   # avoid racing with s3 bucket subscription
   depends_on = [module.observe_lambda_s3_bucket_subscription]

@@ -60,16 +60,46 @@ variable "dead_letter_queue_destination" {
 }
 
 variable "subscribed_log_group_names" {
-  description = "Log groups to subscribe to"
+  description = "Log groups to subscribe to. This is deprecated. Prefer subscribed_log_group_matches"
   type        = list(string)
   default     = []
 }
-
 
 variable "subscribed_s3_bucket_arns" {
   description = "List of additional S3 bucket ARNs to subscribe lambda to."
   type        = list(string)
   default     = []
+}
+
+variable "subscribed_log_group_matches" {
+  description = <<-EOF
+    A list of regex patterns describing CloudWatch log groups to subscribe to.
+
+    See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_matches for more info"
+  EOF
+  type        = list(string)
+  default     = []
+}
+
+variable "subscribed_log_group_excludes" {
+  description = <<-EOF
+    A list of regex patterns describing CloudWatch log groups to NOT subscribe to.
+
+    See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_excludes for more info"
+  EOF
+  type        = list(string)
+  default     = []
+}
+
+variable "subscribed_log_group_filter_pattern" {
+  description = <<-EOF
+    A filter pattern for a CloudWatch Logs subscription filter.
+
+    See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_filter_pattern or
+    https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html for more info"
+  EOF
+  type        = string
+  default     = ""
 }
 
 variable "tags" {
@@ -85,7 +115,7 @@ variable "cloudwatch_logs_subscribe_to_firehose" {
 }
 
 variable "cloudwatch_logs_subscribe_to_lambda" {
-  description = "Subscribe cloudwatch logs to Lambda"
+  description = "Subscribe cloudwatch logs to Lambda. This is deprecated."
   type        = bool
   default     = false
 }
