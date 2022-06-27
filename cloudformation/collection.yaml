@@ -649,6 +649,13 @@ Resources:
       Payload:
         snapshot:
           include: !Ref EventBridgeSnapshotConfig
+  AutoSubscribe:
+    Type: 'AWS::CloudFormation::Stack'
+    Condition: SubscriptionIsEnabled
+    Properties:
+      TemplateURL: https://observeinc.s3-us-west-2.amazonaws.com/cloudformation/subscribelogs-v0.2.0.yaml
+      Parameters:
+        CollectionStackName: !Ref 'AWS::StackName'
 Outputs:
   FirehoseARN:
     Description: 'Firehose ARN'
