@@ -1,0 +1,677 @@
+AWSTemplateFormatVersion: 2010-09-09
+Metadata:
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+      - Label:
+          default: Required parameters
+        Parameters:
+          - ObserveCustomer
+          - ObserveToken
+      - Label:
+          default: Observe Lambda Configuration
+        Parameters:
+          - LambdaVersion
+          - LambdaReservedConcurrentExecutions
+          - LambdaTimeout
+          - LambdaMemorySize
+          - LambdaS3CustomRules
+          - LambdaS3ReadAny
+      - Label:
+          default: Firehose Configuration
+        Parameters:
+          - FirehoseHttpEndpointBufferingInterval
+          - FirehoseHttpEndpointBufferingSize
+          - FirehoseHttpEndpointRetryDuration
+      - Label:
+          default: EventBridge Configuration
+        Parameters:
+          - EventBridgeSnapshotSchedule
+          - EventBridgeSnapshotConfig
+      - Label:
+          default: CloudTrail Configuration
+        Parameters:
+          - TrailEnabled
+          - TrailEnableLogFileValidation
+          - TrailIncludeGlobalEvents
+          - TrailMultiRegion
+      - Label:
+          default: Retention Options
+        Parameters:
+          - BucketExpirationInDays
+          - LogGroupExpirationInDays
+Parameters:
+  ObserveCustomer:
+    Type: String
+    Description: Observe Customer ID
+  ObserveToken:
+    Type: String
+    NoEcho: true
+    Description: Observe Ingest Token
+  ObserveDomain:
+    Type: String
+    Default: observeinc.com
+    Description: Observe domain to submit data to
+  BucketExpirationInDays:
+    Type: Number
+    Default: 30
+    AllowedValues:
+      - 1
+      - 3
+      - 7
+      - 14
+      - 30
+      - 90
+      - 365
+    Description: |
+      Expiration to set for data stored in S3 bucket subscribed to Observe.
+  LogGroupExpirationInDays:
+    Type: Number
+    Default: 365
+    AllowedValues:
+      - 1
+      - 3
+      - 7
+      - 14
+      - 30
+      - 90
+      - 365
+    Description: |
+      Expiration to set on log groups
+  FirehoseHttpEndpointBufferingInterval:
+    Type: Number
+    Default: 60
+    MinValue: 60
+    MaxValue: 900
+    Description: |
+      Buffer incoming data for the specified period of time, in seconds, before
+      delivering it to the destination.
+  FirehoseHttpEndpointBufferingSize:
+    Type: Number
+    Default: 1
+    MinValue: 1
+    MaxValue: 64
+    Description: |
+      Buffer incoming data to the specified size, in MiBs, before delivering it
+      to the destination.
+  FirehoseHttpEndpointRetryDuration:
+    Type: Number
+    Default: 90
+    MinValue: 0
+    MaxValue: 7200
+    Description: >
+      The total amount of time that Kinesis Data Firehose spends on retries.
+      This duration starts after the initial attempt to send data to the
+      custom destination via HTTPS endpoint fails. It doesn't include the
+      periods during which Kinesis Data Firehose waits for acknowledgment
+      from the specified destination after each attempt.
+  EventBridgeSnapshotSchedule:
+    Type: String
+    Default: rate(1 hour)
+    Description: Schedule on which to trigger Lambda to snapshot API
+  EventBridgeSnapshotConfig:
+    Type: CommaDelimitedList
+    Default: >-
+      apigateway:Get*,autoscaling:Describe*,cloudformation:Describe*,cloudfront:List*,dynamodb:Describe*,dynamodb:List*,ec2:Describe*,ecs:Describe*,ecs:List*,eks:Describe*,eks:List*,elasticbeanstalk:Describe*,elasticache:Describe*,elasticfilesystem:Describe*,elasticloadbalancing:Describe*,elasticmapreduce:Describe*,elasticmapreduce:List*,events:List*,firehose:Describe*,firehose:List*,iam:Get*,iam:List*,kinesis:Describe*,kinesis:List*,kms:Describe*,kms:List*,lambda:List*,logs:Describe*,organizations:Describe*,organizations:List*,rds:Describe*,redshift:Describe*,route53:List*,s3:GetBucket*,s3:List*,secretsmanager:List*,sns:Get*,sns:List*,sqs:Get*,sqs:List*
+    Description: List of API endpoints which get periodically scraped by Observe Lambda
+  LambdaVersion:
+    Type: String
+    Default: latest
+    Description: Observe lambda function version
+  LambdaReservedConcurrentExecutions:
+    Type: Number
+    Default: 100
+    Description: The number of simultaneous executions to reserve for the function. Set to -1 to not reserve concurrent executions.
+  LambdaTimeout:
+    Type: Number
+    Default: 60
+    Description: >-
+      The amount of time that Lambda allows a function to run before stopping
+      it. The maximum allowed value is 900 seconds.
+  LambdaMemorySize:
+    Type: Number
+    Default: 128
+    MinValue: 128
+    MaxValue: 10240
+    Description: >-
+      The amount of memory that your function has access to. The value must be a
+      multiple of 64 MB.
+  LambdaS3CustomRules:
+    Type: String
+    Default: ""
+    Description: >-
+      A base64-encoded JSON array of rules which override how S3 objects are
+      submitted to Observe.
+  LambdaS3ReadAny:
+    Type: String
+    Default: false
+    Description: >-
+      Grant the lambda S3 read only access to all buckets. This simplifies the
+      process of subscribing new buckets to the lambda. The lambda function
+      will only ever attempt to read objects for which it has received
+      notifications. By default, we restrict the lambda to only being allowed
+      to access the S3 bucket managed by the cloudformation template.
+    AllowedValues:
+      - true
+      - false
+  TrailEnableLogFileValidation:
+    Type: String
+    Default: false
+    Description: Indicates whether CloudTrail validates the integrity of log files.
+    AllowedValues:
+      - true
+      - false
+  TrailIncludeGlobalEvents:
+    Type: String
+    Default: true
+    Description: >-
+      Indicates whether the trail is publishing events from global services,
+      such as IAM, to the log files.
+    AllowedValues:
+      - true
+      - false
+  TrailEnabled:
+    Type: String
+    Default: true
+    Description: >-
+      Whether to collect CloudTrail data or not. Only disable if you already submit Cloudtrail data separately.
+    AllowedValues:
+      - true
+      - false
+  TrailMultiRegion:
+     Type: String
+     Default: false
+     Description: >-
+       Indicates whether the CloudTrail trail is created in the region in which
+       you create the stack (false) or in all regions (true).
+     AllowedValues:
+      - true
+      - false
+  SubscriptionEnabled:
+    Type: String
+    Default: true
+    Description: >-
+      Whether to subscribe created Cloudwatch log groups to Observe. Only
+      disable if you some other process handling log group subscription.
+    AllowedValues:
+      - true
+      - false
+  InvokeSnapshotOnStartEnabled:
+    Type: String
+    Default: true
+    Description: >-
+      Toggle invocation of snapshot from Cloudformation. This can be useful for
+      debug purposes if the lambda fails to complete successfully.
+    AllowedValues:
+      - true
+      - false
+Conditions:
+  TrailIsEnabled: !Equals
+     - Ref: TrailEnabled
+     - true
+  SubscriptionIsEnabled: !Equals
+     - Ref: SubscriptionEnabled
+     - true
+  TrailIsMultiRegion: !Equals
+    - Ref: TrailMultiRegion
+    - true
+  HasLambdaS3CustomRules: !Not
+    - !Equals
+      - !Ref LambdaS3CustomRules
+      - ''
+  LambdaS3ReadAnyIsEnabled: !Equals
+    - Ref: LambdaS3ReadAny
+    - false
+  InvokeSnapshotOnStart: !Equals
+     - Ref: InvokeSnapshotOnStartEnabled
+     - true
+  HasReservedConcurrency: !Not
+    - !Equals
+      - Ref: LambdaReservedConcurrentExecutions
+      - -1
+Mappings:
+  RegionMap:
+    ca-central-1:
+      BucketName: observeinc-ca-central-1
+    ap-northeast-1:
+      BucketName: observeinc-ap-northeast-1
+    ap-northeast-2:
+      BucketName: observeinc-ap-northeast-2
+    ap-northeast-3:
+      BucketName: observeinc-ap-northeast-3
+    ap-south-1:
+      BucketName: observeinc-ap-south-1
+    ap-southeast-1:
+      BucketName: observeinc-ap-southeast-1
+    ap-southeast-2:
+      BucketName: observeinc-ap-southeast-2
+    eu-central-1:
+      BucketName: observeinc-eu-central-1
+    eu-north-1:
+      BucketName: observeinc-eu-north-1
+    eu-west-1:
+      BucketName: observeinc-eu-west-1
+    eu-west-2:
+      BucketName: observeinc-eu-west-2
+    eu-west-3:
+      BucketName: observeinc-eu-west-3
+    sa-east-1:
+      BucketName: observeinc-sa-east-1
+    us-east-1:
+      BucketName: observeinc-us-east-1
+    us-east-2:
+      BucketName: observeinc-us-east-2
+    us-west-1:
+      BucketName: observeinc-us-west-1
+    us-west-2:
+      BucketName: observeinc-us-west-2
+Resources:
+  Bucket:
+    Type: 'AWS::S3::Bucket'
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      LifecycleConfiguration:
+        Rules:
+          - ExpirationInDays: !Ref BucketExpirationInDays
+            Status: Enabled
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: 's3:ObjectCreated:*'
+            Function: !GetAtt Lambda.Arn
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: AWSLogs
+  BucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref Bucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: config.amazonaws.com
+            Action: 's3:GetBucketAcl'
+            Resource: !GetAtt Bucket.Arn
+          - Effect: Allow
+            Principal:
+              Service: config.amazonaws.com
+            Action: 's3:PutObject'
+            Resource: !Sub 'arn:${AWS::Partition}:s3:::${Bucket}/AWSLogs/${AWS::AccountId}/*'
+          - Effect: Allow
+            Principal:
+              Service: cloudtrail.amazonaws.com
+            Action: 's3:GetBucketAcl'
+            Resource:
+              - !Sub 'arn:${AWS::Partition}:s3:::${Bucket}'
+          - Effect: Allow
+            Principal:
+              Service: cloudtrail.amazonaws.com
+            Action: 's3:PutObject'
+            Resource: !Sub 'arn:${AWS::Partition}:s3:::${Bucket}/AWSLogs/${AWS::AccountId}/*'
+  DeliveryStreamLogGroup:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Join
+        - ''
+        - - /aws/firehose/
+          - !Ref 'AWS::StackName'
+      RetentionInDays: !Ref LogGroupExpirationInDays
+  DeliveryStream:
+    Type: 'AWS::KinesisFirehose::DeliveryStream'
+    Properties:
+      DeliveryStreamType: DirectPut
+      HttpEndpointDestinationConfiguration:
+        RoleARN: !GetAtt DeliveryStreamRole.Arn
+        BufferingHints:
+          IntervalInSeconds: !Ref FirehoseHttpEndpointBufferingInterval
+          SizeInMBs: !Ref FirehoseHttpEndpointBufferingSize
+        EndpointConfiguration:
+          AccessKey: !Sub '${ObserveCustomer} ${ObserveToken}'
+          Name: Observe delivery endpoint
+          Url: !Sub 'https://collect.${ObserveDomain}/v1/kinesis'
+        RequestConfiguration:
+          ContentEncoding: GZIP
+        RetryOptions:
+          DurationInSeconds: !Ref FirehoseHttpEndpointRetryDuration
+        CloudWatchLoggingOptions:
+          Enabled: true
+          LogGroupName: !Ref DeliveryStreamLogGroup
+          LogStreamName: "HttpEndpointDelivery"
+        S3BackupMode: FailedDataOnly
+        S3Configuration:
+          BucketARN: !GetAtt Bucket.Arn
+          RoleARN: !GetAtt DeliveryStreamRole.Arn
+          CloudWatchLoggingOptions:
+            Enabled: true
+            LogGroupName: !Ref DeliveryStreamLogGroup
+            LogStreamName: "S3Delivery"
+  DeliveryStreamRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: firehose.amazonaws.com
+            Action: 'sts:AssumeRole'
+            Condition:
+              StringEquals:
+                'sts:ExternalId': !Ref 'AWS::AccountId'
+  DeliveryStreamCloudWatchPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      Roles:
+        - !Ref DeliveryStreamRole
+      PolicyName: firehose_logging_policy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'logs:CreateLogStream'
+              - 'logs:PutLogEvents'
+            Resource:
+              - !GetAtt DeliveryStreamLogGroup.Arn
+  DeliveryStreamS3Policy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      Roles:
+        - !Ref DeliveryStreamRole
+      PolicyName: DeliveryStreamS3Policy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - 's3:AbortMultipartUpload'
+              - 's3:GetBucketLocation'
+              - 's3:GetObject'
+              - 's3:ListBucket'
+              - 's3:ListBucketMultipartUploads'
+              - 's3:PutObject'
+            Resource:
+              - !GetAtt Bucket.Arn
+              - !Join
+                - ''
+                - - 'arn:aws:s3:::'
+                  - !Ref Bucket
+                  - '*'
+  DeliveryStreamPolicy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: DeliveryStreamPolicy
+      Roles:
+        - !Ref MetricStreamRole
+        - !Ref CloudWatchLogsRole
+        - !Ref EventBridgeRole
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'firehose:PutRecord'
+              - 'firehose:PutRecordBatch'
+            Resource: !GetAtt DeliveryStream.Arn
+  DeliveryStreamLogsSubscriptionFilter:
+    Type: 'AWS::Logs::SubscriptionFilter'
+    Condition: SubscriptionIsEnabled
+    DependsOn:
+      - DeliveryStreamPolicy
+    Properties:
+      DestinationArn: !GetAtt 'DeliveryStream.Arn'
+      FilterPattern: ''
+      LogGroupName: !Ref 'LambdaLogGroup'
+      RoleArn: !GetAtt 'CloudWatchLogsRole.Arn'
+  LambdaLogGroup:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Join
+        - ''
+        - - /aws/lambda/
+          - !Ref 'AWS::StackName'
+      RetentionInDays: !Ref LogGroupExpirationInDays
+  Lambda:
+    Type: 'AWS::Lambda::Function'
+    DependsOn:
+      - LambdaLogGroup
+    Properties:
+      FunctionName: !Ref 'AWS::StackName'
+      Handler: main
+      Role: !GetAtt LambdaRole.Arn
+      Environment:
+        Variables:
+          OBSERVE_URL: !Sub 'https://collect.${ObserveDomain}/v1/http'
+          OBSERVE_TOKEN: !Sub '${ObserveCustomer} ${ObserveToken}'
+          S3_CUSTOM_RULES: !If
+            - HasLambdaS3CustomRules
+            - !Ref 'LambdaS3CustomRules'
+            - !Ref 'AWS::NoValue'
+      Code:
+        S3Bucket: !FindInMap
+          - RegionMap
+          - !Ref 'AWS::Region'
+          - BucketName
+        S3Key: !Sub 'lambda/observer/${LambdaVersion}.zip'
+      Runtime: go1.x
+      MemorySize: !Ref LambdaMemorySize
+      Timeout: !Ref LambdaTimeout
+      ReservedConcurrentExecutions: !If
+       - HasReservedConcurrency
+       - !Ref LambdaReservedConcurrentExecutions
+       - !Ref 'AWS::NoValue'
+  LambdaRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole'
+      Policies:
+        - PolicyName: AllowSnapshot
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: !Ref EventBridgeSnapshotConfig
+                Resource: '*'
+  LambdaReadBucket:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: AllowS3Read
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - 's3:Get*'
+              - 's3:List*'
+            Resource: !If
+              - LambdaS3ReadAnyIsEnabled
+              - - !GetAtt Bucket.Arn
+                - !Join
+                  - ''
+                  - - 'arn:aws:s3:::'
+                    - !Ref Bucket
+                    - '*'
+              - - 'arn:aws:s3:::*'
+      Roles:
+        - !Ref LambdaRole
+  LambdaS3Permission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !Ref Lambda
+      Principal: s3.amazonaws.com
+      SourceAccount: !Ref 'AWS::AccountId'
+  LambdaSNSPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !Ref Lambda
+      Principal: sns.amazonaws.com
+      SourceAccount: !Ref 'AWS::AccountId'
+  CloudWatchLogsRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - logs.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+  LambdaLogsSubscriptionFilter:
+    Type: 'AWS::Logs::SubscriptionFilter'
+    Condition: SubscriptionIsEnabled
+    DependsOn:
+      - DeliveryStreamPolicy
+    Properties:
+      DestinationArn: !GetAtt DeliveryStream.Arn
+      LogGroupName: !Ref LambdaLogGroup
+      FilterPattern: ''
+      RoleArn: !GetAtt CloudWatchLogsRole.Arn
+  MetricStreamRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - streams.metrics.cloudwatch.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+  MetricStream:
+    Type: 'AWS::CloudWatch::MetricStream'
+    DependsOn:
+      - DeliveryStreamPolicy
+    Properties:
+      Name: !Sub '${AWS::StackName}'
+      FirehoseArn: !GetAtt DeliveryStream.Arn
+      RoleArn: !GetAtt MetricStreamRole.Arn
+      OutputFormat: json
+  EventBridgeRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - events.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+  EventBridgeCollectAll:
+    Type: 'AWS::Events::Rule'
+    DependsOn:
+      - DeliveryStreamPolicy
+    Properties:
+      Description: Export all events
+      EventPattern: !Sub '{ "account": [ "${AWS::AccountId}" ] }'
+      Targets:
+        - Id: ObserveKinesisFirehose
+          Arn: !GetAtt DeliveryStream.Arn
+          RoleArn: !GetAtt EventBridgeRole.Arn
+  EventBridgePeriodicSnapshot:
+    Type: 'AWS::Events::Rule'
+    DependsOn:
+      - LambdaEventBridgePermission
+    Properties:
+      Name: !Sub '${AWS::StackName}Snapshot'
+      ScheduleExpression: !Ref EventBridgeSnapshotSchedule
+      Targets:
+        - Id: ObserveLambda
+          Arn: !GetAtt Lambda.Arn
+          Input: !Sub
+            - '{ "snapshot": { "include": [ "${actions}" ] }}'
+            - actions: !Join
+                - '","'
+                - !Ref EventBridgeSnapshotConfig
+  LambdaEventBridgePermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !Ref Lambda
+      Principal: events.amazonaws.com
+      SourceArn: !Sub >-
+        arn:${AWS::Partition}:events:${AWS::Region}:${AWS::AccountId}:rule/${AWS::StackName}Snapshot
+  Trail:
+    Type: 'AWS::CloudTrail::Trail'
+    Condition: TrailIsEnabled
+    DependsOn:
+      - BucketPolicy
+      - LambdaReadBucket
+    Properties:
+      S3BucketName: !Ref Bucket
+      IsLogging: true
+      EnableLogFileValidation: !Ref TrailEnableLogFileValidation
+      IncludeGlobalServiceEvents: !If
+        - TrailIsMultiRegion
+        - true
+        - !Ref TrailIncludeGlobalEvents
+      IsMultiRegionTrail: !If
+        - TrailIsMultiRegion
+        - true
+        - false
+  Snapshot:
+    Type: 'Custom::Invoke'
+    Condition: InvokeSnapshotOnStart
+    Properties:
+      ServiceToken: !GetAtt Lambda.Arn
+      Payload:
+        snapshot:
+          include: !Ref EventBridgeSnapshotConfig
+Outputs:
+  FirehoseARN:
+    Description: 'Firehose ARN'
+    Value: !GetAtt 'DeliveryStream.Arn'
+    Export:
+      Name: !Sub '${AWS::StackName}:firehose:arn'
+  CloudWatchLogsRole:
+    Description: 'Role ARN to use for CloudWatch Logs subscriptions'
+    Value: !GetAtt 'CloudWatchLogsRole.Arn'
+    Export:
+      Name: !Sub '${AWS::StackName}:logs:role:arn'
+  LambdaName:
+    Description: 'Lambda Name'
+    Value: !Ref 'Lambda'
+    Export:
+      Name: !Sub '${AWS::StackName}:lambda:name'
+  LambdaArn:
+    Description: 'Lambda ARN'
+    Value: !GetAtt 'Lambda.Arn'
+    Export:
+      Name: !Sub '${AWS::StackName}:lambda:arn'
+  BucketArn:
+    Description: 'Bucket ARN'
+    Value: !GetAtt 'Bucket.Arn'
+    Export:
+      Name: !Sub '${AWS::StackName}:bucket:arn'
