@@ -4,12 +4,13 @@ resource "aws_cloudwatch_log_group" "group" {
 }
 
 module "observe_kinesis_firehose" {
-  source = "github.com/observeinc/terraform-aws-kinesis-firehose?ref=v0.4.0"
+  source  = "observeinc/kinesis-firehose/aws"
+  version = "1.0.0"
 
   name             = var.name
-  observe_url      = format("https://kinesis.collect.%s", var.observe_domain)
   observe_customer = var.observe_customer
   observe_token    = var.observe_token
+  observe_domain   = var.observe_domain
 
   iam_name_prefix                  = local.name_prefix
   s3_delivery_bucket               = local.s3_bucket
@@ -19,7 +20,9 @@ module "observe_kinesis_firehose" {
 }
 
 module "observe_cloudwatch_metrics" {
-  source           = "github.com/observeinc/terraform-aws-kinesis-firehose?ref=v0.4.0//cloudwatch_metrics"
+  source  = "observeinc/kinesis-firehose/aws//modules/cloudwatch_metrics"
+  version = "1.0.0"
+
   name             = var.name
   iam_name_prefix  = local.name_prefix
   kinesis_firehose = module.observe_kinesis_firehose
@@ -27,3 +30,13 @@ module "observe_cloudwatch_metrics" {
   exclude_filters  = var.cloudwatch_metrics_exclude_filters
 }
 
+module "observe_firehose_cloudwatch_logs_subscription" {
+  source  = "observeinc/kinesis-firehose/aws//modules/cloudwatch_logs_subscription"
+  version = "1.0.0"
+
+  kinesis_firehose = module.observe_kinesis_firehose
+  iam_name_prefix  = local.name_prefix
+  log_group_names = concat(local.subscribed_log_group_names_firehose, [
+    format("/aws/lambda/%s", var.name)
+  ])
+}
