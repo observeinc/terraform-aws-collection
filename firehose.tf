@@ -29,14 +29,3 @@ module "observe_cloudwatch_metrics" {
   include_filters  = var.cloudwatch_metrics_include_filters
   exclude_filters  = var.cloudwatch_metrics_exclude_filters
 }
-
-module "observe_firehose_cloudwatch_logs_subscription" {
-  source  = "observeinc/kinesis-firehose/aws//modules/cloudwatch_logs_subscription"
-  version = "1.0.0"
-
-  kinesis_firehose = module.observe_kinesis_firehose
-  iam_name_prefix  = local.name_prefix
-  log_group_names = concat(local.subscribed_log_group_names_firehose, [
-    format("/aws/lambda/%s", var.name)
-  ])
-}
