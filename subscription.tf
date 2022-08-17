@@ -10,7 +10,6 @@ module "observe_cloudwatch_logs_subscription" {
   log_group_matches = concat(
     [aws_cloudwatch_log_group.group.name, format("/aws/lambda/%s", var.name)], # Note: Data from firehose will go to itself. There is a cycle.
     var.subscribed_log_group_matches,
-    local.subscribed_log_group_names_firehose,
   )
   log_group_excludes = var.subscribed_log_group_excludes
 

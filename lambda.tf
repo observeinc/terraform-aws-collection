@@ -18,22 +18,6 @@ module "observe_lambda" {
   dead_letter_queue_destination = var.dead_letter_queue_destination
 }
 
-module "observe_lambda_cloudwatch_logs_subscription" {
-  count = length(local.subscribed_log_group_names_lambda) > 0 ? 1 : 0
-
-  source  = "observeinc/lambda/aws//modules/cloudwatch_logs_subscription"
-  version = "1.0.0"
-  lambda  = module.observe_lambda.lambda_function
-
-  allow_all_log_groups = true
-
-  statement_id_prefix = local.name_prefix
-  log_group_names     = local.subscribed_log_group_names_lambda
-
-  # avoid racing with s3 bucket subscription
-  depends_on = [module.observe_lambda_s3_bucket_subscription]
-}
-
 module "observe_lambda_snapshot" {
   source  = "observeinc/lambda/aws//modules/snapshot"
   version = "1.0.0"

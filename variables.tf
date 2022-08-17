@@ -64,12 +64,6 @@ variable "dead_letter_queue_destination" {
   description = "Send failed events/function executions to a dead letter queue arn sns or sqs"
 }
 
-variable "subscribed_log_group_names" {
-  description = "Log groups to subscribe to. This is deprecated. Prefer subscribed_log_group_matches"
-  type        = list(string)
-  default     = []
-}
-
 variable "subscribed_s3_bucket_arns" {
   description = "List of additional S3 bucket ARNs to subscribe lambda to."
   type        = list(string)
@@ -111,18 +105,6 @@ variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
   default     = {}
-}
-
-variable "cloudwatch_logs_subscribe_to_firehose" {
-  description = "Subscribe cloudwatch logs to firehose"
-  type        = bool
-  default     = true
-}
-
-variable "cloudwatch_logs_subscribe_to_lambda" {
-  description = "Subscribe cloudwatch logs to Lambda. This is deprecated."
-  type        = bool
-  default     = false
 }
 
 variable "cloudtrail_is_multi_region_trail" {

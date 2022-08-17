@@ -101,11 +101,9 @@ module "observe_collection" {
 |------|--------|---------|
 | <a name="module_observe_cloudwatch_logs_subscription"></a> [observe\_cloudwatch\_logs\_subscription](#module\_observe\_cloudwatch\_logs\_subscription) | observeinc/cloudwatch-logs-subscription/aws | 0.2.0 |
 | <a name="module_observe_cloudwatch_metrics"></a> [observe\_cloudwatch\_metrics](#module\_observe\_cloudwatch\_metrics) | observeinc/kinesis-firehose/aws//modules/cloudwatch_metrics | 1.0.0 |
-| <a name="module_observe_firehose_cloudwatch_logs_subscription"></a> [observe\_firehose\_cloudwatch\_logs\_subscription](#module\_observe\_firehose\_cloudwatch\_logs\_subscription) | observeinc/kinesis-firehose/aws//modules/cloudwatch_logs_subscription | 1.0.0 |
 | <a name="module_observe_firehose_eventbridge"></a> [observe\_firehose\_eventbridge](#module\_observe\_firehose\_eventbridge) | observeinc/kinesis-firehose/aws//modules/eventbridge | 1.0.0 |
 | <a name="module_observe_kinesis_firehose"></a> [observe\_kinesis\_firehose](#module\_observe\_kinesis\_firehose) | observeinc/kinesis-firehose/aws | 1.0.0 |
 | <a name="module_observe_lambda"></a> [observe\_lambda](#module\_observe\_lambda) | observeinc/lambda/aws | 1.0.0 |
-| <a name="module_observe_lambda_cloudwatch_logs_subscription"></a> [observe\_lambda\_cloudwatch\_logs\_subscription](#module\_observe\_lambda\_cloudwatch\_logs\_subscription) | observeinc/lambda/aws//modules/cloudwatch_logs_subscription | 1.0.0 |
 | <a name="module_observe_lambda_s3_bucket_subscription"></a> [observe\_lambda\_s3\_bucket\_subscription](#module\_observe\_lambda\_s3\_bucket\_subscription) | observeinc/lambda/aws//modules/s3_bucket_subscription | 1.0.0 |
 | <a name="module_observe_lambda_snapshot"></a> [observe\_lambda\_snapshot](#module\_observe\_lambda\_snapshot) | observeinc/lambda/aws//modules/snapshot | 1.0.0 |
 | <a name="module_s3_bucket"></a> [s3\_bucket](#module\_s3\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 2.6.0 |
@@ -130,8 +128,6 @@ module "observe_collection" {
 | <a name="input_cloudtrail_enable"></a> [cloudtrail\_enable](#input\_cloudtrail\_enable) | Whether to create a CloudTrail trail.<br><br>Useful for avoiding the 'trails per region' quota of 5, such as when testing. | `bool` | `true` | no |
 | <a name="input_cloudtrail_enable_log_file_validation"></a> [cloudtrail\_enable\_log\_file\_validation](#input\_cloudtrail\_enable\_log\_file\_validation) | Whether log file integrity validation is enabled for CloudTrail. Defalults to false. | `bool` | `false` | no |
 | <a name="input_cloudtrail_is_multi_region_trail"></a> [cloudtrail\_is\_multi\_region\_trail](#input\_cloudtrail\_is\_multi\_region\_trail) | Whether to enable multi region trail export | `bool` | `true` | no |
-| <a name="input_cloudwatch_logs_subscribe_to_firehose"></a> [cloudwatch\_logs\_subscribe\_to\_firehose](#input\_cloudwatch\_logs\_subscribe\_to\_firehose) | Subscribe cloudwatch logs to firehose | `bool` | `true` | no |
-| <a name="input_cloudwatch_logs_subscribe_to_lambda"></a> [cloudwatch\_logs\_subscribe\_to\_lambda](#input\_cloudwatch\_logs\_subscribe\_to\_lambda) | Subscribe cloudwatch logs to Lambda. This is deprecated. | `bool` | `false` | no |
 | <a name="input_cloudwatch_metrics_exclude_filters"></a> [cloudwatch\_metrics\_exclude\_filters](#input\_cloudwatch\_metrics\_exclude\_filters) | Namespaces to exclude. Mutually exclusive with cloudwatch\_metrics\_include\_filters. | `list(string)` | `[]` | no |
 | <a name="input_cloudwatch_metrics_include_filters"></a> [cloudwatch\_metrics\_include\_filters](#input\_cloudwatch\_metrics\_include\_filters) | Namespaces to include. Mutually exclusive with cloudwatch\_metrics\_exclude\_filters. | `list(string)` | `[]` | no |
 | <a name="input_dead_letter_queue_destination"></a> [dead\_letter\_queue\_destination](#input\_dead\_letter\_queue\_destination) | Send failed events/function executions to a dead letter queue arn sns or sqs | `string` | `null` | no |
@@ -154,7 +150,6 @@ module "observe_collection" {
 | <a name="input_subscribed_log_group_excludes"></a> [subscribed\_log\_group\_excludes](#input\_subscribed\_log\_group\_excludes) | A list of regex patterns describing CloudWatch log groups to NOT subscribe to.<br><br>See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_excludes for more info" | `list(string)` | `[]` | no |
 | <a name="input_subscribed_log_group_filter_pattern"></a> [subscribed\_log\_group\_filter\_pattern](#input\_subscribed\_log\_group\_filter\_pattern) | A filter pattern for a CloudWatch Logs subscription filter.<br><br>See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_filter_pattern or<br>https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html for more info" | `string` | `""` | no |
 | <a name="input_subscribed_log_group_matches"></a> [subscribed\_log\_group\_matches](#input\_subscribed\_log\_group\_matches) | A list of regex patterns describing CloudWatch log groups to subscribe to.<br><br>See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_matches for more info" | `list(string)` | `[]` | no |
-| <a name="input_subscribed_log_group_names"></a> [subscribed\_log\_group\_names](#input\_subscribed\_log\_group\_names) | Log groups to subscribe to. This is deprecated. Prefer subscribed\_log\_group\_matches | `list(string)` | `[]` | no |
 | <a name="input_subscribed_s3_bucket_arns"></a> [subscribed\_s3\_bucket\_arns](#input\_subscribed\_s3\_bucket\_arns) | List of additional S3 bucket ARNs to subscribe lambda to. | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
 
