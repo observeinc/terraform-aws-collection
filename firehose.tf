@@ -5,7 +5,7 @@ resource "aws_cloudwatch_log_group" "group" {
 
 module "observe_kinesis_firehose" {
   source  = "observeinc/kinesis-firehose/aws"
-  version = "1.0.0"
+  version = "1.0.2"
 
   name             = var.name
   observe_customer = var.observe_customer
@@ -21,7 +21,7 @@ module "observe_kinesis_firehose" {
 
 module "observe_cloudwatch_metrics" {
   source  = "observeinc/kinesis-firehose/aws//modules/cloudwatch_metrics"
-  version = "1.0.0"
+  version = "1.0.2"
 
   name             = var.name
   iam_name_prefix  = local.name_prefix
