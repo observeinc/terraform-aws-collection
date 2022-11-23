@@ -17,7 +17,7 @@ resource "random_string" "this" {
 
 module "s3_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "~> 2.6.0"
+  version = "~> 3.0.0"
 
   bucket        = local.bucket_name
   acl           = "log-delivery-write"
@@ -144,7 +144,7 @@ data "aws_iam_policy_document" "bucket" {
 
     principals {
       type        = "AWS"
-      identifiers = data.aws_redshift_service_account.this.*.arn
+      identifiers = [for acct in data.aws_redshift_service_account.this : acct.arn]
     }
 
     actions = [
@@ -162,7 +162,7 @@ data "aws_iam_policy_document" "bucket" {
 
     principals {
       type        = "AWS"
-      identifiers = data.aws_redshift_service_account.this.*.arn
+      identifiers = [for acct in data.aws_redshift_service_account.this : acct.arn]
     }
 
     actions = [
@@ -178,7 +178,7 @@ data "aws_iam_policy_document" "bucket" {
 
 module "observe_lambda_s3_bucket_subscription" {
   source  = "observeinc/lambda/aws//modules/s3_bucket_subscription"
-  version = "1.1.0"
+  version = "1.1.1"
 
   lambda          = module.observe_lambda.lambda_function
   bucket_arns     = concat([local.s3_bucket.arn], var.subscribed_s3_bucket_arns)

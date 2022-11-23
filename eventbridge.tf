@@ -8,7 +8,7 @@ resource "aws_cloudwatch_event_rule" "wildcard" {
 
 module "observe_firehose_eventbridge" {
   source  = "observeinc/kinesis-firehose/aws//modules/eventbridge"
-  version = "1.0.0"
+  version = "1.0.2"
 
   kinesis_firehose = module.observe_kinesis_firehose
   iam_name_prefix  = local.name_prefix
