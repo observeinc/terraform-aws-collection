@@ -144,7 +144,7 @@ data "aws_iam_policy_document" "bucket" {
 
     principals {
       type        = "AWS"
-      identifiers = [for acct in data.aws_redshift_service_account.this : acct.arn]
+      identifiers = [data.aws_redshift_service_account.this.arn]
     }
 
     actions = [
@@ -162,7 +162,7 @@ data "aws_iam_policy_document" "bucket" {
 
     principals {
       type        = "AWS"
-      identifiers = [for acct in data.aws_redshift_service_account.this : acct.arn]
+      identifiers = [data.aws_redshift_service_account.this.arn]
     }
 
     actions = [

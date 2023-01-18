@@ -171,6 +171,19 @@ variable "cloudtrail_enable_log_file_validation" {
   default     = false
 }
 
+variable "cloudtrail_exclude_management_event_sources" {
+  description = <<-EOF
+    A list of management event sources to exclude.
+
+    See the following link for more info:
+    https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-management-events-with-cloudtrail.html
+  EOF
+  type        = set(string)
+  default = [
+    "kms.amazonaws.com",
+    "rdsdata.amazonaws.com",
+  ]
+}
 
 variable "cloudwatch_metrics_include_filters" {
   description = "Namespaces to include. Mutually exclusive with cloudwatch_metrics_exclude_filters."
