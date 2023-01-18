@@ -7,4 +7,11 @@ resource "aws_cloudtrail" "trail" {
   is_multi_region_trail      = var.cloudtrail_is_multi_region_trail
   kms_key_id                 = var.kms_key_id
   enable_log_file_validation = var.cloudtrail_enable_log_file_validation
+
+  dynamic "event_selector" {
+    for_each = length(var.cloudtrail_exclude_management_event_sources) > 0 ? ["ok"] : []
+    content {
+      exclude_management_event_sources = var.cloudtrail_exclude_management_event_sources
+    }
+  }
 }
