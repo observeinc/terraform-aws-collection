@@ -173,7 +173,7 @@ variable "cloudtrail_enable_log_file_validation" {
 
 variable "cloudtrail_exclude_management_event_sources" {
   description = <<-EOF
-    A comma-separated list of Management Event Sources to exclude.
+    A list of management event sources to exclude.
 
     See the following link for more info:
     https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-management-events-with-cloudtrail.html
