@@ -103,9 +103,9 @@ module "observe_collection" {
 | <a name="module_observe_cloudwatch_metrics"></a> [observe\_cloudwatch\_metrics](#module\_observe\_cloudwatch\_metrics) | observeinc/kinesis-firehose/aws//modules/cloudwatch_metrics | 1.0.2 |
 | <a name="module_observe_firehose_eventbridge"></a> [observe\_firehose\_eventbridge](#module\_observe\_firehose\_eventbridge) | observeinc/kinesis-firehose/aws//modules/eventbridge | 1.0.2 |
 | <a name="module_observe_kinesis_firehose"></a> [observe\_kinesis\_firehose](#module\_observe\_kinesis\_firehose) | observeinc/kinesis-firehose/aws | 1.0.2 |
-| <a name="module_observe_lambda"></a> [observe\_lambda](#module\_observe\_lambda) | observeinc/lambda/aws | 1.1.1 |
-| <a name="module_observe_lambda_s3_bucket_subscription"></a> [observe\_lambda\_s3\_bucket\_subscription](#module\_observe\_lambda\_s3\_bucket\_subscription) | observeinc/lambda/aws//modules/s3_bucket_subscription | 1.1.1 |
-| <a name="module_observe_lambda_snapshot"></a> [observe\_lambda\_snapshot](#module\_observe\_lambda\_snapshot) | observeinc/lambda/aws//modules/snapshot | 1.1.1 |
+| <a name="module_observe_lambda"></a> [observe\_lambda](#module\_observe\_lambda) | observeinc/lambda/aws | 1.1.2 |
+| <a name="module_observe_lambda_s3_bucket_subscription"></a> [observe\_lambda\_s3\_bucket\_subscription](#module\_observe\_lambda\_s3\_bucket\_subscription) | observeinc/lambda/aws//modules/s3_bucket_subscription | 1.1.2 |
+| <a name="module_observe_lambda_snapshot"></a> [observe\_lambda\_snapshot](#module\_observe\_lambda\_snapshot) | observeinc/lambda/aws//modules/snapshot | 1.1.2 |
 | <a name="module_s3_bucket"></a> [s3\_bucket](#module\_s3\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 3.0.0 |
 
 ## Resources
@@ -127,7 +127,7 @@ module "observe_collection" {
 |------|-------------|------|---------|:--------:|
 | <a name="input_cloudtrail_enable"></a> [cloudtrail\_enable](#input\_cloudtrail\_enable) | Whether to create a CloudTrail trail.<br><br>Useful for avoiding the 'trails per region' quota of 5, such as when testing. | `bool` | `true` | no |
 | <a name="input_cloudtrail_enable_log_file_validation"></a> [cloudtrail\_enable\_log\_file\_validation](#input\_cloudtrail\_enable\_log\_file\_validation) | Whether log file integrity validation is enabled for CloudTrail. Defalults to false. | `bool` | `false` | no |
-| <a name="input_cloudtrail_exclude_management_event_sources"></a> [cloudtrail\_exclude\_management\_event\_sources](#input\_cloudtrail\_exclude\_management\_event\_sources) | A comma-separated list of Management Event Sources to exclude.<br><br>See the following link for more info:<br>https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-management-events-with-cloudtrail.html | `set(string)` | <pre>[<br>  "kms.amazonaws.com",<br>  "rdsdata.amazonaws.com"<br>]</pre> | no |
+| <a name="input_cloudtrail_exclude_management_event_sources"></a> [cloudtrail\_exclude\_management\_event\_sources](#input\_cloudtrail\_exclude\_management\_event\_sources) | A list of management event sources to exclude.<br><br>See the following link for more info:<br>https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-management-events-with-cloudtrail.html | `set(string)` | <pre>[<br>  "kms.amazonaws.com",<br>  "rdsdata.amazonaws.com"<br>]</pre> | no |
 | <a name="input_cloudtrail_is_multi_region_trail"></a> [cloudtrail\_is\_multi\_region\_trail](#input\_cloudtrail\_is\_multi\_region\_trail) | Whether to enable multi region trail export | `bool` | `true` | no |
 | <a name="input_cloudwatch_metrics_exclude_filters"></a> [cloudwatch\_metrics\_exclude\_filters](#input\_cloudwatch\_metrics\_exclude\_filters) | Namespaces to exclude. Mutually exclusive with cloudwatch\_metrics\_include\_filters. | `list(string)` | `[]` | no |
 | <a name="input_cloudwatch_metrics_include_filters"></a> [cloudwatch\_metrics\_include\_filters](#input\_cloudwatch\_metrics\_include\_filters) | Namespaces to include. Mutually exclusive with cloudwatch\_metrics\_exclude\_filters. | `list(string)` | `[]` | no |
