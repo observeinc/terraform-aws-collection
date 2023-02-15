@@ -160,6 +160,7 @@ module "observe_collection" {
 | Name | Description |
 |------|-------------|
 | <a name="output_bucket"></a> [bucket](#output\_bucket) | S3 bucket subscribed to Observe Lambda |
+| <a name="output_cloudtrail"></a> [cloudtrail](#output\_cloudtrail) | AWS Cloudtrail. Currently this is experimental and only exposed for the test module. |
 | <a name="output_observe_kinesis_firehose"></a> [observe\_kinesis\_firehose](#output\_observe\_kinesis\_firehose) | Observe Kinesis Firehose module |
 | <a name="output_observe_lambda"></a> [observe\_lambda](#output\_observe\_lambda) | Observe Lambda module |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

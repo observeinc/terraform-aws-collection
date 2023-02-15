@@ -12,3 +12,8 @@ output "bucket" {
   description = "S3 bucket subscribed to Observe Lambda"
   value       = local.s3_bucket
 }
+
+output "cloudtrail" {
+  description = "AWS Cloudtrail. Currently this is experimental and only exposed for the test module."
+  value       = aws_cloudtrail.trail
+}
