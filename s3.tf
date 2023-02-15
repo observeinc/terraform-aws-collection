@@ -184,7 +184,22 @@ data "aws_iam_policy_document" "bucket" {
 
 }
 
+# TODO(luke): uncomment this in a follow up commit to make terraform-aws-collection
+# more likely to avoid the terraform apply failure
+# (due to s3 bucket notification eventual consistency)
+#
+# resource "time_sleep" "wait_before_subscribing" {
+#   depends_on = module.s3_bucket
+
+#   create_duration = "10s"
+# }
+
 module "observe_lambda_s3_bucket_subscription" {
+  # TODO(luke): uncomment this in a follow up commit to make terraform-aws-collection
+  # more likely to avoid the terraform apply failure
+  # (due to s3 bucket notification eventual consistency)
+  # depends_on = [time_sleep.wait_before_subscribing]
+
   source  = "observeinc/lambda/aws//modules/s3_bucket_subscription"
   version = "3.1.3"
 

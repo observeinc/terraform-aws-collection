@@ -11,5 +11,13 @@ terraform {
       source  = "hashicorp/random"
       version = ">= 3.0.0"
     }
+
+    # TODO(luke): uncomment this in a follow up commit to make terraform-aws-collection
+    # more likely to avoid the terraform apply failure
+    # (due to s3 bucket notification eventual consistency)
+    # time = {
+    #   source  = "hashicorp/time"
+    #   version = ">= 0.9.1"
+    # }
   }
 }
