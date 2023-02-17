@@ -1,6 +1,6 @@
 module "observe_cloudwatch_logs_subscription" {
   source           = "observeinc/cloudwatch-logs-subscription/aws"
-  version          = "0.2.0"
+  version          = "0.4.0"
   kinesis_firehose = module.observe_kinesis_firehose
   iam_name_prefix  = local.name_prefix
 
@@ -17,4 +17,6 @@ module "observe_cloudwatch_logs_subscription" {
   depends_on = [
     module.observe_lambda_s3_bucket_subscription
   ]
+
+  tags = var.tags
 }
