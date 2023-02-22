@@ -4,6 +4,12 @@ variable "name" {
   default     = "observe-collection"
 }
 
+variable "log_subscription_name" {
+  description = "Name for log subscription resources to be created"
+  type        = string
+  default     = null
+}
+
 variable "observe_customer" {
   description = "Observe Customer ID"
   type        = string
