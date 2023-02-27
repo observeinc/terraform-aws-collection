@@ -17,7 +17,7 @@ resource "random_string" "this" {
 
 module "s3_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "~> 3.0.0"
+  version = "~> 3.7.0"
 
   bucket        = local.bucket_name
   acl           = "log-delivery-write"
