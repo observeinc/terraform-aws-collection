@@ -202,3 +202,17 @@ variable "cloudwatch_metrics_exclude_filters" {
   type        = list(string)
   default     = []
 }
+
+variable "eventbridge_rules" {
+  description = <<-EOF
+    Eventbridge events matching these rules will be forwarded to Observe. Map
+    keys are only used to provide stable resource addresses.
+
+    If null, a default set of rules will be used.
+  EOF
+  type = map(object({
+    description   = string
+    event_pattern = string
+  }))
+  default = null
+}
