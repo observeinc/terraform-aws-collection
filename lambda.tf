@@ -8,6 +8,8 @@ module "observe_lambda" {
   observe_token    = var.observe_token
   iam_name_prefix  = local.name_prefix
   lambda_version   = var.lambda_version
+  memory_size      = var.lambda_memory_size
+  timeout          = var.lambda_timeout
   tags             = var.tags
 
   reserved_concurrent_executions = var.lambda_reserved_concurrent_executions
