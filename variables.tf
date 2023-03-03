@@ -31,6 +31,26 @@ variable "observe_domain" {
   default     = "observeinc.com"
 }
 
+variable "lambda_memory_size" {
+  description = <<-EOF
+    The amount of memory that your function has access to. Increasing the function's memory also increases its CPU allocation.
+    The default value is 128 MB. The value must be a multiple of 64 MB.
+  EOF
+  type        = number
+  nullable    = false
+  default     = 128
+}
+
+variable "lambda_timeout" {
+  description = <<-EOF
+    The amount of time that Lambda allows a function to run before stopping it.
+    The maximum allowed value is 900 seconds.
+  EOF
+  type        = number
+  nullable    = false
+  default     = 60
+}
+
 variable "lambda_version" {
   description = "Lambda version"
   type        = string
