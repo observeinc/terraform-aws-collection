@@ -213,13 +213,19 @@ variable "cloudtrail_exclude_management_event_sources" {
 
 variable "cloudwatch_metrics_include_filters" {
   description = "Namespaces to include. Mutually exclusive with cloudwatch_metrics_exclude_filters."
-  type        = list(string)
+  type        = set(string)
+  nullable    = false
   default     = []
 }
 
 variable "cloudwatch_metrics_exclude_filters" {
-  description = "Namespaces to exclude. Mutually exclusive with cloudwatch_metrics_include_filters."
-  type        = list(string)
+  description = <<-EOF
+    Namespaces to exclude. Mutually exclusive with cloudwatch_metrics_include_filters.
+
+    To disable Cloudwatch Metrics Stream entirely, use ["*"].
+  EOF
+  type        = set(string)
+  nullable    = false
   default     = []
 }
 

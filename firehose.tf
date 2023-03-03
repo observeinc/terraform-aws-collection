@@ -19,7 +19,14 @@ module "observe_kinesis_firehose" {
   tags                             = var.tags
 }
 
+# prior to 2.x, metrics stream was always configured
+moved {
+  from = module.observe_cloudwatch_metrics
+  to   = module.observe_cloudwatch_metrics[0]
+}
+
 module "observe_cloudwatch_metrics" {
+  count   = contains(var.cloudwatch_metrics_exclude_filters, "*") ? 0 : 1
   source  = "observeinc/kinesis-firehose/aws//modules/cloudwatch_metrics"
   version = "2.0.0"
 
