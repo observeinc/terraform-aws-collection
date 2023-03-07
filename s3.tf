@@ -1,5 +1,5 @@
 locals {
-  bucket_name  = "${local.name_prefix}${data.aws_region.current.name}-${random_string.this.id}"
+  bucket_name  = var.s3_bucket_name != "" ? var.s3_bucket_name : "${local.name_prefix}${data.aws_region.current.name}-${random_string.this[0].id}"
   bucket_arn   = "arn:aws:s3:::${local.bucket_name}"
   aws_logs_arn = "${local.bucket_arn}/${local.s3_exported_prefix}AWSLogs/${data.aws_caller_identity.current.account_id}/*"
 
@@ -10,6 +10,7 @@ locals {
 }
 
 resource "random_string" "this" {
+  count   = var.s3_bucket_name == "" ? 1 : 0
   length  = 8
   upper   = false
   special = false

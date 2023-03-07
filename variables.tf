@@ -242,3 +242,15 @@ variable "eventbridge_rules" {
   }))
   default = null
 }
+
+variable "s3_bucket_name" {
+  description = <<-EOF
+    Override the name used for the S3 bucket created by this module.
+
+    If empty, the bucket name will combine the `name` variable with the
+    region and a random suffix to ensure it is globally unique.
+  EOF
+  type        = string
+  nullable    = false
+  default     = ""
+}
