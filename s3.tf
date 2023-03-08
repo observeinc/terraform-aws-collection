@@ -1,21 +1,29 @@
 locals {
-  bucket_name  = "${local.name_prefix}${data.aws_region.current.name}-${random_string.this.id}"
-  bucket_arn   = "arn:aws:s3:::${local.bucket_name}"
-  aws_logs_arn = "${local.bucket_arn}/${local.s3_exported_prefix}AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+  create_s3_bucket = var.s3_bucket == null
+  bucket_name      = local.create_s3_bucket ? "${local.name_prefix}${data.aws_region.current.name}-${random_string.this[0].id}" : var.s3_bucket.id
+  bucket_arn       = "arn:aws:s3:::${local.bucket_name}"
+  aws_logs_arn     = "${local.bucket_arn}/${local.s3_exported_prefix}AWSLogs/${data.aws_caller_identity.current.account_id}/*"
 
-  s3_bucket = {
-    id  = module.s3_bucket.s3_bucket_id
-    arn = module.s3_bucket.s3_bucket_arn
-  }
+  s3_bucket = local.create_s3_bucket ? {
+    id  = module.s3_bucket[0].s3_bucket_id
+    arn = module.s3_bucket[0].s3_bucket_arn
+  } : var.s3_bucket
 }
 
 resource "random_string" "this" {
+  count   = local.create_s3_bucket ? 1 : 0
   length  = 8
   upper   = false
   special = false
 }
 
+moved {
+  from = module.s3_bucket
+  to   = module.s3_bucket[0]
+}
+
 module "s3_bucket" {
+  count   = local.create_s3_bucket ? 1 : 0
   source  = "terraform-aws-modules/s3-bucket/aws"
   version = "~> 3.7.0"
 

@@ -242,3 +242,14 @@ variable "eventbridge_rules" {
   }))
   default = null
 }
+
+variable "s3_bucket" {
+  description = <<-EOF
+    Override S3 bucket used to to stage data to be sent to Observe.
+  EOF
+  type = object({
+    id  = string
+    arn = string
+  })
+  default = null
+}

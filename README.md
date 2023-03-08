@@ -146,6 +146,7 @@ module "observe_collection" {
 | <a name="input_observe_domain"></a> [observe\_domain](#input\_observe\_domain) | Observe Domain | `string` | `"observeinc.com"` | no |
 | <a name="input_observe_token"></a> [observe\_token](#input\_observe\_token) | Observe Token | `string` | n/a | yes |
 | <a name="input_retention_in_days"></a> [retention\_in\_days](#input\_retention\_in\_days) | Retention in days of cloudwatch log group | `number` | `365` | no |
+| <a name="input_s3_bucket"></a> [s3\_bucket](#input\_s3\_bucket) | Override S3 bucket used to to stage data to be sent to Observe. | <pre>object({<br>    id  = string<br>    arn = string<br>  })</pre> | `null` | no |
 | <a name="input_s3_exported_prefix"></a> [s3\_exported\_prefix](#input\_s3\_exported\_prefix) | Key prefix which is subscribed to be sent to Observe Lambda | `string` | `""` | no |
 | <a name="input_s3_lifecycle_rule"></a> [s3\_lifecycle\_rule](#input\_s3\_lifecycle\_rule) | List of maps containing configuration of object lifecycle management. | `any` | `[]` | no |
 | <a name="input_s3_logging"></a> [s3\_logging](#input\_s3\_logging) | Enable S3 access log collection | `bool` | `false` | no |
