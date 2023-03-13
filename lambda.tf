@@ -1,6 +1,6 @@
 module "observe_lambda" {
   source  = "observeinc/lambda/aws"
-  version = "3.0.0"
+  version = "3.1.1"
 
   name             = var.name
   observe_domain   = var.observe_domain
@@ -22,7 +22,7 @@ module "observe_lambda" {
 
 module "observe_lambda_snapshot" {
   source  = "observeinc/lambda/aws//modules/snapshot"
-  version = "3.0.0"
+  version = "3.1.1"
 
   lambda                          = module.observe_lambda
   eventbridge_name_prefix         = local.name_prefix
