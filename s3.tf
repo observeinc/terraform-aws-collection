@@ -46,6 +46,7 @@ module "s3_bucket" {
     }
   }
 
+  object_ownership        = "BucketOwnerPreferred"
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
