@@ -1,9 +1,9 @@
-## [2.2.1](https://github.com/observeinc/terraform-aws-collection/compare/v2.2.0...v2.2.1) (2023-04-19)
+## [2.2.2](https://github.com/observeinc/terraform-aws-collection/compare/v2.2.1...v2.2.2) (2023-05-15)
 
 
 ### Bug Fixes
 
-* adjust bucket ownership to allow ACLs ([#12](https://github.com/observeinc/terraform-aws-collection/issues/12)) ([#58](https://github.com/observeinc/terraform-aws-collection/issues/58)) ([3d21b77](https://github.com/observeinc/terraform-aws-collection/commit/3d21b774b2e6778ad01cf7bc66d480ea5e0ca43e))
+* **s3:** set object ownership to ObjectWriter ([#61](https://github.com/observeinc/terraform-aws-collection/issues/61)) ([f5c4cb1](https://github.com/observeinc/terraform-aws-collection/commit/f5c4cb1e390a3d219df56888c9c9d5ffeb698c5d))
 
 
 
