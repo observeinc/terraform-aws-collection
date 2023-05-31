@@ -1,9 +1,9 @@
-## [2.2.2](https://github.com/observeinc/terraform-aws-collection/compare/v2.2.1...v2.2.2) (2023-05-15)
+## [2.2.3](https://github.com/observeinc/terraform-aws-collection/compare/v2.2.2...v2.2.3) (2023-05-31)
 
 
 ### Bug Fixes
 
-* **s3:** set object ownership to ObjectWriter ([#61](https://github.com/observeinc/terraform-aws-collection/issues/61)) ([f5c4cb1](https://github.com/observeinc/terraform-aws-collection/commit/f5c4cb1e390a3d219df56888c9c9d5ffeb698c5d))
+* bump firehose module to 2.0.1 ([#63](https://github.com/observeinc/terraform-aws-collection/issues/63)) ([68bd2c7](https://github.com/observeinc/terraform-aws-collection/commit/68bd2c79773c72da03f963277e6fb0be7f1620af))
 
 
 
