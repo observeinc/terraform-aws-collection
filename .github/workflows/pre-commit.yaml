@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install Python
         uses: actions/setup-python@v4
       - name: Build matrix
@@ -37,7 +37,7 @@ jobs:
       OBSERVE_CUSTOMER: 0
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install Python
         uses: actions/setup-python@v4
       - name: Terraform min/max versions
@@ -66,7 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Terraform min/max versions
         id: minMax
         uses: clowdhaus/terraform-min-max@v1.2.6
@@ -85,7 +85,7 @@ jobs:
           - ${{ needs.getBaseVersion.outputs.maxVersion }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install Python
         uses: actions/setup-python@v4
       - name: Install Terraform v${{ matrix.version }}
