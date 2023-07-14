@@ -20,11 +20,16 @@ module "observe_cloudwatch_logs_subscription" {
   filter_pattern = var.subscribed_log_group_filter_pattern
 
   log_group_matches = var.subscribed_log_group_matches
-  log_group_excludes = concat(
-    var.subscribed_log_group_excludes,
-    # log groups managed by our module should be explicitly subscribed
-    [aws_cloudwatch_log_group.group.name, "/aws/lambda/${var.name}"],
-  )
+
+  log_group_excludes = var.subscribed_log_groups_excludes
+
+  if var.subscribed_log_groups_exclude_observe_lambda {
+     log_group_excludes = concat(
+       log_group_excludes,
+       # log groups managed by our module should be explicitly subscribed
+       [aws_cloudwatch_log_group.group.name, "/aws/lambda/${var.name}"],
+     )
+  }
 
   # avoid racing with s3 bucket subscription
   depends_on = [
