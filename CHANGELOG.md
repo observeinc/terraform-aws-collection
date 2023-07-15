@@ -1,9 +1,9 @@
-## [2.2.3](https://github.com/observeinc/terraform-aws-collection/compare/v2.2.2...v2.2.3) (2023-05-31)
+# [2.3.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.2.3...v2.3.0) (2023-07-15)
 
 
-### Bug Fixes
+### Features
 
-* bump firehose module to 2.0.1 ([#63](https://github.com/observeinc/terraform-aws-collection/issues/63)) ([68bd2c7](https://github.com/observeinc/terraform-aws-collection/commit/68bd2c79773c72da03f963277e6fb0be7f1620af))
+* **subscription:** subscribe to Lambda logs by default ([#69](https://github.com/observeinc/terraform-aws-collection/issues/69)) ([3fbfb8f](https://github.com/observeinc/terraform-aws-collection/commit/3fbfb8f41cfddcb21577c572beecec327d8438f4))
 
 
 
