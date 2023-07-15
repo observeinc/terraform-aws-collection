@@ -72,6 +72,12 @@ variable "lambda_reserved_concurrent_executions" {
   default     = 100
 }
 
+variable "lambda_subscribe_logs" {
+  description = "Whether to subscribe to the Lambda function's logs and deliver them from CloudWatch to Observe via Kinesis Firehose."
+  type        = bool
+  default     = true
+}
+
 variable "retention_in_days" {
   description = "Retention in days of cloudwatch log group"
   type        = number

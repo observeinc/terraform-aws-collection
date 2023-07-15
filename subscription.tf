@@ -23,7 +23,7 @@ module "observe_cloudwatch_logs_subscription" {
   log_group_excludes = concat(
     var.subscribed_log_group_excludes,
     # log groups managed by our module should be explicitly subscribed
-    [aws_cloudwatch_log_group.group.name, "/aws/lambda/${var.name}"],
+    [aws_cloudwatch_log_group.group.name, local.lambda_log_group],
   )
 
   # avoid racing with s3 bucket subscription
@@ -32,4 +32,19 @@ module "observe_cloudwatch_logs_subscription" {
   ]
 
   tags = var.tags
+}
+
+locals {
+  # TODO: output this from lambda module so we don't have to reverse-engineer it again here
+  lambda_log_group = "/aws/lambda/${var.name}"
+}
+
+module "lambda_log_subscription" {
+  count = var.lambda_subscribe_logs ? 1 : 0
+
+  source  = "observeinc/kinesis-firehose/aws//modules/cloudwatch_logs_subscription"
+  version = "2.0.2"
+
+  kinesis_firehose = module.observe_kinesis_firehose
+  log_group_names  = [local.lambda_log_group]
 }
