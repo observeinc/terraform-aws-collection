@@ -34,11 +34,11 @@ variable "observe_domain" {
 variable "lambda_memory_size" {
   description = <<-EOF
     The amount of memory that your function has access to. Increasing the function's memory also increases its CPU allocation.
-    The default value is 128 MB. The value must be a multiple of 64 MB.
+    The default value is 256 MB. The value must be a multiple of 64 MB.
   EOF
   type        = number
   nullable    = false
-  default     = 128
+  default     = 256
 }
 
 variable "lambda_timeout" {
@@ -48,7 +48,7 @@ variable "lambda_timeout" {
   EOF
   type        = number
   nullable    = false
-  default     = 60
+  default     = 120
 }
 
 variable "lambda_version" {
