@@ -178,7 +178,7 @@ variable "snapshot_exclude" {
 variable "snapshot_schedule_expression" {
   description = "Rate at which snapshot is triggered. Must be valid EventBridge expression"
   type        = string
-  default     = "rate(3 hours)"
+  default     = "rate(1 hour)"
 }
 
 variable "kms_key_id" {
