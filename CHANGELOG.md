@@ -1,9 +1,9 @@
-# [2.3.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.2.3...v2.3.0) (2023-07-15)
+## [2.3.1](https://github.com/observeinc/terraform-aws-collection/compare/v2.3.0...v2.3.1) (2023-07-18)
 
 
-### Features
+### Bug Fixes
 
-* **subscription:** subscribe to Lambda logs by default ([#69](https://github.com/observeinc/terraform-aws-collection/issues/69)) ([3fbfb8f](https://github.com/observeinc/terraform-aws-collection/commit/3fbfb8f41cfddcb21577c572beecec327d8438f4))
+* **Snapshot:** Reduce recurring snapshot time to 1hour ([#71](https://github.com/observeinc/terraform-aws-collection/issues/71)) ([9a99738](https://github.com/observeinc/terraform-aws-collection/commit/9a9973852993aea58c5682314766087476be10fc))
 
 
 
