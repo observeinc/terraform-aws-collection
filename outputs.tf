@@ -6,6 +6,7 @@ output "observe_lambda" {
 output "observe_kinesis_firehose" {
   description = "Observe Kinesis Firehose module"
   value       = module.observe_kinesis_firehose
+  sensitive   = true
 }
 
 output "bucket" {
