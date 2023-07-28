@@ -31,6 +31,44 @@ variable "observe_domain" {
   default     = "observeinc.com"
 }
 
+variable "snapshot_action" {
+  description = "List of actions triggered by snapshot. Set to null to inherit all actions supported by the lambda."
+  type        = set(string)
+  nullable    = true
+  default = [
+    "autoscaling:Describe*",
+    "cloudformation:Describe*",
+    "cloudformation:List*",
+    "cloudfront:List*",
+    "dynamodb:Describe*",
+    "dynamodb:List*",
+    "ec2:Describe*",
+    "ecs:Describe*",
+    "ecs:List*",
+    "eks:Describe*",
+    "eks:List*",
+    "elasticache:Describe*",
+    "elasticloadbalancing:Describe*",
+    "events:List*",
+    "firehose:Describe*",
+    "firehose:List*",
+    "iam:Get*",
+    "iam:List*",
+    "kinesis:Describe*",
+    "kinesis:List*",
+    "lambda:List*",
+    "logs:Describe*",
+    "rds:Describe*",
+    "route53:List*",
+    "s3:GetBucket*",
+    "s3:List*",
+    "sns:Get*",
+    "sns:List*",
+    "sqs:Get*",
+    "sqs:List*"
+  ]
+}
+
 variable "lambda_memory_size" {
   description = <<-EOF
     The amount of memory that your function has access to. Increasing the function's memory also increases its CPU allocation.

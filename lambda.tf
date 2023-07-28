@@ -28,6 +28,7 @@ module "observe_lambda_snapshot" {
   eventbridge_name_prefix          = local.name_prefix
   eventbridge_schedule_expression  = var.snapshot_schedule_expression
   invoke_snapshot_on_start_enabled = var.invoke_snapshot_on_start_enabled
+  action                           = var.snapshot_action
   include                          = var.snapshot_include
   exclude                          = var.snapshot_exclude
 }
