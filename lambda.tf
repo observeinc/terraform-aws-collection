@@ -24,9 +24,10 @@ module "observe_lambda_snapshot" {
   source  = "observeinc/lambda/aws//modules/snapshot"
   version = "3.3.0"
 
-  lambda                          = module.observe_lambda
-  eventbridge_name_prefix         = local.name_prefix
-  eventbridge_schedule_expression = var.snapshot_schedule_expression
-  include                         = var.snapshot_include
-  exclude                         = var.snapshot_exclude
+  lambda                           = module.observe_lambda
+  eventbridge_name_prefix          = local.name_prefix
+  eventbridge_schedule_expression  = var.snapshot_schedule_expression
+  invoke_snapshot_on_start_enabled = var.invoke_snapshot_on_start_enabled
+  include                          = var.snapshot_include
+  exclude                          = var.snapshot_exclude
 }
