@@ -5,7 +5,7 @@ resource "aws_cloudwatch_log_group" "group" {
 
 module "observe_kinesis_firehose" {
   source  = "observeinc/kinesis-firehose/aws"
-  version = "2.0.2"
+  version = "2.0.3"
 
   name             = var.name
   observe_customer = var.observe_customer
@@ -28,7 +28,7 @@ moved {
 module "observe_cloudwatch_metrics" {
   count   = contains(var.cloudwatch_metrics_exclude_filters, "*") ? 0 : 1
   source  = "observeinc/kinesis-firehose/aws//modules/cloudwatch_metrics"
-  version = "2.0.2"
+  version = "2.0.3"
 
   name             = var.name
   iam_name_prefix  = local.name_prefix
