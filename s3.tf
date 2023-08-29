@@ -25,7 +25,7 @@ moved {
 module "s3_bucket" {
   count   = local.create_s3_bucket ? 1 : 0
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "~> 3.14.0"
+  version = "~> 3.15.1"
 
   bucket        = local.bucket_name
   acl           = "log-delivery-write"
