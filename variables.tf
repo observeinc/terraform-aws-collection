@@ -58,6 +58,7 @@ variable "snapshot_action" {
     "kinesis:List*",
     "lambda:List*",
     "logs:Describe*",
+    "organizations:List*",
     "rds:Describe*",
     "route53:List*",
     "s3:GetBucket*",
