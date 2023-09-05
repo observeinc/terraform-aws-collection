@@ -1,0 +1,20 @@
+name: Run AWS Spec tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-aws-test-kitchen:
+    uses: observeinc/aws-test-kitchen/.github/workflows/ci.yml@main
+    with:
+      test_type: cloudformation
+      code_sha: ${{ github.sha }}
+    secrets:
+      OBSERVE_CUSTOMER: ${{ secrets.OBSERVE_CUSTOMER }}
+      OBSERVE_TOKEN: ${{ secrets.OBSERVE_TOKEN }}
+      OBSERVE_DOMAIN: ${{ secrets.OBSERVE_DOMAIN }}
