@@ -301,5 +301,5 @@ variable "s3_bucket" {
 variable "invoke_snapshot_on_start_enabled" {
   description = "Toggle invocation of snapshot from Cloudformation. This can be useful for debug purposes if the lambda fails to complete successfully."
   type        = bool
-  default     = true
+  default     = false
 }
