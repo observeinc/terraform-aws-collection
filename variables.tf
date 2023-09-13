@@ -62,10 +62,6 @@ variable "snapshot_action" {
     "route53:List*",
     "s3:GetBucket*",
     "s3:List*",
-    "sns:Get*",
-    "sns:List*",
-    "sqs:Get*",
-    "sqs:List*"
   ]
 }
 
