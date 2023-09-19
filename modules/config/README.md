@@ -2,6 +2,8 @@
 
 This module sets up AWS Config to store configuration data to a provided S3 bucket.
 
+⚠️ _You can specify only one configuration recorder for each AWS Region for each account._
+
 # Usage
 
 ```
