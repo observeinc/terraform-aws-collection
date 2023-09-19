@@ -19,7 +19,7 @@ variable "prefix" {
 }
 
 variable "delivery_frequency" {
-  description = "The frequency with which AWS Config recurringly delivers configuration snapshots"
+  description = "The frequency with which AWS Config recurringly delivers configuration snapshots. Valid values: One_Hour, Three_Hours, Six_Hours, Twelve_Hours, TwentyFour_Hours (https://docs.aws.amazon.com/config/latest/APIReference/API_ConfigSnapshotDeliveryProperties.html)."
   type        = string
   default     = "Three_Hours"
   nullable    = false
