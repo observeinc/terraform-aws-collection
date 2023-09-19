@@ -27,8 +27,7 @@ variable "delivery_frequency" {
 
 variable "include_global_resource_types" {
   description = <<-EOF
-    Specifies whether AWS Config includes all supported types of global
-    resources with the resources that it records.
+    Specifies whether AWS Config includes all supported types of global resources with the resources that it records.
   EOF
   type        = bool
   default     = true
