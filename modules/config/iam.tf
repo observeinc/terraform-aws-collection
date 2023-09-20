@@ -10,6 +10,14 @@ resource "aws_iam_role" "this" {
     name   = "writer"
     policy = data.aws_iam_policy_document.writer.json
   }
+
+  dynamic "inline_policy" {
+    for_each = var.sns_topic_arn != null ? [1] : []
+    content {
+      name   = "notifications"
+      policy = data.aws_iam_policy_document.notifications.json
+    }
+  }
 }
 
 data "aws_iam_policy_document" "assume_role" {
@@ -44,6 +52,18 @@ data "aws_iam_policy_document" "writer" {
 
     resources = [
       "arn:aws:s3:::${var.bucket}/${var.prefix}AWSLogs/*",
+    ]
+  }
+}
+
+data "aws_iam_policy_document" "notifications" {
+  statement {
+    actions = [
+      "sns:Publish",
+    ]
+
+    resources = [
+      var.sns_topic_arn != null ? var.sns_topic_arn : "",
     ]
   }
 }
