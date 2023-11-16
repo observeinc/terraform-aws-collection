@@ -92,7 +92,7 @@ variable "lambda_timeout" {
 variable "lambda_version" {
   description = "Lambda version"
   type        = string
-  default     = "latest"
+  default     = "arm64/latest"
 }
 
 variable "lambda_s3_custom_rules" {

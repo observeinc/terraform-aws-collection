@@ -104,7 +104,7 @@ module "observe_collection" {
 | <a name="module_observe_cloudwatch_metrics"></a> [observe\_cloudwatch\_metrics](#module\_observe\_cloudwatch\_metrics) | observeinc/kinesis-firehose/aws//modules/cloudwatch_metrics | 2.1.0 |
 | <a name="module_observe_firehose_eventbridge"></a> [observe\_firehose\_eventbridge](#module\_observe\_firehose\_eventbridge) | observeinc/kinesis-firehose/aws//modules/eventbridge | 2.1.0 |
 | <a name="module_observe_kinesis_firehose"></a> [observe\_kinesis\_firehose](#module\_observe\_kinesis\_firehose) | observeinc/kinesis-firehose/aws | 2.1.0 |
-| <a name="module_observe_lambda"></a> [observe\_lambda](#module\_observe\_lambda) | observeinc/lambda/aws | 3.3.0 |
+| <a name="module_observe_lambda"></a> [observe\_lambda](#module\_observe\_lambda) | observeinc/lambda/aws | 3.4.0 |
 | <a name="module_observe_lambda_s3_bucket_subscription"></a> [observe\_lambda\_s3\_bucket\_subscription](#module\_observe\_lambda\_s3\_bucket\_subscription) | observeinc/lambda/aws//modules/s3_bucket_subscription | 3.3.0 |
 | <a name="module_observe_lambda_snapshot"></a> [observe\_lambda\_snapshot](#module\_observe\_lambda\_snapshot) | observeinc/lambda/aws//modules/snapshot | 3.3.0 |
 | <a name="module_s3_bucket"></a> [s3\_bucket](#module\_s3\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 3.15.1 |
@@ -142,7 +142,7 @@ module "observe_collection" {
 | <a name="input_lambda_s3_custom_rules"></a> [lambda\_s3\_custom\_rules](#input\_lambda\_s3\_custom\_rules) | List of rules to evaluate how to upload a given S3 object to Observe. | <pre>list(object({<br>    pattern = string<br>    headers = map(string)<br>  }))</pre> | `[]` | no |
 | <a name="input_lambda_subscribe_logs"></a> [lambda\_subscribe\_logs](#input\_lambda\_subscribe\_logs) | Whether to subscribe to the Lambda function's logs and deliver them from CloudWatch to Observe via Kinesis Firehose. | `bool` | `true` | no |
 | <a name="input_lambda_timeout"></a> [lambda\_timeout](#input\_lambda\_timeout) | The amount of time that Lambda allows a function to run before stopping it.<br>The maximum allowed value is 900 seconds. | `number` | `120` | no |
-| <a name="input_lambda_version"></a> [lambda\_version](#input\_lambda\_version) | Lambda version | `string` | `"latest"` | no |
+| <a name="input_lambda_version"></a> [lambda\_version](#input\_lambda\_version) | Lambda version | `string` | `"arm64/latest"` | no |
 | <a name="input_log_subscription_name"></a> [log\_subscription\_name](#input\_log\_subscription\_name) | Name for log subscription resources to be created | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name for resources to be created | `string` | `"observe-collection"` | no |
 | <a name="input_observe_customer"></a> [observe\_customer](#input\_observe\_customer) | Observe Customer ID | `string` | n/a | yes |
