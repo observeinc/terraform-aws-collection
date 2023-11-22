@@ -22,7 +22,7 @@ module "observe_lambda" {
 
 module "observe_lambda_snapshot" {
   source  = "observeinc/lambda/aws//modules/snapshot"
-  version = "3.3.0"
+  version = "3.4.0"
 
   lambda                           = module.observe_lambda
   eventbridge_name_prefix          = local.name_prefix
