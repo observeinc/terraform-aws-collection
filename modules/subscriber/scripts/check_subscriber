@@ -1,0 +1,60 @@
+#!/bin/bash
+# Write records to firehose, verify data shows up in S3
+set -euo pipefail
+
+DIE() { echo "$*" 1>&2; exit 1; }
+
+[[ ! -z "${FUNCTION_ARN:-}" ]] || DIE "FUNCTION_ARN not set"
+
+cleanup() {
+    rm -f "$TMPFILE"
+}
+
+trap cleanup EXIT
+
+TMPFILE=$(mktemp)
+
+FUNCTION_NAME=$(echo "$FUNCTION_ARN" | cut -d: -f7)
+AWS_REGION=$(echo "$FUNCTION_ARN" | cut -d: -f4)
+
+CHECK_INTERVAL=${CHECK_INTERVAL:-5}
+CHECK_TIMEOUT=${CHECK_TIMEOUT:-120}
+
+LOG_EVENTS=
+# Wait up to `CHECK_TIMEOUT` seconds for first invocation
+# from scheduled discovery
+for i in $(seq 0 ${CHECK_INTERVAL} ${CHECK_TIMEOUT}); do
+  [[ ! -z "${LOG_EVENTS}" ]] && break
+  if [ $i -gt 0 ]; then
+    echo "waiting"
+    sleep ${CHECK_INTERVAL}
+  fi
+  LOG_EVENTS=$(aws logs filter-log-events \
+    --region ${AWS_REGION} \
+    --log-group-name /aws/lambda/${FUNCTION_NAME} | jq -r '.events[] | .message | fromjson?' )
+done
+
+[[ ! -z "${LOG_EVENTS}" ]] || DIE "subscriber lambda not invoked by eventbridge rule"
+
+[[ -z $(jq -r 'select(.level == "ERROR")' <<< ${LOG_EVENTS}) ]] || DIE "errors detected in lambda logs"
+
+# this requires verbosity to be set to at least 3
+[[ ! -z $(jq -r 'select(.msg == "handling discovery request")' <<< ${LOG_EVENTS}) ]] || DIE "no discovery request detected"
+
+check_result() {
+    ERR=$(jq '.StatusCode != 200 or has("FunctionError")' <<<"$1")
+    if [[ "$ERR" == true ]]; then
+        cat ${TMPFILE}
+        echo "$1"
+        return 1
+    fi
+}
+
+echo '{"subscribe": {"logGroups": [{"logGroupName": "does_not_exist"}]}}' > ${TMPFILE}
+
+RESULT=$(aws lambda invoke \
+    --function-name ${FUNCTION_NAME} \
+    --payload fileb://${TMPFILE} ${TMPFILE} \
+    --region ${AWS_REGION} \
+    --no-cli-pager)
+check_result "$RESULT" || DIE "Failed to invoke lambda"
