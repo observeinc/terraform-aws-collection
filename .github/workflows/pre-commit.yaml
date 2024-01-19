@@ -46,7 +46,7 @@ jobs:
         with:
           directory: ${{ matrix.directory }}
       - name: Install Terraform v${{ steps.minMax.outputs.minVersion }}
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ steps.minMax.outputs.minVersion }}
       - name: Install pre-commit dependencies
@@ -89,7 +89,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v5
       - name: Install Terraform v${{ matrix.version }}
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ matrix.version }}
       - name: Install pre-commit dependencies
