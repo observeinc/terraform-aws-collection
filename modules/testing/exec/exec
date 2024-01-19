@@ -1,0 +1,26 @@
+#!/bin/bash
+set -o pipefail
+# source environment variables from a JSON blob from stdin
+STDIN=$(</dev/stdin)
+ENV=$(echo "$STDIN" | jq -r 'to_entries | map("\(.key)=\(.value)") | @sh')
+eval "export ${ENV}"
+
+# if debug file is provided, write out and wait for it to be deleted
+# before proceeding
+if [[ ! -z "${CHECK_DEBUG_FILE:-}" ]]; then
+    echo "export $(echo ${ENV}) && $@" > "${CHECK_DEBUG_FILE}"
+    while [ -e "${CHECK_DEBUG_FILE}" ]; do
+        sleep 1
+    done
+fi;
+
+OUTPUT=$($@ 2>&1)
+RESULT=$?
+ERROR="\"\""
+if [ $RESULT -ne 0 ]; then
+    ERROR=$(echo -n "$OUTPUT" | tail -n1 | jq -Rsa .)
+fi
+
+# terraform external data source expects all arguments to be strings
+echo "{\"error\": ${ERROR}, \"exitcode\": \"${RESULT}\", \"output\": $(echo -n "$OUTPUT" | jq -Rsa .)}"
+# always return 0, let caller decide if error message warrants any action
