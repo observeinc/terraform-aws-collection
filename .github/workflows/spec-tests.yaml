@@ -20,4 +20,5 @@ jobs:
       OBSERVE_CUSTOMER: ${{ secrets.OBSERVE_CUSTOMER }}
       OBSERVE_TOKEN: ${{ secrets.OBSERVE_TOKEN }}
       OBSERVE_DOMAIN: ${{ secrets.OBSERVE_DOMAIN }}
-      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
