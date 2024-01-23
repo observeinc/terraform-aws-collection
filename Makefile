@@ -1,9 +1,5 @@
-.PHONY: changelog release
+.PHONY: test
 
-changelog:
-	git-chglog -o CHANGELOG.md --next-tag `semtag final -s minor -o`
-
-release:
-	semtag final -s minor
-
-test:
+test-dir:
+	terraform -chdir=${DIR} init -upgrade
+	terraform -chdir=${DIR} test
