@@ -1,9 +1,11 @@
-.PHONY: changelog release
+.PHONY: test
 
-changelog:
-	git-chglog -o CHANGELOG.md --next-tag `semtag final -s minor -o`
+test-dir:
+	terraform -chdir=${DIR} init -upgrade
+	terraform -chdir=${DIR} test
 
-release:
-	semtag final -s minor
+update-logwriter-binaries-csv:
+	APP=logwriter RESOURCE=Subscriber utilities/update-binaries.sh > modules/subscriber/uris.csv
 
-test:
+update-forwarder-binaries-csv:
+	APP=forwarder RESOURCE=Forwarder utilities/update-binaries.sh > modules/forwarder/uris.csv
