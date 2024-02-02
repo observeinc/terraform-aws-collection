@@ -25,7 +25,7 @@ moved {
 module "s3_bucket" {
   count   = local.create_s3_bucket ? 1 : 0
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "~> 3.15.1"
+  version = "~> 4.0"
 
   bucket        = local.bucket_name
   acl           = "log-delivery-write"
@@ -56,8 +56,6 @@ module "s3_bucket" {
 
   tags = var.tags
 }
-
-data "aws_redshift_service_account" "this" {}
 
 data "aws_iam_policy_document" "bucket" {
   statement {
@@ -149,9 +147,10 @@ data "aws_iam_policy_document" "bucket" {
     effect = "Allow"
 
     principals {
-      type        = "AWS"
-      identifiers = [data.aws_redshift_service_account.this.arn]
+      type        = "Service"
+      identifiers = ["redshift.amazonaws.com"]
     }
+
 
     actions = [
       "s3:PutObject",
@@ -167,8 +166,8 @@ data "aws_iam_policy_document" "bucket" {
     effect = "Allow"
 
     principals {
-      type        = "AWS"
-      identifiers = [data.aws_redshift_service_account.this.arn]
+      type        = "Service"
+      identifiers = ["redshift.amazonaws.com"]
     }
 
     actions = [
