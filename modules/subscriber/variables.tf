@@ -2,9 +2,7 @@ variable "name" {
   type        = string
   nullable    = false
   description = <<-EOF
-    Name of role. Since this name must be unique within the
-    account, it will be reused for most of the resources created by this
-    module.
+    Name for resources.
   EOF
 
   validation {
@@ -70,8 +68,11 @@ variable "log_group_name_prefixes" {
 variable "discovery_rate" {
   description = "EventBridge rate expression for periodically triggering discovery. If not set, no eventbridge rules are configured."
   type        = string
+  default     = "24 hours"
+  nullable    = false
+
   validation {
-    condition     = can(regex("^\\d+ (minutes|hours|days)$", var.discovery_rate))
+    condition     = can(regex("^(\\d+ (minutes|hours|days))?$", var.discovery_rate))
     error_message = "Discovery_rate must be a valid rate expression of a positive number followed by (minutes|hours|days) ex. 10 minutes."
   }
 }

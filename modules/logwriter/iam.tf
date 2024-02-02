@@ -1,5 +1,5 @@
 resource "aws_iam_role" "firehose" {
-  name_prefix        = "${var.name}-"
+  name_prefix        = local.name_prefix
   assume_role_policy = data.aws_iam_policy_document.firehose_assume_role_policy.json
 
   dynamic "inline_policy" {
@@ -55,7 +55,7 @@ data "aws_iam_policy_document" "firehose_s3writer" {
 }
 
 resource "aws_iam_role" "destination" {
-  name_prefix        = "${var.name}-"
+  name_prefix        = local.name_prefix
   assume_role_policy = data.aws_iam_policy_document.destination_assume_role_policy.json
 
   inline_policy {

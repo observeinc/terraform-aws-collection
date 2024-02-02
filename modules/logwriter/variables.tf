@@ -2,9 +2,7 @@ variable "name" {
   type        = string
   nullable    = false
   description = <<-EOF
-    Name of role. Since this name must be unique within the
-    account, it will be reused for most of the resources created by this
-    module.
+    Name for resources.
   EOF
 
   validation {
@@ -14,7 +12,9 @@ variable "name" {
 }
 
 variable "bucket_arn" {
-  description = "S3 Bucket ARN to write log records to."
+  description = <<-EOF
+    S3 Bucket ARN to write log records to.
+  EOF
   type        = string
   nullable    = false
 }
@@ -47,55 +47,78 @@ variable "buffering_size" {
 }
 
 variable "filter_name" {
-  description = "Subscription filter name. Existing filters that have this name as a prefix will be removed."
+  description = <<-EOF
+    Subscription filter name. Existing filters that have this name as a prefix
+    will be removed.
+  EOF
   type        = string
   default     = null
 }
 
 variable "filter_pattern" {
-  description = "Subscription filter pattern."
+  description = <<-EOF
+    Subscription filter pattern.
+  EOF
   type        = string
   default     = null
 }
 
 variable "log_group_name_patterns" {
-  description = "List of patterns as strings. We will only subscribe to log groups that have names matching one of the provided strings based on strings based on a case-sensitive substring search. To subscribe to all log groups, use the wildcard operator *."
+  description = <<-EOF
+    Subscribe to CloudWatch log groups matching any of the provided patterns
+    based on a case-sensitive substring search. To subscribe to all log groups
+    use the wildcard operator *.
+  EOF
   type        = list(string)
   default     = null
 }
 
 variable "log_group_name_prefixes" {
-  description = "List of prefixes as strings. The lambda function will only apply to log groups that start with a provided string. To subscribe to all log groups, use the wildcard operator *."
+  description = <<-EOF
+    Subscribe to CloudWatch log groups matching any of the provided prefixes.
+    To subscribe to all log groups use the wildcard operator *.
+  EOF
   type        = list(string)
   default     = null
 }
 
 variable "num_workers" {
-  description = "Maximum number of concurrent workers when processing log groups."
+  description = <<-EOF
+    Maximum number of concurrent workers when processing log groups.
+  EOF
   type        = number
   default     = null
 }
 
 variable "discovery_rate" {
-  description = "EventBridge rate expression for periodically triggering discovery. If not set, no eventbridge rules are configured."
+  description = <<-EOF
+    EventBridge rate expression for periodically triggering discovery. If not
+    set, no eventbridge rules are configured.
+  EOF
   type        = string
   default     = null
 }
 
 variable "lambda_memory_size" {
-  description = "Memory size for lambda function."
+  description = <<-EOF
+    Memory size for lambda function.
+  EOF
   type        = number
   default     = null
 }
 
 variable "lambda_timeout" {
-  description = "Timeout in seconds for lambda function."
+  description = <<-EOF
+    Timeout in seconds for lambda function.
+  EOF
   type        = number
   default     = null
 }
 
 variable "lambda_env_vars" {
-  description = "Environment variables to be passed into lambda."
+  description = <<-EOF
+    Environment variables to be passed into lambda.
+  EOF
   type        = map(string)
   default     = null
 }
