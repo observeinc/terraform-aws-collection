@@ -1,6 +1,6 @@
 
 resource "aws_iam_role" "subscriber" {
-  name_prefix        = "${var.name}-"
+  name_prefix        = local.name_prefix
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 
   dynamic "inline_policy" {
@@ -80,7 +80,7 @@ data "aws_iam_policy_document" "subscription_policy" {
 }
 
 resource "aws_iam_role" "scheduler" {
-  name_prefix        = "${var.name}-"
+  name_prefix        = local.name_prefix
   assume_role_policy = data.aws_iam_policy_document.scheduler_assume_role_policy.json
 
   inline_policy {
