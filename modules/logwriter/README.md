@@ -1,59 +1,53 @@
 # Observe AWS Logwriter
 
-This app ingests logs from various sources into Observe. This app can be configured to ingest from a fixed set of Cloudwatch log groups or it can be configured with a subscriber lambda that periodically searches for new log groups to include.
+This module streams CloudWatch Log Groups data to S3.
 
 ## Usage
 
-This is a minimal example for setting up a logwriter:
-
-- create an `observe_datastream`
-- create an `observe_filedrop`. You must provide an ARN for a role that does not yet exist.
-- instantiate the logwriter module with the `observe_filedrop` and the `name` of the role you used in the previous step.
+In the simplest case, you must provide an S3 bucket where logs will be sent to,
+as well as a name for the Kinesis Firehose that will be provisioned:
 
 ```hcl
-data "observe_workspace" "default" {
-  name = "Default"
-}
-
 resource "random_pet" "this" {}
 
-data "observe_datastream" "this" {
-  workspace = data.observe_workspace.default.oid
-  name      = random_pet.this.id
-}
-
-resource "observe_filedrop" "this" {
-  workspace  = data.observe_workspace.default.oid
-  datastream = observe_datastream.this.oid
-  config {
-    provider {
-      aws {
-        region   = "us-west-2"
-        role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${random_pet.this.id}"
-      }
-    }
-  }
+resource "aws_s3_bucket" "this" {
+    bucket = random_pet.this.id
 }
 
 module "logwriter" {
-  name                    = random_pet.this.id
-  bucket_arn              = observe_filedrop.this.endpoint[0].s3[0]
-  filter_name             = "${random_pet.this.id}-filter"
-  num_workers             = "1"
-  log_group_name_prefixes = ["*"]
-  discovery_rate          = "10 minutes"
+  name       = random_pet.this.id
+  bucket_arn = aws_s3_bucket.this.arn
 }
+```
 
-# Example static cloudwatch log subscription filter that ingests logs from the subscriber lambda
-resource "aws_cloudwatch_log_subscription_filter" "lambda_cloudwatch_subscription_filter" {
-  name            = "${random_pet.this.id}-logfilter"
-  role_arn        = module.logwriter.destination_iam_policy
-  log_group_name  = "/aws/lambda/${random_pet.this.id}"
-  filter_pattern  = ""
+## Statically subscribing log groups
+
+You can add a subscription filter for an existing log group towards the Kinesis
+Firehose provisioned by the logwriter module:
+
+```hcl
+resource "aws_cloudwatch_log_subscription_filter" "example" {
+  name            = "observe-logs-subscription"
+  log_group_name  = "my-example-log-group"
   destination_arn = module.logwriter.firehose_arn
-  distribution    = "Random"
+  role_arn        = module.logwriter.destination_iam_policy
 }
+```
 
+## Dynamically subscribing log groups
+
+This module embeds an optional [subscriber]("../subscriber/README.md") module
+to dynamically subscribe log groups to the provisioned Kinesis Firehose. You
+can activate this mode by providing a set of `log_group_name_patterns` or
+`log_group_name_prefixes`:
+
+```hcl
+module "logwriter" {
+  name                    = random_pet.this.id
+  bucket_arn              = aws_s3_bucket.this.arn
+  log_group_name_patterns = ["*"]
+  discovery_rate          = "24 hours"
+}
 ```
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
