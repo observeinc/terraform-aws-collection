@@ -48,7 +48,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_destination_iam_arn"></a> [destination\_iam\_arn](#input\_destination\_iam\_arn) | ARN for destination iam policy | `string` | n/a | yes |
-| <a name="input_discovery_rate"></a> [discovery\_rate](#input\_discovery\_rate) | EventBridge rate expression for periodically triggering discovery. If not set, no eventbridge rules are configured. | `string` | n/a | yes |
+| <a name="input_discovery_rate"></a> [discovery\_rate](#input\_discovery\_rate) | EventBridge scheduler rate expression for periodically triggering discovery. If not set, no scheduler is configured. | `string` | `""` | no |
 | <a name="input_filter_name"></a> [filter\_name](#input\_filter\_name) | Subscription filter name. Existing filters that have this name as a prefix will be removed. | `string` | `"observe-logs-subscription"` | no |
 | <a name="input_filter_pattern"></a> [filter\_pattern](#input\_filter\_pattern) | Subscription filter pattern. | `string` | `""` | no |
 | <a name="input_firehose_arn"></a> [firehose\_arn](#input\_firehose\_arn) | ARN for kinesis firehose | `string` | n/a | yes |
@@ -57,7 +57,7 @@ No modules.
 | <a name="input_lambda_timeout"></a> [lambda\_timeout](#input\_lambda\_timeout) | Timeout in seconds for lambda function. | `number` | `20` | no |
 | <a name="input_log_group_name_patterns"></a> [log\_group\_name\_patterns](#input\_log\_group\_name\_patterns) | List of patterns as strings. We will only subscribe to log groups that have names matching one of the provided strings based on strings based on a case-sensitive substring search. To subscribe to all log groups, use the wildcard operator *. | `list(string)` | `[]` | no |
 | <a name="input_log_group_name_prefixes"></a> [log\_group\_name\_prefixes](#input\_log\_group\_name\_prefixes) | List of prefixes as strings. The lambda function will only apply to log groups that start with a provided string. To subscribe to all log groups, use the wildcard operator *. | `list(string)` | `[]` | no |
-| <a name="input_name"></a> [name](#input\_name) | Name of role. Since this name must be unique within the<br>account, it will be reused for most of the resources created by this<br>module. | `string` | n/a | yes |
+| <a name="input_name"></a> [name](#input\_name) | Name for resources. | `string` | n/a | yes |
 | <a name="input_num_workers"></a> [num\_workers](#input\_num\_workers) | Maximum number of concurrent workers when processing log groups. | `number` | `1` | no |
 
 ## Outputs
