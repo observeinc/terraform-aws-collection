@@ -96,7 +96,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_content_type_overrides"></a> [content\_type\_overrides](#input\_content\_type\_overrides) | A list of key value pairs. The key is a regular expression which is<br>applied to the S3 URI of forwarded files. The value is the content type<br>to set for matching files. For example, `\.json$=application/x-ndjson`<br>would forward all files ending in `.json` as newline delimited JSON<br>files. | <pre>list(object({<br>    pattern      = string<br>    content_type = string<br>  }))</pre> | `[]` | no |
+| <a name="input_content_type_overrides"></a> [content\_type\_overrides](#input\_content\_type\_overrides) | A list of key value pairs. The key is a regular expression which is<br>applied to the S3 source (<bucket>/<key>) of forwarded files. The value<br>is the content type to set for matching files. For example,<br>`\.json$=application/x-ndjson` would forward all files ending in `.json`<br>as newline delimited JSON | <pre>list(object({<br>    pattern      = string<br>    content_type = string<br>  }))</pre> | `[]` | no |
 | <a name="input_destination"></a> [destination](#input\_destination) | Destination filedrop | <pre>object({<br>    arn    = string<br>    bucket = string<br>    prefix = string<br>  })</pre> | n/a | yes |
 | <a name="input_lambda_env_vars"></a> [lambda\_env\_vars](#input\_lambda\_env\_vars) | Environment variables to be passed into lambda. | `map(string)` | `{}` | no |
 | <a name="input_lambda_memory_size"></a> [lambda\_memory\_size](#input\_lambda\_memory\_size) | Memory size for lambda function. | `number` | `128` | no |
