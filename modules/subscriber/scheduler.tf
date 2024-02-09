@@ -1,6 +1,6 @@
 resource "aws_scheduler_schedule" "discovery_schedule" {
   count       = local.has_discovery_rate ? 1 : 0
-  name        = var.name
+  name_prefix = local.name_prefix
   description = "Trigger log group discovery"
   state       = "ENABLED"
   flexible_time_window {
