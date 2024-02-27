@@ -55,10 +55,10 @@ variable "max_file_size" {
 variable "content_type_overrides" {
   description = <<-EOF
       A list of key value pairs. The key is a regular expression which is
-      applied to the S3 URI of forwarded files. The value is the content type
-      to set for matching files. For example, `\.json$=application/x-ndjson`
-      would forward all files ending in `.json` as newline delimited JSON
-      files.
+      applied to the S3 source (<bucket>/<key>) of forwarded files. The value
+      is the content type to set for matching files. For example,
+      `\.json$=application/x-ndjson` would forward all files ending in `.json`
+      as newline delimited JSON
     EOF
   type = list(object({
     pattern      = string

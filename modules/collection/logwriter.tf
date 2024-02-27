@@ -1,0 +1,21 @@
+module "logwriter" {
+  count  = var.logwriter != null ? 1 : 0
+  source = "../logwriter"
+
+  name       = "${var.name}-logwriter"
+  bucket_arn = aws_s3_bucket.this.arn
+  prefix     = "cloudwatchlogs/"
+
+  log_group_name_patterns = var.logwriter.log_group_name_patterns
+  log_group_name_prefixes = var.logwriter.log_group_name_prefixes
+  buffering_interval      = var.logwriter.buffering_interval
+  buffering_size          = var.logwriter.buffering_size
+  filter_name             = var.logwriter.filter_name
+  filter_pattern          = var.logwriter.filter_pattern
+  num_workers             = var.logwriter.num_workers
+  discovery_rate          = var.logwriter.discovery_rate
+  lambda_memory_size      = var.logwriter.lambda_memory_size
+  lambda_timeout          = var.logwriter.lambda_timeout
+
+  depends_on = [aws_s3_bucket_notification.this]
+}
