@@ -22,13 +22,3 @@ output "account_id" {
   description = "AWS Account in use"
   value       = data.aws_caller_identity.current.account_id
 }
-
-output "access_point" {
-  description = "S3 access point where files are copied to"
-  value       = aws_s3_access_point.this
-}
-
-output "bucket_arn" {
-  description = "S3 Bucket arn"
-  value       = aws_s3_bucket.this.arn
-}

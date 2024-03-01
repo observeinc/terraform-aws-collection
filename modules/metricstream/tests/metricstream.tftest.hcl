@@ -1,13 +1,23 @@
 run "setup" {
   module {
-    source = "../testing/run"
+    source = "../testing/setup"
+  }
+}
+
+run "create_bucket" {
+  module {
+    source = "../testing/s3_bucket"
+  }
+
+  variables {
+    setup = run.setup
   }
 }
 
 run "install" {
   variables {
     name       = run.setup.id
-    bucket_arn = run.setup.bucket_arn
+    bucket_arn = run.create_bucket.bucket_arn
     include_filters = [
       {
         namespace    = "AWS/RDS"
