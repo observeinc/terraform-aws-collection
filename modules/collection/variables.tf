@@ -70,7 +70,7 @@ variable "logwriter" {
     filter_name             = optional(string)
     filter_pattern          = optional(string)
     num_workers             = optional(number)
-    discovery_rate          = optional(string)
+    discovery_rate          = optional(string, "24 hours")
     lambda_memory_size      = optional(number)
     lambda_timeout          = optional(number)
   })
