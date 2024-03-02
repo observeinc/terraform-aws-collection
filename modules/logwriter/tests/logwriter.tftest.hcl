@@ -17,7 +17,7 @@ run "create_bucket" {
 run "install_logwriter" {
   variables {
     name                    = run.setup.short
-    bucket_arn              = run.create_bucket.bucket_arn
+    bucket_arn              = run.create_bucket.arn
     discovery_rate          = "10 minutes"
     filter_name             = "${run.setup.id}-filter"
     log_group_name_patterns = ["${run.setup.short}"]
