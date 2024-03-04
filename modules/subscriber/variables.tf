@@ -104,9 +104,3 @@ variable "lambda_env_vars" {
   nullable    = false
   default     = {}
 }
-
-variable "debug_endpoint" {
-  description = "Endpoint to send debugging telemetry to. Ask your Observe POC for further instructions"
-  type        = string
-  nullable    = true
-}
