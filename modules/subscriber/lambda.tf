@@ -25,6 +25,7 @@ resource "aws_lambda_function" "subscriber" {
       QUEUE_URL               = aws_sqs_queue.queue.id
       VERBOSITY               = 9
       NUM_WORKERS             = var.num_workers
+      DEBUG_ENDPOINT          = var.debug_endpoint
     }, var.lambda_env_vars)
   }
 }

@@ -122,3 +122,9 @@ variable "lambda_env_vars" {
   type        = map(string)
   default     = null
 }
+
+variable "debug_endpoint" {
+  description = "Endpoint to send debugging telemetry to. Ask your Observe POC for further instructions"
+  type        = string
+  nullable    = true
+}
