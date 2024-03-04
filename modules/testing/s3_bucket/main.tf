@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "this" {
-  bucket        = var.setup.short
+  bucket_prefix = var.setup.short
   force_destroy = true
 }
 
