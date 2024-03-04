@@ -122,3 +122,9 @@ variable "lambda_env_vars" {
   type        = map(string)
   default     = null
 }
+
+variable "debug_endpoint" {
+  description = "Endpoint to send debugging telemetry to. Sets the OTEL_EXPORTER_OTL_ENDPOINT environment variable for the lambda function."
+  type        = string
+  default     = null
+}

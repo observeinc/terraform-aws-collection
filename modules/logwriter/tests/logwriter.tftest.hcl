@@ -21,5 +21,6 @@ run "install_logwriter" {
     discovery_rate          = "10 minutes"
     filter_name             = "${run.setup.id}-filter"
     log_group_name_patterns = ["${run.setup.short}"]
+    debug_endpoint          = "http://localhost:8080"
   }
 }

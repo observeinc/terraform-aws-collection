@@ -104,3 +104,10 @@ variable "lambda_env_vars" {
   nullable    = false
   default     = {}
 }
+
+variable "debug_endpoint" {
+  description = "Endpoint to send debugging telemetry to. Sets the OTEL_EXPORTER_OTL_ENDPOINT environment variable for the lambda function."
+  type        = string
+  nullable    = false
+  default     = ""
+}
