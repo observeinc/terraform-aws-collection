@@ -16,15 +16,16 @@ resource "aws_lambda_function" "subscriber" {
 
   environment {
     variables = merge({
-      FILTER_NAME             = var.filter_name
-      FILTER_PATTERN          = var.filter_pattern
-      DESTINATION_ARN         = var.firehose_arn
-      LOG_GROUP_NAME_PREFIXES = join(",", var.log_group_name_prefixes)
-      LOG_GROUP_NAME_PATTERNS = join(",", var.log_group_name_patterns)
-      ROLE_ARN                = var.destination_iam_arn
-      QUEUE_URL               = aws_sqs_queue.queue.id
-      VERBOSITY               = 9
-      NUM_WORKERS             = var.num_workers
+      FILTER_NAME                 = var.filter_name
+      FILTER_PATTERN              = var.filter_pattern
+      DESTINATION_ARN             = var.firehose_arn
+      LOG_GROUP_NAME_PREFIXES     = join(",", var.log_group_name_prefixes)
+      LOG_GROUP_NAME_PATTERNS     = join(",", var.log_group_name_patterns)
+      ROLE_ARN                    = var.destination_iam_arn
+      QUEUE_URL                   = aws_sqs_queue.queue.id
+      VERBOSITY                   = 9
+      NUM_WORKERS                 = var.num_workers
+      OTEL_EXPORTER_OTLP_ENDPOINT = var.debug_endpoint
     }, var.lambda_env_vars)
   }
 }
