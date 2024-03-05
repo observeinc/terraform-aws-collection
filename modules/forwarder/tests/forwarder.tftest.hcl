@@ -23,8 +23,8 @@ run "install_forwarder" {
   variables {
     name = run.setup.id
     destination = {
-      arn    = run.create_bucket.access_point.arn
-      bucket = run.create_bucket.access_point.alias
+      arn    = ""
+      bucket = run.create_bucket.id
       prefix = ""
     }
     source_bucket_names = [for source in ["sns", "sqs", "eventbridge"] : "${run.setup.short}-${source}"]
