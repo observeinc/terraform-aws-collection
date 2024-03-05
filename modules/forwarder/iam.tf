@@ -9,6 +9,7 @@ resource "aws_iam_role" "this" {
         writer  = data.aws_iam_policy_document.writer.json
         queue   = data.aws_iam_policy_document.queue.json
         reader  = length(var.source_bucket_names) > 0 ? data.aws_iam_policy_document.reader.json : null
+        kms     = length(var.source_kms_key_arns) > 0 ? data.aws_iam_policy_document.kms.json : null
       } : k => v if v != null
     }
 
@@ -88,5 +89,15 @@ data "aws_iam_policy_document" "queue" {
     ]
 
     resources = [aws_sqs_queue.this.arn]
+  }
+}
+
+data "aws_iam_policy_document" "kms" {
+  statement {
+    actions = [
+      "kms:Decrypt",
+    ]
+
+    resources = var.source_kms_key_arns
   }
 }

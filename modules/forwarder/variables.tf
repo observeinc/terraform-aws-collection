@@ -43,6 +43,15 @@ variable "source_topic_arns" {
   default     = []
 }
 
+variable "source_kms_key_arns" {
+  description = <<-EOF
+    A list of KMS Key ARNs the forwarder is allowed to use to decrypt objects in S3.
+  EOF
+  type        = list(string)
+  nullable    = false
+  default     = []
+}
+
 variable "max_file_size" {
   description = <<-EOF
     Max file size for objects to process (in bytes), default is 1GB
