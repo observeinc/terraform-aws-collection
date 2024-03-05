@@ -45,8 +45,9 @@ resource "aws_s3_bucket_notification" "source" {
 }
 
 module "forwarder" {
+  source              = "observeinc/collection/aws//modules/forwarder"
+
   name                = random_pet.this.id
-  source              = "/Users/joao/Code/terraform-aws-collection/modules/forwarder"
   destination         = observe_filedrop.this.endpoint[0].s3[0]
   source_bucket_names = [aws_s3_bucket.source.bucket]
 }
@@ -85,6 +86,7 @@ No modules.
 | [aws_sqs_queue.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue) | resource |
 | [aws_sqs_queue_redrive_allow_policy.dlq](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue_redrive_allow_policy) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_iam_policy_document.kms](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.lambda_assume_role_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.logging](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.queue](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
@@ -110,6 +112,7 @@ No modules.
 | <a name="input_queue_message_retention_seconds"></a> [queue\_message\_retention\_seconds](#input\_queue\_message\_retention\_seconds) | Maximum amount of time a message will be retained in queue.<br>This value applies to both source queue and dead letter queue if one<br>exists. | `number` | `345600` | no |
 | <a name="input_retention_in_days"></a> [retention\_in\_days](#input\_retention\_in\_days) | Retention in days of cloudwatch log group | `number` | `365` | no |
 | <a name="input_source_bucket_names"></a> [source\_bucket\_names](#input\_source\_bucket\_names) | A list of bucket names which the forwarder is allowed to read from.  This<br>list only affects permissions, and supports wildcards. In order to have<br>files copied to Filedrop, you must also subscribe S3 Bucket Notifications<br>to the forwarder. | `list(string)` | `[]` | no |
+| <a name="input_source_kms_key_arns"></a> [source\_kms\_key\_arns](#input\_source\_kms\_key\_arns) | A list of KMS Key ARNs the forwarder is allowed to use to decrypt objects in S3. | `list(string)` | `[]` | no |
 | <a name="input_source_topic_arns"></a> [source\_topic\_arns](#input\_source\_topic\_arns) | A list of SNS topics the forwarder is allowed to be subscribed to. | `list(string)` | `[]` | no |
 
 ## Outputs
