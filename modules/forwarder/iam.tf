@@ -53,12 +53,15 @@ data "aws_iam_policy_document" "writer" {
       "s3:PutObjectTagging",
     ]
 
-    resources = ["*"]
+    resources = var.destination.arn != "" ? ["*"] : ["arn:${data.aws_partition.current.id}:s3:::${var.destination.bucket}"]
 
-    condition {
-      test     = "StringLike"
-      variable = "s3:DataAccessPointArn"
-      values   = [var.destination.arn]
+    dynamic "condition" {
+      for_each = var.destination.arn != "" ? [1] : []
+      content {
+        test     = "StringLike"
+        variable = "s3:DataAccessPointArn"
+        values   = [var.destination.arn]
+      }
     }
   }
 }
