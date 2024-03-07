@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_event_rule" "this" {
-  name           = "${substr(var.name, 0, 37)}-"
+  name_prefix    = "${substr(var.name, 0, 37)}-"
   description    = "Trigger copy for object created events"
   event_bus_name = "default"
 
