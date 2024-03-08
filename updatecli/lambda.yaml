@@ -1,0 +1,22 @@
+# updatecli.yaml
+sources:
+  AppsRelease:
+    kind: "githubrelease"
+    spec:
+      owner: "observeinc"
+      repository: "aws-sam-apps"
+      token: '{{ requiredEnv "UPDATECLI_GITHUB_TOKEN" }}'
+      versionFilter:
+        kind: "semver"
+        allowPrerelease: false
+    transformers:
+      - trimprefix: "v"
+
+targets:
+  updateLambdaBinaries:
+    name: "Update lambda binaries"
+    kind: file
+    spec:
+      file: "utilities/update-binaries.sh"
+      matchpattern: '{VERSION:-\S*}'
+      replacepattern: '{VERSION:-{{ source `AppsRelease` }}}'
