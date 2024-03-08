@@ -20,6 +20,36 @@ data "aws_iam_policy_document" "kms_default_key_policy" {
   }
 }
 
+resource "aws_kms_key" "source" {
+  policy = data.aws_iam_policy_document.kms_default_key_policy.json
+}
+
+resource "aws_s3_bucket" "source" {
+  bucket_prefix = "${random_pet.this.id}-source"
+  force_destroy = true
+}
+
+resource "aws_s3_bucket" "destination" {
+  bucket_prefix = "${random_pet.this.id}-destination"
+  force_destroy = true
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "source" {
+  bucket = aws_s3_bucket.source.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = aws_kms_key.source.arn
+      sse_algorithm     = "aws:kms"
+    }
+  }
+}
+
+resource "aws_s3_bucket_notification" "source" {
+  bucket      = aws_s3_bucket.source.id
+  eventbridge = true
+}
+
 data "observe_workspace" "default" {
   name = "Default"
 }
@@ -27,31 +57,6 @@ data "observe_workspace" "default" {
 resource "observe_datastream" "this" {
   workspace = data.observe_workspace.default.oid
   name      = random_pet.this.id
-}
-
-resource "aws_kms_key" "this" {
-  policy = data.aws_iam_policy_document.kms_default_key_policy.json
-}
-
-resource "aws_s3_bucket" "this" {
-  bucket_prefix = random_pet.this.id
-  force_destroy = true
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
-  bucket = aws_s3_bucket.this.id
-
-  rule {
-    apply_server_side_encryption_by_default {
-      kms_master_key_id = aws_kms_key.this.arn
-      sse_algorithm     = "aws:kms"
-    }
-  }
-}
-
-resource "aws_s3_bucket_notification" "this" {
-  bucket      = aws_s3_bucket.this.id
-  eventbridge = true
 }
 
 resource "observe_filedrop" "this" {
@@ -77,6 +82,6 @@ module "forwarder" {
 
   name                = random_pet.this.id
   destination         = observe_filedrop.this.endpoint[0].s3[0]
-  source_bucket_names = [aws_s3_bucket.this.bucket]
-  source_kms_key_arns = [aws_kms_key.this.arn]
+  source_bucket_names = [aws_s3_bucket.source.bucket]
+  source_kms_key_arns = [aws_kms_key.source.arn]
 }
