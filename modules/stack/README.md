@@ -1,10 +1,10 @@
-# Observe Collection module
+# Observe stack module
 
-This module collects configuration, log and metrics data from AWS into Observe.
+This module combines our log, metrics and configuration AWS collection modules into a single standalone "stack".
 
 ## Usage
 
-This is a minimal example for setting up the collection module:
+This is a minimal example for setting up the stack module:
 
 - create an `observe_datastream`
 - create an `observe_filedrop`. You must provide an ARN for a role that does not yet exist.
@@ -35,8 +35,8 @@ resource "observe_filedrop" "this" {
   }
 }
 
-module "collection" {
-  source      = "observeinc/collection/aws//modules/collection"
+module "collection_stack" {
+  source      = "observeinc/collection/aws//modules/stack"
   name        = random_pet.this.id
 
   destination = observe_filedrop.this.endpoint[0].s3[0]
