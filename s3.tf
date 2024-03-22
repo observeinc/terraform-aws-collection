@@ -183,10 +183,11 @@ data "aws_iam_policy_document" "bucket" {
 
 module "observe_lambda_s3_bucket_subscription" {
   source  = "observeinc/lambda/aws//modules/s3_bucket_subscription"
-  version = "3.4.0"
+  version = "3.5.0"
 
-  lambda          = module.observe_lambda.lambda_function
-  bucket_arns     = concat([local.s3_bucket.arn], var.subscribed_s3_bucket_arns)
-  iam_name_prefix = local.name_prefix
-  filter_prefix   = local.s3_exported_prefix
+  lambda             = module.observe_lambda.lambda_function
+  bucket_arns        = concat([local.s3_bucket.arn], var.subscribed_s3_bucket_arns)
+  iam_name_prefix    = local.name_prefix
+  filter_prefix      = local.s3_exported_prefix
+  enable_eventbridge = var.enable_s3_bucket_eventbridge
 }

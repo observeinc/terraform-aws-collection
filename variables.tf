@@ -303,3 +303,10 @@ variable "invoke_snapshot_on_start_enabled" {
   type        = bool
   default     = false
 }
+
+variable "enable_s3_bucket_eventbridge" {
+  description = "Enable sending bucket notifications to EventBridge"
+  type        = bool
+  nullable    = false
+  default     = false
+}
