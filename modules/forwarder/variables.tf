@@ -155,3 +155,10 @@ variable "queue_maximum_batching_window_in_seconds" {
   nullable    = false
   default     = 1
 }
+
+variable "debug_endpoint" {
+  description = "Endpoint to send debugging telemetry to. Sets the OTEL_EXPORTER_OTLP_ENDPOINT environment variable for the lambda function."
+  type        = string
+  nullable    = false
+  default     = ""
+}

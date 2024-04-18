@@ -17,4 +17,5 @@ module "forwarder" {
   queue_message_retention_seconds          = var.forwarder.queue_message_retention_seconds
   queue_batch_size                         = var.forwarder.queue_batch_size
   queue_maximum_batching_window_in_seconds = var.forwarder.queue_maximum_batching_window_in_seconds
+  debug_endpoint                           = var.debug_endpoint
 }

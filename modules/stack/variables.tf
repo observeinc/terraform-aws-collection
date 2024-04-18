@@ -91,7 +91,7 @@ variable "metricstream" {
 }
 
 variable "debug_endpoint" {
-  description = "Endpoint to send debugging telemetry to. Sets OTEL_EXPORTER_OTL_ENDPOINT environment variable for supported lambda functions."
+  description = "Endpoint to send debugging telemetry to. Sets OTEL_EXPORTER_OTLP_ENDPOINT environment variable for supported lambda functions."
   type        = string
   default     = null
 }
