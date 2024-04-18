@@ -11,10 +11,12 @@ resource "aws_lambda_function" "this" {
 
   environment {
     variables = merge({
-      DESTINATION_URI        = "s3://${var.destination.bucket}/${var.destination.prefix}"
-      MAX_FILE_SIZE          = var.max_file_size
-      CONTENT_TYPE_OVERRIDES = join(",", [for o in var.content_type_overrides : "${o["pattern"]}=${o["content_type"]}"])
-      SOURCE_BUCKET_NAMES    = join(",", var.source_bucket_names)
+      DESTINATION_URI             = "s3://${var.destination.bucket}/${var.destination.prefix}"
+      MAX_FILE_SIZE               = var.max_file_size
+      CONTENT_TYPE_OVERRIDES      = join(",", [for o in var.content_type_overrides : "${o["pattern"]}=${o["content_type"]}"])
+      SOURCE_BUCKET_NAMES         = join(",", var.source_bucket_names)
+      OTEL_EXPORTER_OTLP_ENDPOINT = var.debug_endpoint
+      OTEL_TRACES_EXPORTER        = var.debug_endpoint == "" ? "none" : "otlp"
     }, var.lambda_env_vars)
   }
 }

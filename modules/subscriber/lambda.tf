@@ -26,6 +26,7 @@ resource "aws_lambda_function" "subscriber" {
       VERBOSITY                   = 9
       NUM_WORKERS                 = var.num_workers
       OTEL_EXPORTER_OTLP_ENDPOINT = var.debug_endpoint
+      OTEL_TRACES_EXPORTER        = var.debug_endpoint == "" ? "none" : "otlp"
     }, var.lambda_env_vars)
   }
 }
