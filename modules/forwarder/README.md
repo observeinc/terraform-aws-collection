@@ -104,7 +104,7 @@ No modules.
 | <a name="input_destination"></a> [destination](#input\_destination) | Destination filedrop | <pre>object({<br>    arn    = string<br>    bucket = string<br>    prefix = string<br>  })</pre> | n/a | yes |
 | <a name="input_lambda_env_vars"></a> [lambda\_env\_vars](#input\_lambda\_env\_vars) | Environment variables to be passed into lambda. | `map(string)` | `{}` | no |
 | <a name="input_lambda_memory_size"></a> [lambda\_memory\_size](#input\_lambda\_memory\_size) | Memory size for lambda function. | `number` | `128` | no |
-| <a name="input_lambda_timeout"></a> [lambda\_timeout](#input\_lambda\_timeout) | Timeout in seconds for lambda function. | `number` | `20` | no |
+| <a name="input_lambda_timeout"></a> [lambda\_timeout](#input\_lambda\_timeout) | Timeout in seconds for lambda function. | `number` | `300` | no |
 | <a name="input_max_file_size"></a> [max\_file\_size](#input\_max\_file\_size) | Max file size for objects to process (in bytes), default is 1GB | `number` | `1073741824` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name of role. Since this name must be unique within the<br>account, it will be reused for most of the resources created by this<br>module. | `string` | n/a | yes |
 | <a name="input_queue_batch_size"></a> [queue\_batch\_size](#input\_queue\_batch\_size) | Max number of items to process in single lambda execution | `number` | `10` | no |
