@@ -1,9 +1,15 @@
-## [2.11.1](https://github.com/observeinc/terraform-aws-collection/compare/v2.11.0...v2.11.1) (2024-04-11)
+# [2.12.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.11.1...v2.12.0) (2024-04-22)
 
 
 ### Bug Fixes
 
-* CS-425 update default aws snapshot lambda to 2gb and timeout 120s ([5a74516](https://github.com/observeinc/terraform-aws-collection/commit/5a74516543bfee023d52a72653c85f8e46503e9d))
+* **forwarder:** increase timeout ([#137](https://github.com/observeinc/terraform-aws-collection/issues/137)) ([f504492](https://github.com/observeinc/terraform-aws-collection/commit/f504492b76b7fbad8a42f4352e8ba5eb09704975))
+
+
+### Features
+
+* **forwarder:** add `debug_endpoint` parameter ([#136](https://github.com/observeinc/terraform-aws-collection/issues/136)) ([426ab11](https://github.com/observeinc/terraform-aws-collection/commit/426ab11a85ed0736cf79244226b14616736e2cea))
+* update dependencies ([#133](https://github.com/observeinc/terraform-aws-collection/issues/133)) ([777722c](https://github.com/observeinc/terraform-aws-collection/commit/777722c4a70585c48e79b81ff1f613ba194238ac))
 
 
 
