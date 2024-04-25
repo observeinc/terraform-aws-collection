@@ -76,6 +76,7 @@ module "collection_stack" {
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_config"></a> [config](#module\_config) | ../config | n/a |
+| <a name="module_configsubscription"></a> [configsubscription](#module\_configsubscription) | ../configsubscription | n/a |
 | <a name="module_forwarder"></a> [forwarder](#module\_forwarder) | ../forwarder | n/a |
 | <a name="module_logwriter"></a> [logwriter](#module\_logwriter) | ../logwriter | n/a |
 | <a name="module_metricstream"></a> [metricstream](#module\_metricstream) | ../metricstream | n/a |
@@ -97,6 +98,7 @@ module "collection_stack" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_config"></a> [config](#input\_config) | Variables for AWS Config collection. | <pre>object({<br>    include_resource_types        = list(string)<br>    exclude_resource_types        = optional(list(string))<br>    delivery_frequency            = optional(string)<br>    include_global_resource_types = optional(bool)<br>  })</pre> | `null` | no |
+| <a name="input_config_delivery_bucket_name"></a> [config\_delivery\_bucket\_name](#input\_config\_delivery\_bucket\_name) | AWS Config delivery bucket name. | `string` | `""` | no |
 | <a name="input_debug_endpoint"></a> [debug\_endpoint](#input\_debug\_endpoint) | Endpoint to send debugging telemetry to. Sets OTEL\_EXPORTER\_OTLP\_ENDPOINT environment variable for supported lambda functions. | `string` | `null` | no |
 | <a name="input_destination"></a> [destination](#input\_destination) | Destination filedrop | <pre>object({<br>    arn    = string<br>    bucket = string<br>    prefix = string<br>  })</pre> | n/a | yes |
 | <a name="input_forwarder"></a> [forwarder](#input\_forwarder) | Variables for forwarder module. | <pre>object({<br>    source_bucket_names                      = optional(list(string), [])<br>    source_topic_arns                        = optional(list(string), [])<br>    content_type_overrides                   = optional(list(object({ pattern = string, content_type = string })), [])<br>    max_file_size                            = optional(number)<br>    lambda_memory_size                       = optional(number)<br>    lambda_timeout                           = optional(number)<br>    lambda_env_vars                          = optional(map(string))<br>    retention_in_days                        = optional(number)<br>    queue_max_receive_count                  = optional(number)<br>    queue_delay_seconds                      = optional(number)<br>    queue_message_retention_seconds          = optional(number)<br>    queue_batch_size                         = optional(number)<br>    queue_maximum_batching_window_in_seconds = optional(number)<br>  })</pre> | `{}` | no |
