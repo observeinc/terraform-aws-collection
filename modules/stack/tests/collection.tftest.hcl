@@ -27,8 +27,12 @@ run "install" {
       prefix = ""
     }
 
+    configsubscription = {
+      delivery_bucket_name = run.create_bucket.access_point.bucket
+    }
+
     config = {
-      include_resource_types  = ["*"]
+      include_resource_types = ["*"]
     }
 
     logwriter = {

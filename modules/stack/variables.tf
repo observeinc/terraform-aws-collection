@@ -58,13 +58,14 @@ variable "config" {
   default = null
 }
 
-variable "config_delivery_bucket_name" {
+variable "configsubscription" {
   description = <<-EOF
-    AWS Config delivery bucket name.
+    Variables for AWS Config subscription.
   EOF
-  type        = string
-  default     = ""
-  nullable    = false
+  type = object({
+    delivery_bucket_name = string
+  })
+  default = null
 }
 
 variable "logwriter" {

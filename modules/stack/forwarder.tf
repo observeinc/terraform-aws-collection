@@ -4,7 +4,10 @@ module "forwarder" {
   name        = var.name
   destination = var.destination
 
-  source_bucket_names                      = compact(concat([aws_s3_bucket.this.id, var.config_delivery_bucket_name], var.forwarder.source_bucket_names))
+  source_bucket_names = compact(concat([
+    aws_s3_bucket.this.id,
+    var.configsubscription != null ? var.configsubscription.delivery_bucket_name : "",
+  ], var.forwarder.source_bucket_names))
   source_topic_arns                        = concat([aws_sns_topic.this.arn], var.forwarder.source_topic_arns)
   content_type_overrides                   = local.content_type_overrides
   max_file_size                            = var.forwarder.max_file_size
