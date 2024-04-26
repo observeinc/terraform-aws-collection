@@ -6,5 +6,4 @@ locals {
     [
     ]
   , var.forwarder.content_type_overrides)
-
 }

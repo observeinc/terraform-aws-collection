@@ -58,6 +58,15 @@ variable "config" {
   default = null
 }
 
+variable "config_delivery_bucket_name" {
+  description = <<-EOF
+    AWS Config delivery bucket name.
+  EOF
+  type        = string
+  default     = ""
+  nullable    = false
+}
+
 variable "logwriter" {
   description = <<-EOF
     Variables for AWS CloudWatch Logs collection.
