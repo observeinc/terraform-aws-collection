@@ -13,6 +13,6 @@ resource "aws_cloudwatch_event_rule" "change" {
 }
 
 resource "aws_cloudwatch_event_target" "change" {
-  rule = aws_cloudwatch_event_rule.delivery.name
+  rule = aws_cloudwatch_event_rule.change.name
   arn  = var.target_arn
 }
