@@ -53,11 +53,6 @@ resource "aws_sqs_queue" "this" {
         Principal = {
           "Service" : "events.amazonaws.com"
         },
-        Condition = {
-          ArnEquals = {
-            "aws:SourceArn" : aws_cloudwatch_event_rule.this.arn
-          }
-        }
       },
     ]
   })

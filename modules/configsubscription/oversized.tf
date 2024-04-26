@@ -15,7 +15,7 @@ resource "aws_cloudwatch_event_rule" "oversized" {
 }
 
 resource "aws_cloudwatch_event_target" "oversized" {
-  rule = aws_cloudwatch_event_rule.delivery.name
+  rule = aws_cloudwatch_event_rule.oversized.name
   arn  = var.target_arn
 
   input_transformer {
