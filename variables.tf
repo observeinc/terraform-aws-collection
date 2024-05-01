@@ -18,11 +18,6 @@ variable "observe_customer" {
 variable "observe_token" {
   description = "Observe Token"
   type        = string
-
-  validation {
-    condition     = contains(split("", var.observe_token), ":")
-    error_message = "Token format does not follow {datastream_id}:{datastream_secret} format."
-  }
 }
 
 variable "observe_domain" {
@@ -120,6 +115,12 @@ variable "retention_in_days" {
   description = "Retention in days of cloudwatch log group"
   type        = number
   default     = 365
+}
+
+variable "lambda_kms_key" {
+  description = "KMS key to encrypt environment variables"
+  type        = object({ arn = string })
+  default     = null
 }
 
 variable "lambda_envvars" {

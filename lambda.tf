@@ -1,6 +1,6 @@
 module "observe_lambda" {
   source  = "observeinc/lambda/aws"
-  version = "3.5.1"
+  version = "3.6.0"
 
   name             = var.name
   observe_domain   = var.observe_domain
@@ -16,13 +16,14 @@ module "observe_lambda" {
 
   lambda_s3_custom_rules        = var.lambda_s3_custom_rules
   lambda_envvars                = var.lambda_envvars
+  kms_key                       = var.lambda_kms_key
   retention_in_days             = var.retention_in_days
   dead_letter_queue_destination = var.dead_letter_queue_destination
 }
 
 module "observe_lambda_snapshot" {
   source  = "observeinc/lambda/aws//modules/snapshot"
-  version = "3.5.1"
+  version = "3.6.0"
 
   lambda                           = module.observe_lambda
   eventbridge_name_prefix          = local.name_prefix
