@@ -1,15 +1,10 @@
-# [2.14.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.13.0...v2.14.0) (2024-04-26)
-
-
-### Bug Fixes
-
-* **configsubscription:** match targets, relax permissions ([#141](https://github.com/observeinc/terraform-aws-collection/issues/141)) ([73a16ab](https://github.com/observeinc/terraform-aws-collection/commit/73a16abb32d3944fd42af88a779ea652d5a2ec2a))
-* **stack:** introduce configsubscription variable ([#140](https://github.com/observeinc/terraform-aws-collection/issues/140)) ([4906a0f](https://github.com/observeinc/terraform-aws-collection/commit/4906a0fc774ace043dcad791a4bf4c17a3a6caea))
+# [2.15.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.14.0...v2.15.0) (2024-05-01)
 
 
 ### Features
 
-* **stack:** add config subscription module ([#139](https://github.com/observeinc/terraform-aws-collection/issues/139)) ([828a811](https://github.com/observeinc/terraform-aws-collection/commit/828a811946add026dc2f09161584d617994603c2))
+* bump lambda version to 3.6.0 ([#143](https://github.com/observeinc/terraform-aws-collection/issues/143)) ([d541cbd](https://github.com/observeinc/terraform-aws-collection/commit/d541cbd2c3b3d484414e15729ef0e91a7d39a088))
+* **stack:** bump lambda version to 1.14.0 ([35d5677](https://github.com/observeinc/terraform-aws-collection/commit/35d5677581df8acbf5b19caf45c86fb4bde4d30e))
 
 
 
