@@ -14,9 +14,11 @@ variable "name" {
 
 variable "destination" {
   type = object({
-    arn    = string
-    bucket = string
-    prefix = string
+    arn    = optional(string, "")
+    bucket = optional(string, "")
+    prefix = optional(string, "")
+    # exclusively for backward compatible HTTP endpoint
+    uri = optional(string, "")
   })
   nullable    = false
   description = "Destination filedrop"

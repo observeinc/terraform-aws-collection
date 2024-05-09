@@ -14,12 +14,34 @@ variable "name" {
 
 variable "destination" {
   type = object({
-    arn    = string
-    bucket = string
-    prefix = string
+    arn    = optional(string, "")
+    bucket = optional(string, "")
+    prefix = optional(string, "")
+    # exclusively for backward compatible HTTP endpoint
+    uri = optional(string, "")
   })
   nullable    = false
   description = "Destination filedrop"
+
+  validation {
+    condition     = !(var.destination.uri != "" && "${var.destination.arn}${var.destination.bucket}${var.destination.prefix}" != "")
+    error_message = "URI is mutually exclusive with S3 attributes"
+  }
+
+  validation {
+    condition     = !(var.destination.bucket == "" && var.destination.prefix != "")
+    error_message = "Prefix cannot be set without bucket"
+  }
+
+  validation {
+    condition     = !(var.destination.bucket == "" && var.destination.arn != "")
+    error_message = "Access point ARN cannot be set without bucket"
+  }
+
+  validation {
+    condition     = var.destination.uri == "" || can(regex("^https://.*", var.destination.uri))
+    error_message = "URI must have https scheme"
+  }
 }
 
 variable "source_bucket_names" {
