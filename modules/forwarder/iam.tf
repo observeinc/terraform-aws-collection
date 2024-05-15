@@ -6,8 +6,8 @@ resource "aws_iam_role" "this" {
     for_each = {
       for k, v in {
         logging = data.aws_iam_policy_document.logging.json
-        writer  = data.aws_iam_policy_document.writer.json
         queue   = data.aws_iam_policy_document.queue.json
+        writer  = var.destination.bucket != "" ? data.aws_iam_policy_document.writer.json : null
         reader  = length(var.source_bucket_names) > 0 ? data.aws_iam_policy_document.reader.json : null
         kms     = length(var.source_kms_key_arns) > 0 ? data.aws_iam_policy_document.kms.json : null
       } : k => v if v != null
@@ -53,7 +53,7 @@ data "aws_iam_policy_document" "writer" {
       "s3:PutObjectTagging",
     ]
 
-    resources = var.destination.arn != "" ? ["*"] : ["arn:${data.aws_partition.current.id}:s3:::${var.destination.bucket}"]
+    resources = var.destination.arn != "" ? ["*"] : ["arn:${data.aws_partition.current.id}:s3:::${var.destination.bucket}/${var.destination.prefix}*"]
 
     dynamic "condition" {
       for_each = var.destination.arn != "" ? [1] : []
