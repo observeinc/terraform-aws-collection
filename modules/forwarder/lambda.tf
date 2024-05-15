@@ -6,13 +6,13 @@ resource "aws_lambda_function" "this" {
   architectures = ["arm64"]
   handler       = "bootstrap"
   runtime       = "provided.al2"
-  memory_size   = var.lambda_memory_size
-  timeout       = var.lambda_timeout
+  memory_size   = var.lambda_memory_size != null ? var.lambda_memory_size : local.default_limits.memory_size
+  timeout       = var.lambda_timeout != null ? var.lambda_timeout : local.default_limits.timeout
 
   environment {
     variables = merge({
       DESTINATION_URI             = local.destination_uri
-      MAX_FILE_SIZE               = var.max_file_size
+      MAX_FILE_SIZE               = var.max_file_size != null ? var.max_file_size : local.default_limits.max_file_size
       CONTENT_TYPE_OVERRIDES      = join(",", [for o in var.content_type_overrides : "${o["pattern"]}=${o["content_type"]}"])
       SOURCE_BUCKET_NAMES         = join(",", var.source_bucket_names)
       OTEL_EXPORTER_OTLP_ENDPOINT = var.debug_endpoint

@@ -8,7 +8,7 @@ locals {
 resource "aws_sqs_queue" "this" {
   name = var.name
   # tie this to lambda execution time since both are tightly coupled
-  visibility_timeout_seconds = var.lambda_timeout
+  visibility_timeout_seconds = var.lambda_timeout != null ? var.lambda_timeout : local.default_limits.timeout
   delay_seconds              = var.queue_delay_seconds
   message_retention_seconds  = var.queue_message_retention_seconds
 

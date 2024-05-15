@@ -79,8 +79,7 @@ variable "max_file_size" {
     Max file size for objects to process (in bytes), default is 1GB
   EOF
   type        = number
-  nullable    = false
-  default     = 1073741824
+  default     = null
 }
 
 variable "content_type_overrides" {
@@ -107,15 +106,13 @@ variable "content_type_overrides" {
 variable "lambda_memory_size" {
   description = "Memory size for lambda function."
   type        = number
-  nullable    = false
-  default     = 128
+  default     = null
 }
 
 variable "lambda_timeout" {
   description = "Timeout in seconds for lambda function."
   type        = number
-  nullable    = false
-  default     = 300
+  default     = null
 }
 
 variable "lambda_env_vars" {
