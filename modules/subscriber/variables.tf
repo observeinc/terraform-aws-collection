@@ -65,6 +65,20 @@ variable "log_group_name_prefixes" {
   }
 }
 
+variable "exclude_log_group_name_patterns" {
+  description = "List of patterns as strings. This variable is usd to filter out log groups from subscription, and supports the use of regular expressions"
+  type        = list(string)
+  nullable    = false
+  default     = []
+
+  validation {
+    condition = alltrue([
+      for pattern in var.exclude_log_group_name_patterns : can(regexall(pattern, ""))
+    ])
+    error_message = "Invalid group name pattern provided. See https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_CreateLogGroup.html for log group name restrictions."
+  }
+}
+
 variable "discovery_rate" {
   description = "EventBridge scheduler rate expression for periodically triggering discovery. If not set, no scheduler is configured."
   type        = string

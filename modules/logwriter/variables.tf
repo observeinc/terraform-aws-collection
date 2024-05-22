@@ -82,6 +82,15 @@ variable "log_group_name_prefixes" {
   default     = null
 }
 
+variable "exclude_log_group_name_patterns" {
+  description = <<-EOF
+    Exclude any log group names matching the provided set of regular
+    expressions.
+  EOF
+  type        = list(string)
+  default     = null
+}
+
 variable "num_workers" {
   description = <<-EOF
     Maximum number of concurrent workers when processing log groups.
