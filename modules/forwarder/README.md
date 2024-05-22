@@ -103,9 +103,9 @@ No modules.
 | <a name="input_debug_endpoint"></a> [debug\_endpoint](#input\_debug\_endpoint) | Endpoint to send debugging telemetry to. Sets the OTEL\_EXPORTER\_OTLP\_ENDPOINT environment variable for the lambda function. | `string` | `""` | no |
 | <a name="input_destination"></a> [destination](#input\_destination) | Destination filedrop | <pre>object({<br>    arn    = optional(string, "")<br>    bucket = optional(string, "")<br>    prefix = optional(string, "")<br>    # exclusively for backward compatible HTTP endpoint<br>    uri = optional(string, "")<br>  })</pre> | n/a | yes |
 | <a name="input_lambda_env_vars"></a> [lambda\_env\_vars](#input\_lambda\_env\_vars) | Environment variables to be passed into lambda. | `map(string)` | `{}` | no |
-| <a name="input_lambda_memory_size"></a> [lambda\_memory\_size](#input\_lambda\_memory\_size) | Memory size for lambda function. | `number` | `128` | no |
-| <a name="input_lambda_timeout"></a> [lambda\_timeout](#input\_lambda\_timeout) | Timeout in seconds for lambda function. | `number` | `300` | no |
-| <a name="input_max_file_size"></a> [max\_file\_size](#input\_max\_file\_size) | Max file size for objects to process (in bytes), default is 1GB | `number` | `1073741824` | no |
+| <a name="input_lambda_memory_size"></a> [lambda\_memory\_size](#input\_lambda\_memory\_size) | Memory size for lambda function. | `number` | `null` | no |
+| <a name="input_lambda_timeout"></a> [lambda\_timeout](#input\_lambda\_timeout) | Timeout in seconds for lambda function. | `number` | `null` | no |
+| <a name="input_max_file_size"></a> [max\_file\_size](#input\_max\_file\_size) | Max file size for objects to process (in bytes), default is 1GB | `number` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name of role. Since this name must be unique within the<br>account, it will be reused for most of the resources created by this<br>module. | `string` | n/a | yes |
 | <a name="input_queue_batch_size"></a> [queue\_batch\_size](#input\_queue\_batch\_size) | Max number of items to process in single lambda execution | `number` | `10` | no |
 | <a name="input_queue_delay_seconds"></a> [queue\_delay\_seconds](#input\_queue\_delay\_seconds) | The time in seconds that the delivery of all messages in the queue will be<br>delayed. An integer from 0 to 900 (15 minutes). | `number` | `0` | no |
