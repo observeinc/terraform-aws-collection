@@ -107,3 +107,9 @@ variable "debug_endpoint" {
   type        = string
   default     = null
 }
+
+variable "s3_bucket_lifecycle_expiration" {
+  description = "Expiration in days for S3 objects in collection bucket"
+  type        = number
+  default     = 4
+}
