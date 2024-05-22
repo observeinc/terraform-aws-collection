@@ -116,6 +116,7 @@ No modules.
 | <a name="input_source_bucket_names"></a> [source\_bucket\_names](#input\_source\_bucket\_names) | A list of bucket names which the forwarder is allowed to read from.  This<br>list only affects permissions, and supports wildcards. In order to have<br>files copied to Filedrop, you must also subscribe S3 Bucket Notifications<br>to the forwarder. | `list(string)` | `[]` | no |
 | <a name="input_source_kms_key_arns"></a> [source\_kms\_key\_arns](#input\_source\_kms\_key\_arns) | A list of KMS Key ARNs the forwarder is allowed to use to decrypt objects in S3. | `list(string)` | `[]` | no |
 | <a name="input_source_topic_arns"></a> [source\_topic\_arns](#input\_source\_topic\_arns) | A list of SNS topics the forwarder is allowed to be subscribed to. | `list(string)` | `[]` | no |
+| <a name="input_verbosity"></a> [verbosity](#input\_verbosity) | Logging verbosity for Lambda. Highest log verbosity is 9. | `number` | `1` | no |
 
 ## Outputs
 
