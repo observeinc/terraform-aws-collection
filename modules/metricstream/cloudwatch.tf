@@ -15,7 +15,7 @@ resource "aws_cloudwatch_metric_stream" "main" {
   output_format = var.output_format
 
   dynamic "include_filter" {
-    for_each = local.include_filters
+    for_each = local.filter.include_filters
     content {
       namespace    = include_filter.value.namespace
       metric_names = include_filter.value.metric_names
@@ -23,7 +23,7 @@ resource "aws_cloudwatch_metric_stream" "main" {
   }
 
   dynamic "exclude_filter" {
-    for_each = local.exclude_filters
+    for_each = local.filter.exclude_filters
     content {
       namespace    = exclude_filter.value.namespace
       metric_names = exclude_filter.value.metric_names
