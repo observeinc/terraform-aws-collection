@@ -18,6 +18,13 @@ run "install" {
   variables {
     name       = run.setup.id
     bucket_arn = run.create_bucket.arn
+  }
+}
+
+run "update_filters" {
+  variables {
+    name       = run.setup.id
+    bucket_arn = run.create_bucket.arn
     include_filters = [
       {
         namespace    = "AWS/RDS"

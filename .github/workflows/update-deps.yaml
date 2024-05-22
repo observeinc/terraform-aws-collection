@@ -41,6 +41,9 @@ jobs:
       - name: Update binaries
         run: make update-binaries
 
+      - name: Update filters
+        run: make update-filters
+
       # Use Peter Evans Pull Request Action to create a pull request
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6

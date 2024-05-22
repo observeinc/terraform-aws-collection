@@ -40,26 +40,25 @@ variable "output_format" {
 
 variable "include_filters" {
   description = <<-EOF
-    List of inclusion filters.
+    List of inclusion filters. If neither include_filters or exclude_filters is
+    set, a default filter will be used.
   EOF
   type = list(object({
     namespace    = string
     metric_names = list(string)
   }))
-  default  = []
-  nullable = false
+  default = null
 }
 
 variable "exclude_filters" {
   description = <<-EOF
-    List of exclusion filters. Mutually exclusive with inclusion filters
+    List of exclusion filters. Mutually exclusive with inclusion filters.
   EOF
   type = list(object({
     namespace    = string
     metric_names = list(string)
   }))
-  default  = []
-  nullable = false
+  default = null
 }
 
 variable "buffering_interval" {

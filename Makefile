@@ -12,3 +12,5 @@ update-binaries-forwarder:
 
 update-binaries: update-binaries-logwriter update-binaries-forwarder
 
+update-filters: utilities/update-filters.sh
+
