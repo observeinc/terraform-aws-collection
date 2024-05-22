@@ -16,4 +16,5 @@ module "subscriber" {
   lambda_memory_size              = var.lambda_memory_size
   lambda_timeout                  = var.lambda_timeout
   debug_endpoint                  = var.debug_endpoint
+  verbosity                       = var.verbosity
 }

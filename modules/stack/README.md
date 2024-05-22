@@ -106,6 +106,7 @@ module "collection_stack" {
 | <a name="input_metricstream"></a> [metricstream](#input\_metricstream) | Variables for AWS CloudWatch Metrics Stream collection. | <pre>object({<br>    include_filters    = optional(list(object({ namespace = string, metric_names = optional(list(string)) })))<br>    exclude_filters    = optional(list(object({ namespace = string, metric_names = optional(list(string)) })))<br>    buffering_interval = optional(number)<br>    buffering_size     = optional(number)<br>  })</pre> | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name of role. Since this name must be unique within the<br>account, it will be reused for most of the resources created by this<br>module. | `string` | n/a | yes |
 | <a name="input_s3_bucket_lifecycle_expiration"></a> [s3\_bucket\_lifecycle\_expiration](#input\_s3\_bucket\_lifecycle\_expiration) | Expiration in days for S3 objects in collection bucket | `number` | `4` | no |
+| <a name="input_verbosity"></a> [verbosity](#input\_verbosity) | Logging verbosity for Lambda. Highest log verbosity is 9. | `number` | `null` | no |
 
 ## Outputs
 

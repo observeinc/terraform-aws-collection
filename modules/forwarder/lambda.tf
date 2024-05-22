@@ -17,6 +17,7 @@ resource "aws_lambda_function" "this" {
       SOURCE_BUCKET_NAMES         = join(",", var.source_bucket_names)
       OTEL_EXPORTER_OTLP_ENDPOINT = var.debug_endpoint
       OTEL_TRACES_EXPORTER        = var.debug_endpoint == "" ? "none" : "otlp"
+      VERBOSITY                   = var.verbosity
     }, var.lambda_env_vars)
   }
 }

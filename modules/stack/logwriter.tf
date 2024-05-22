@@ -17,6 +17,7 @@ module "logwriter" {
   lambda_memory_size      = var.logwriter.lambda_memory_size
   lambda_timeout          = var.logwriter.lambda_timeout
   debug_endpoint          = var.debug_endpoint
+  verbosity               = var.verbosity
 
   depends_on = [aws_s3_bucket_notification.this]
 }

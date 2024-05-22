@@ -181,3 +181,10 @@ variable "debug_endpoint" {
   nullable    = false
   default     = ""
 }
+
+variable "verbosity" {
+  description = "Logging verbosity for Lambda. Highest log verbosity is 9."
+  type        = number
+  nullable    = false
+  default     = 1
+}

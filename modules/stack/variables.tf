@@ -114,3 +114,9 @@ variable "s3_bucket_lifecycle_expiration" {
   type        = number
   default     = 4
 }
+
+variable "verbosity" {
+  description = "Logging verbosity for Lambda. Highest log verbosity is 9."
+  type        = number
+  default     = null
+}
