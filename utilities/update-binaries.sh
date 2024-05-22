@@ -6,7 +6,7 @@ DIE() { echo "$*" 1>&2; exit 1; }
 APP=${APP:-forwarder}
 RESOURCE=${RESOURCE:-Forwarder}
 
-VERSION=${VERSION:-1.16.1}
+VERSION=${VERSION:-1.18.1}
 BUCKET=${BUCKET:-observeinc}
 
 REGIONS=$(aws ec2 describe-regions | jq -r '.Regions | map(.RegionName) |.[]')
