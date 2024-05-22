@@ -50,6 +50,7 @@ No modules.
 | <a name="input_debug_endpoint"></a> [debug\_endpoint](#input\_debug\_endpoint) | Endpoint to send debugging telemetry to. Sets the OTEL\_EXPORTER\_OTLP\_ENDPOINT environment variable for the lambda function. | `string` | `""` | no |
 | <a name="input_destination_iam_arn"></a> [destination\_iam\_arn](#input\_destination\_iam\_arn) | ARN for destination iam policy | `string` | n/a | yes |
 | <a name="input_discovery_rate"></a> [discovery\_rate](#input\_discovery\_rate) | EventBridge scheduler rate expression for periodically triggering discovery. If not set, no scheduler is configured. | `string` | `""` | no |
+| <a name="input_exclude_log_group_name_patterns"></a> [exclude\_log\_group\_name\_patterns](#input\_exclude\_log\_group\_name\_patterns) | List of patterns as strings. This variable is usd to filter out log groups from subscription, and supports the use of regular expressions | `list(string)` | `[]` | no |
 | <a name="input_filter_name"></a> [filter\_name](#input\_filter\_name) | Subscription filter name. Existing filters that have this name as a prefix will be removed. | `string` | `"observe-logs-subscription"` | no |
 | <a name="input_filter_pattern"></a> [filter\_pattern](#input\_filter\_pattern) | Subscription filter pattern. | `string` | `""` | no |
 | <a name="input_firehose_arn"></a> [firehose\_arn](#input\_firehose\_arn) | ARN for kinesis firehose | `string` | n/a | yes |

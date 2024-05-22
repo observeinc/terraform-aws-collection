@@ -75,16 +75,17 @@ variable "logwriter" {
     Variables for AWS CloudWatch Logs collection.
   EOF
   type = object({
-    log_group_name_patterns = optional(list(string))
-    log_group_name_prefixes = optional(list(string))
-    buffering_interval      = optional(number)
-    buffering_size          = optional(number)
-    filter_name             = optional(string)
-    filter_pattern          = optional(string)
-    num_workers             = optional(number)
-    discovery_rate          = optional(string, "24 hours")
-    lambda_memory_size      = optional(number)
-    lambda_timeout          = optional(number)
+    log_group_name_patterns         = optional(list(string))
+    log_group_name_prefixes         = optional(list(string))
+    exclude_log_group_name_prefixes = optional(list(string))
+    buffering_interval              = optional(number)
+    buffering_size                  = optional(number)
+    filter_name                     = optional(string)
+    filter_pattern                  = optional(string)
+    num_workers                     = optional(number)
+    discovery_rate                  = optional(string, "24 hours")
+    lambda_memory_size              = optional(number)
+    lambda_timeout                  = optional(number)
   })
   default = null
 }
