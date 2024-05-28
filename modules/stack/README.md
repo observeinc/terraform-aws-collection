@@ -110,5 +110,13 @@ module "collection_stack" {
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_bucket"></a> [bucket](#output\_bucket) | S3 bucket subscribed to forwarder |
+| <a name="output_config"></a> [config](#output\_config) | Config module |
+| <a name="output_configsubscription"></a> [configsubscription](#output\_configsubscription) | ConfigSubscription module |
+| <a name="output_forwarder"></a> [forwarder](#output\_forwarder) | Forwarder module |
+| <a name="output_logwriter"></a> [logwriter](#output\_logwriter) | LogWriter module |
+| <a name="output_metricstream"></a> [metricstream](#output\_metricstream) | MetricStream module |
+| <a name="output_topic"></a> [topic](#output\_topic) | SNS topic subscribed to forwarder |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

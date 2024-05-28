@@ -8,7 +8,7 @@ output "firehose" {
   value       = aws_kinesis_firehose_delivery_stream.delivery_stream.arn
 }
 
-output "destination_iam_policy" {
-  description = "Firehose destination iam policy"
+output "destination_role_arn" {
+  description = "Role for CloudWatch Logs to assume when writing to Firehose"
   value       = aws_iam_role.destination.arn
 }
