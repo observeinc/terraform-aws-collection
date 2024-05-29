@@ -30,7 +30,7 @@ resource "aws_cloudwatch_log_subscription_filter" "example" {
   name            = "observe-logs-subscription"
   log_group_name  = "my-example-log-group"
   destination_arn = module.logwriter.firehose_arn
-  role_arn        = module.logwriter.destination_iam_policy
+  role_arn        = module.logwriter.destination_role_arn
 }
 ```
 
@@ -113,7 +113,7 @@ module "logwriter" {
 
 | Name | Description |
 |------|-------------|
-| <a name="output_destination_iam_policy"></a> [destination\_iam\_policy](#output\_destination\_iam\_policy) | Firehose destination iam policy |
+| <a name="output_destination_role_arn"></a> [destination\_role\_arn](#output\_destination\_role\_arn) | Role for CloudWatch Logs to assume when writing to Firehose |
 | <a name="output_firehose"></a> [firehose](#output\_firehose) | Kinesis Firehose Delivery Stream ARN |
 | <a name="output_subscriber"></a> [subscriber](#output\_subscriber) | Subscriber module |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
