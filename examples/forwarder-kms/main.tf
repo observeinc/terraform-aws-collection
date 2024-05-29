@@ -1,4 +1,7 @@
-resource "random_pet" "this" {}
+locals {
+  name        = basename(abspath(path.root))
+  name_prefix = "${local.name}-"
+}
 
 data "aws_caller_identity" "current" {}
 
@@ -25,12 +28,12 @@ resource "aws_kms_key" "source" {
 }
 
 resource "aws_s3_bucket" "source" {
-  bucket_prefix = "${random_pet.this.id}-source"
+  bucket_prefix = "${local.name_prefix}-source"
   force_destroy = true
 }
 
 resource "aws_s3_bucket" "destination" {
-  bucket_prefix = "${random_pet.this.id}-destination"
+  bucket_prefix = "${local.name_prefix}-destination"
   force_destroy = true
 }
 
@@ -56,7 +59,7 @@ data "observe_workspace" "default" {
 
 resource "observe_datastream" "this" {
   workspace = data.observe_workspace.default.oid
-  name      = random_pet.this.id
+  name      = local.name
 }
 
 resource "observe_filedrop" "this" {
@@ -67,7 +70,7 @@ resource "observe_filedrop" "this" {
     provider {
       aws {
         region   = "us-west-2"
-        role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${random_pet.this.id}"
+        role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${local.name}"
       }
     }
   }
@@ -80,7 +83,7 @@ module "forwarder" {
   # module:
   source = "../..//modules/forwarder"
 
-  name                = random_pet.this.id
+  name                = local.name
   destination         = observe_filedrop.this.endpoint[0].s3[0]
   source_bucket_names = [aws_s3_bucket.source.bucket]
   source_kms_key_arns = [aws_kms_key.source.arn]
