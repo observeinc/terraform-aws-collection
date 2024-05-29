@@ -10,6 +10,8 @@ resource "aws_cloudwatch_event_rule" "change" {
       ]
     },
   )
+
+  tags = local.tags
 }
 
 resource "aws_cloudwatch_event_target" "change" {
