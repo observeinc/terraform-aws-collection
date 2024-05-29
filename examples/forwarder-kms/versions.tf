@@ -7,11 +7,6 @@ terraform {
       version = ">= 5.0"
     }
 
-    random = {
-      source  = "hashicorp/random"
-      version = ">= 3.0.0"
-    }
-
     observe = {
       source  = "terraform.observeinc.com/observeinc/observe"
       version = "~> 0.14"
