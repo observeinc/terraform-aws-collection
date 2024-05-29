@@ -68,4 +68,5 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_function_arn"></a> [function\_arn](#output\_function\_arn) | Lambda Function ARN |
+| <a name="output_log_group"></a> [log\_group](#output\_log\_group) | Lambda log group |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

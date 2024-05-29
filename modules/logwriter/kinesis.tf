@@ -11,8 +11,8 @@ resource "aws_kinesis_firehose_delivery_stream" "delivery_stream" {
     buffering_size      = var.buffering_size
     cloudwatch_logging_options {
       enabled         = true
-      log_group_name  = aws_cloudwatch_log_group.firehose_log_group.name
-      log_stream_name = aws_cloudwatch_log_stream.firehose_log_stream.name
+      log_group_name  = aws_cloudwatch_log_group.firehose.name
+      log_stream_name = aws_cloudwatch_log_stream.firehose.name
     }
   }
 }

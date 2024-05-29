@@ -17,13 +17,18 @@ variable "bucket_arn" {
   EOF
   type        = string
   nullable    = false
+
+  validation {
+    condition     = can(regex("^arn:.*", var.bucket_arn))
+    error_message = "ARN is invalid."
+  }
 }
 
 variable "prefix" {
   description = "Optional prefix to write log records to."
   type        = string
   nullable    = false
-  default     = "observe"
+  default     = "cloudwatchlogs/"
 }
 
 variable "buffering_interval" {
