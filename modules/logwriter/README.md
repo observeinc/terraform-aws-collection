@@ -74,8 +74,8 @@ module "logwriter" {
 
 | Name | Type |
 |------|------|
-| [aws_cloudwatch_log_group.firehose_log_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
-| [aws_cloudwatch_log_stream.firehose_log_stream](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_stream) | resource |
+| [aws_cloudwatch_log_group.firehose](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
+| [aws_cloudwatch_log_stream.firehose](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_stream) | resource |
 | [aws_iam_role.destination](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role.firehose](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_kinesis_firehose_delivery_stream.delivery_stream](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kinesis_firehose_delivery_stream) | resource |
@@ -106,7 +106,7 @@ module "logwriter" {
 | <a name="input_log_group_name_prefixes"></a> [log\_group\_name\_prefixes](#input\_log\_group\_name\_prefixes) | Subscribe to CloudWatch log groups matching any of the provided prefixes.<br>To subscribe to all log groups use the wildcard operator *. | `list(string)` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name for resources. | `string` | n/a | yes |
 | <a name="input_num_workers"></a> [num\_workers](#input\_num\_workers) | Maximum number of concurrent workers when processing log groups. | `number` | `null` | no |
-| <a name="input_prefix"></a> [prefix](#input\_prefix) | Optional prefix to write log records to. | `string` | `"observe"` | no |
+| <a name="input_prefix"></a> [prefix](#input\_prefix) | Optional prefix to write log records to. | `string` | `"cloudwatchlogs/"` | no |
 | <a name="input_verbosity"></a> [verbosity](#input\_verbosity) | Logging verbosity for Lambda. Highest log verbosity is 9. | `number` | `null` | no |
 
 ## Outputs
@@ -114,6 +114,7 @@ module "logwriter" {
 | Name | Description |
 |------|-------------|
 | <a name="output_destination_role_arn"></a> [destination\_role\_arn](#output\_destination\_role\_arn) | Role for CloudWatch Logs to assume when writing to Firehose |
-| <a name="output_firehose"></a> [firehose](#output\_firehose) | Kinesis Firehose Delivery Stream ARN |
+| <a name="output_firehose_arn"></a> [firehose\_arn](#output\_firehose\_arn) | Kinesis Firehose Delivery Stream ARN |
+| <a name="output_log_group"></a> [log\_group](#output\_log\_group) | Kinesis Firehose Log Group |
 | <a name="output_subscriber"></a> [subscriber](#output\_subscriber) | Subscriber module |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

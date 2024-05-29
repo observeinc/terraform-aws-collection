@@ -32,7 +32,7 @@ data "aws_iam_policy_document" "firehose_logging" {
   statement {
     effect    = "Allow"
     actions   = ["logs:CreateLogStream", "logs:PutLogEvents"]
-    resources = [aws_cloudwatch_log_group.firehose_log_group.arn]
+    resources = [aws_cloudwatch_log_group.firehose.arn]
   }
 }
 

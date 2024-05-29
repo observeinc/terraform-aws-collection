@@ -3,7 +3,12 @@ output "subscriber" {
   value       = one(module.subscriber)
 }
 
-output "firehose" {
+output "log_group" {
+  description = "Kinesis Firehose Log Group"
+  value       = aws_cloudwatch_log_group.firehose
+}
+
+output "firehose_arn" {
   description = "Kinesis Firehose Delivery Stream ARN"
   value       = aws_kinesis_firehose_delivery_stream.delivery_stream.arn
 }

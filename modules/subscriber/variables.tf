@@ -59,7 +59,7 @@ variable "log_group_name_prefixes" {
 
   validation {
     condition = alltrue([
-      for prefix in var.log_group_name_prefixes : can(regex("^(?!aws)([a-zA-Z0-9_\\-\\/\\.\\#]){1,512}", prefix)) || prefix == "*"
+      for prefix in var.log_group_name_prefixes : can(regex("[a-zA-Z0-9_\\-\\/\\.\\#]{1,512}", prefix)) || prefix == "*"
     ])
     error_message = "Invalid group name prefix provided. See https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_CreateLogGroup.html for log group name restrictions."
   }
