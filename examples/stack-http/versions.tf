@@ -1,0 +1,15 @@
+terraform {
+  required_version = ">= 1.3"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.0"
+    }
+
+    observe = {
+      source  = "terraform.observeinc.com/observeinc/observe"
+      version = ">= 0.14.10"
+    }
+  }
+}

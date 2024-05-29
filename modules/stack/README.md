@@ -1,61 +1,130 @@
 # Observe stack module
 
-This module combines our log, metrics and configuration AWS collection modules into a single standalone "stack".
+This module combines our log, metrics and configuration AWS collection modules
+into a single standalone "stack".
 
-## Usage
+This module:
+- embeds the `forwarder` [module](../forwarder/README.md), which is responsible for forwarding data to Observe. 
+- creates a collection S3 bucket. This bucket is subscribed to the `forwarder`. As a result, any data written to this bucket will be sent to Observe.
+- creates a collection SNS topic. This topic is subscribed to the `forwarder`. Any message sent to this topic will be sent to Observe.
 
-This is a minimal example for setting up the stack module:
+You may optionally enable modules for collecting data from AWS sources. These modules will all write directly to the collection S3 bucket.
 
-- create an `observe_datastream`
-- create an `observe_filedrop`. You must provide an ARN for a role that does not yet exist.
-- instantiate the module with the `observe_filedrop` and the `name` of the role you used in the previous step.
+## Configuring forwarding
 
-```hcl
+In order to install the `stack` module, you must provide a destination. The module supports two backend schemes.
+
+### Filedrop
+
+To configure a Filedrop backend, you must first create a Filedrop using the `observe` provider, and then pass it in directly as a destination. The following snippet is extracted from the [provided example](../../examples/stack-filedrop/README.md):
+
+
+```terraform
+data "aws_caller_identity" "current" {}
+
 data "observe_workspace" "default" {
   name = "Default"
 }
 
-resource "random_pet" "this" {}
-
-data "observe_datastream" "this" {
+resource "observe_datastream" "this" {
   workspace = data.observe_workspace.default.oid
-  name      = random_pet.this.id
+  name      = local.name
 }
 
 resource "observe_filedrop" "this" {
   workspace  = data.observe_workspace.default.oid
   datastream = observe_datastream.this.oid
+
   config {
     provider {
       aws {
         region   = "us-west-2"
-        role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${random_pet.this.id}"
+        role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${local.name}"
       }
     }
   }
 }
 
-module "collection_stack" {
-  source      = "observeinc/collection/aws//modules/stack"
-  name        = random_pet.this.id
+module "stack" {
+  source = "observeinc/collection/aws//modules/stack"
 
+  name        = local.name
   destination = observe_filedrop.this.endpoint[0].s3[0]
+}
+```
 
-  # Install AWS Config and collect all resources
-  config = {
-    include_resource_types  = ["*"]
-  }
+### HTTPS
 
-  # Subscribe to all CloudWatch Log Groups
-  logwriter = {
-    log_group_name_patterns = ["*"]  
-  }
+To configure an HTTPS backend, you can create a datastream token and reference the collection URL. 
+ The following snippet is extracted from the [provided example](../../examples/stack-http/README.md):
 
-  # Export all CloudWatch Metrics
-  metricstream = {}
+```terraform
+locals {
+  token               = nonsensitive(observe_datastream_token.this.secret)
+  collection_endpoint = trim(data.observe_ingest_info.this.collect_url, "https://")
 }
 
+data "observe_workspace" "default" {
+  name = "Default"
+}
+
+resource "observe_datastream" "this" {
+  workspace = data.observe_workspace.default.oid
+  name      = local.name
+}
+
+resource "observe_datastream_token" "this" {
+  datastream = observe_datastream.this.oid
+  name       = local.name
+}
+
+data "observe_ingest_info" "this" {}
+
+module "stack" {
+  source = "observeinc/collection/aws//modules/stack"
+
+  name = local.name
+  destination = {
+    uri = "https://${local.token}@${local.collection_endpoint}/v1/http"
+  }
+}
 ```
+
+## Configuring AWS sources
+
+You may optionally enable different submodules which are exposed as part of the `stack` parent module. Configuration of these modules is always explicitly gated on the presence of a variable.
+
+For example, to instantiate the `logwriter` [module](../logwriter/README.md), you must specify a `logwriter` object:
+
+```terraform
+module "collection_stack" {
+  source      = "observeinc/collection/aws//modules/stack"
+
+  ...
+  # installs the logwriter module
+  logwriter = {}
+}
+```
+
+Any variable defined within the object will be passed directly to submodule. For example, we can enable automatic log subscription by enabled `logwriter` and passing in `log_group_name_patterns`:
+
+```terraform
+module "collection_stack" {
+  source      = "observeinc/collection/aws//modules/stack"
+
+  ...
+  # installs the logwriter module
+  logwriter = {
+    # enables automatic subscription for all log groups
+    log_group_name_patterns = ["*"]
+  }
+}
+```
+
+You can additionally configure other submodules in this manner:
+- the `config` [module](../config/README.md) installs [AWS Config](https://aws.amazon.com/config/) collection. 
+- the `configsubscription` [module](../configsubscription/README.md) enables subscribing to a pre-existing [AWS Config](https://aws.amazon.com/config/) install. 
+- the `metricstream` [module](../metricstream/README.md) enables [AWS Cloudwatch Metrics Stream](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Metric-Streams.html) collection. 
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
