@@ -1,5 +1,6 @@
 resource "aws_iam_role" "this" {
-  name               = var.name
+  name               = var.destination.arn != "" ? var.name : null
+  name_prefix        = var.destination.arn != "" ? null : local.name_prefix
   assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
 
   dynamic "inline_policy" {
