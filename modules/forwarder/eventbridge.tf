@@ -21,7 +21,7 @@ resource "aws_cloudwatch_event_target" "this" {
       objectKey  = "$.detail.object.key"
       objectSize = "$.detail.object.size"
     }
-    input_template = <<EOF
+    input_template = <<-EOF
       {"copy": [{"uri": "s3://<bucketName>/<objectKey>", "size": <objectSize>}]}
     EOF
   }
