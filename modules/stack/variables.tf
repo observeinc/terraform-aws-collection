@@ -42,6 +42,8 @@ variable "forwarder" {
     queue_message_retention_seconds          = optional(number)
     queue_batch_size                         = optional(number)
     queue_maximum_batching_window_in_seconds = optional(number)
+    code_uri                                 = optional(string)
+    code_version                             = optional(string)
   })
   default  = {}
   nullable = false
@@ -86,6 +88,8 @@ variable "logwriter" {
     discovery_rate                  = optional(string, "24 hours")
     lambda_memory_size              = optional(number)
     lambda_timeout                  = optional(number)
+    code_uri                        = optional(string)
+    code_version                    = optional(string)
   })
   default = null
 }
@@ -118,5 +122,11 @@ variable "s3_bucket_lifecycle_expiration" {
 variable "verbosity" {
   description = "Logging verbosity for Lambda. Highest log verbosity is 9."
   type        = number
+  default     = null
+}
+
+variable "code_version" {
+  description = "Binary versions as released on github.com/observeinc/aws-sam-apps."
+  type        = string
   default     = null
 }

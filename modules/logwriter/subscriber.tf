@@ -17,4 +17,6 @@ module "subscriber" {
   lambda_timeout                  = var.lambda_timeout
   debug_endpoint                  = var.debug_endpoint
   verbosity                       = var.verbosity
+  code_uri                        = var.code_uri
+  code_version                    = var.code_version
 }
