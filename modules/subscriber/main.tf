@@ -2,8 +2,14 @@ locals {
   has_discovery_rate = var.discovery_rate != ""
   name_prefix        = "${substr(var.name, 0, 37)}-"
 
-  s3_uri        = one([for item in csvdecode(file("${path.module}/uris.csv")) : item["code_uri"] if item["region"] == data.aws_region.current.name])
-  parsed_s3_uri = regex("s3://(?P<bucket>[^/]+)/(?P<key>.+)", local.s3_uri)
+  code_uri      = var.code_uri != "" ? var.code_uri : module.samversion[0].code_uri
+  parsed_s3_uri = regex("s3://(?P<bucket>[^/]+)/(?P<key>.+)", local.code_uri)
 }
 
-data "aws_region" "current" {}
+module "samversion" {
+  count    = var.code_uri != "" ? 0 : 1
+  source   = "../samversion"
+  app      = "logwriter"
+  function = "Subscriber"
+  release  = var.code_version
+}

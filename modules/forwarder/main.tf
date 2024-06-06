@@ -1,6 +1,6 @@
 locals {
-  s3_uri          = one([for item in csvdecode(file("${path.module}/uris.csv")) : item["code_uri"] if item["region"] == data.aws_region.current.name])
-  parsed_s3_uri   = regex("s3://(?P<bucket>[^/]+)/(?P<key>.+)", local.s3_uri)
+  code_uri        = var.code_uri != "" ? var.code_uri : module.samversion[0].code_uri
+  parsed_s3_uri   = regex("s3://(?P<bucket>[^/]+)/(?P<key>.+)", local.code_uri)
   destination_uri = var.destination.uri != "" ? var.destination.uri : "s3://${var.destination.bucket}/${var.destination.prefix}"
   name_prefix     = "${substr(var.name, 0, 37)}-"
 
@@ -20,3 +20,11 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 data "aws_partition" "current" {}
+
+module "samversion" {
+  count    = var.code_uri != "" ? 0 : 1
+  source   = "../samversion"
+  app      = "forwarder"
+  function = "Forwarder"
+  release  = var.code_version
+}

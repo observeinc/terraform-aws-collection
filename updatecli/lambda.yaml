@@ -14,9 +14,9 @@ sources:
 
 targets:
   updateLambdaBinaries:
-    name: "Update lambda binaries"
+    name: "Update binary release version"
     kind: file
     spec:
-      file: "utilities/update-binaries.sh"
-      matchpattern: '{VERSION:-\S*}'
-      replacepattern: '{VERSION:-{{ source `AppsRelease` }}}'
+      file: "modules/samversion/main.tf"
+      matchpattern: 'latest_release = "\S*"'
+      replacepattern: 'latest_release = "{{ source `AppsRelease`}}"'

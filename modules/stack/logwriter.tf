@@ -18,6 +18,8 @@ module "logwriter" {
   lambda_timeout          = var.logwriter.lambda_timeout
   debug_endpoint          = var.debug_endpoint
   verbosity               = var.verbosity
+  code_uri                = var.logwriter.code_uri
+  code_version            = try(coalesce(var.logwriter.code_version, var.code_version), null)
 
   depends_on = [aws_s3_bucket_notification.this]
 }

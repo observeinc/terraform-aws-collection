@@ -22,4 +22,6 @@ module "forwarder" {
   queue_maximum_batching_window_in_seconds = var.forwarder.queue_maximum_batching_window_in_seconds
   debug_endpoint                           = var.debug_endpoint
   verbosity                                = var.verbosity
+  code_uri                                 = var.forwarder.code_uri
+  code_version                             = try(coalesce(var.forwarder.code_version, var.code_version), null)
 }

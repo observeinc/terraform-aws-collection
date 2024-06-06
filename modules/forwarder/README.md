@@ -60,7 +60,6 @@ module "forwarder" {
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.0.0 |
 
 ## Providers
 
@@ -70,7 +69,9 @@ module "forwarder" {
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_samversion"></a> [samversion](#module\_samversion) | ../samversion | n/a |
 
 ## Resources
 
@@ -99,6 +100,8 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_code_uri"></a> [code\_uri](#input\_code\_uri) | S3 URI for lambda binary. If set, takes precedence over code\_version. | `string` | `""` | no |
+| <a name="input_code_version"></a> [code\_version](#input\_code\_version) | Binary version as released on github.com/observeinc/aws-sam-apps. | `string` | `""` | no |
 | <a name="input_content_type_overrides"></a> [content\_type\_overrides](#input\_content\_type\_overrides) | A list of key value pairs. The key is a regular expression which is<br>applied to the S3 source (<bucket>/<key>) of forwarded files. The value<br>is the content type to set for matching files. For example,<br>`\.json$=application/x-ndjson` would forward all files ending in `.json`<br>as newline delimited JSON | <pre>list(object({<br>    pattern      = string<br>    content_type = string<br>  }))</pre> | `[]` | no |
 | <a name="input_debug_endpoint"></a> [debug\_endpoint](#input\_debug\_endpoint) | Endpoint to send debugging telemetry to. Sets the OTEL\_EXPORTER\_OTLP\_ENDPOINT environment variable for the lambda function. | `string` | `""` | no |
 | <a name="input_destination"></a> [destination](#input\_destination) | Destination filedrop | <pre>object({<br>    arn    = optional(string, "")<br>    bucket = optional(string, "")<br>    prefix = optional(string, "")<br>    # exclusively for backward compatible HTTP endpoint<br>    uri = optional(string, "")<br>  })</pre> | n/a | yes |
