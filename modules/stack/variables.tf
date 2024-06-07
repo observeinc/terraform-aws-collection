@@ -99,10 +99,11 @@ variable "metricstream" {
     Variables for AWS CloudWatch Metrics Stream collection.
   EOF
   type = object({
-    include_filters    = optional(list(object({ namespace = string, metric_names = optional(list(string)) })))
-    exclude_filters    = optional(list(object({ namespace = string, metric_names = optional(list(string)) })))
-    buffering_interval = optional(number)
-    buffering_size     = optional(number)
+    include_filters     = optional(list(object({ namespace = string, metric_names = optional(list(string)) })))
+    exclude_filters     = optional(list(object({ namespace = string, metric_names = optional(list(string)) })))
+    buffering_interval  = optional(number)
+    buffering_size      = optional(number)
+    sam_release_version = optional(string)
   })
   default = null
 }
