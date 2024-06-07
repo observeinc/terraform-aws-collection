@@ -13,10 +13,10 @@ sources:
       - trimprefix: "v"
 
 targets:
-  updateLambdaBinaries:
-    name: "Update binary release version"
+  updateSamVersion:
+    name: "Update SAM release version"
     kind: file
     spec:
-      file: "modules/samversion/main.tf"
-      matchpattern: 'latest_release = "\S*"'
-      replacepattern: 'latest_release = "{{ source `AppsRelease`}}"'
+      file: "modules/sam_asset/main.tf"
+      matchpattern: 'latest_version = "\S*"'
+      replacepattern: 'latest_version = "{{ source `AppsRelease`}}"'
