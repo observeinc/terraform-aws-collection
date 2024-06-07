@@ -71,7 +71,7 @@ module "forwarder" {
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_samversion"></a> [samversion](#module\_samversion) | ../samversion | n/a |
+| <a name="module_sam_asset"></a> [sam\_asset](#module\_sam\_asset) | ../sam_asset | n/a |
 
 ## Resources
 
