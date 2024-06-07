@@ -8,7 +8,7 @@ This is a helper module that given a SAM App name and Lambda function resource I
 module "samversion" {
     app      = "forwarder"
     function = "Forwarder"
-    releasen = "1.19.3"
+    release  = "1.19.3"
 }
 ```
 

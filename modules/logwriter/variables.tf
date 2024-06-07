@@ -149,14 +149,14 @@ variable "verbosity" {
   default     = null
 }
 
-variable "code_version" {
-  description = "Binary version as released on github.com/observeinc/aws-sam-apps."
+variable "sam_release_version" {
+  description = "Release version for SAM apps as defined on github.com/observeinc/aws-sam-apps."
   type        = string
   default     = null
 }
 
 variable "code_uri" {
-  description = "S3 URI for lambda binary. If set, takes precedence over code_version."
+  description = "S3 URI for lambda binary. If set, takes precedence over sam_release_version."
   type        = string
   default     = null
 }

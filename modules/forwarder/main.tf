@@ -26,5 +26,5 @@ module "samversion" {
   source   = "../samversion"
   app      = "forwarder"
   function = "Forwarder"
-  release  = var.code_version
+  release  = var.sam_release_version
 }

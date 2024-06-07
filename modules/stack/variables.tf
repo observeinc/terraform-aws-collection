@@ -43,7 +43,7 @@ variable "forwarder" {
     queue_batch_size                         = optional(number)
     queue_maximum_batching_window_in_seconds = optional(number)
     code_uri                                 = optional(string)
-    code_version                             = optional(string)
+    sam_release_version                      = optional(string)
   })
   default  = {}
   nullable = false
@@ -89,7 +89,7 @@ variable "logwriter" {
     lambda_memory_size              = optional(number)
     lambda_timeout                  = optional(number)
     code_uri                        = optional(string)
-    code_version                    = optional(string)
+    sam_release_version             = optional(string)
   })
   default = null
 }
@@ -125,8 +125,8 @@ variable "verbosity" {
   default     = null
 }
 
-variable "code_version" {
-  description = "Binary versions as released on github.com/observeinc/aws-sam-apps."
+variable "sam_release_version" {
+  description = "Release version for SAM apps as defined on github.com/observeinc/aws-sam-apps."
   type        = string
   default     = null
 }

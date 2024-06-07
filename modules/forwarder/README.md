@@ -100,8 +100,7 @@ module "forwarder" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_code_uri"></a> [code\_uri](#input\_code\_uri) | S3 URI for lambda binary. If set, takes precedence over code\_version. | `string` | `""` | no |
-| <a name="input_code_version"></a> [code\_version](#input\_code\_version) | Binary version as released on github.com/observeinc/aws-sam-apps. | `string` | `""` | no |
+| <a name="input_code_uri"></a> [code\_uri](#input\_code\_uri) | S3 URI for lambda binary. If set, takes precedence over sam\_release\_version. | `string` | `""` | no |
 | <a name="input_content_type_overrides"></a> [content\_type\_overrides](#input\_content\_type\_overrides) | A list of key value pairs. The key is a regular expression which is<br>applied to the S3 source (<bucket>/<key>) of forwarded files. The value<br>is the content type to set for matching files. For example,<br>`\.json$=application/x-ndjson` would forward all files ending in `.json`<br>as newline delimited JSON | <pre>list(object({<br>    pattern      = string<br>    content_type = string<br>  }))</pre> | `[]` | no |
 | <a name="input_debug_endpoint"></a> [debug\_endpoint](#input\_debug\_endpoint) | Endpoint to send debugging telemetry to. Sets the OTEL\_EXPORTER\_OTLP\_ENDPOINT environment variable for the lambda function. | `string` | `""` | no |
 | <a name="input_destination"></a> [destination](#input\_destination) | Destination filedrop | <pre>object({<br>    arn    = optional(string, "")<br>    bucket = optional(string, "")<br>    prefix = optional(string, "")<br>    # exclusively for backward compatible HTTP endpoint<br>    uri = optional(string, "")<br>  })</pre> | n/a | yes |
@@ -116,6 +115,7 @@ module "forwarder" {
 | <a name="input_queue_maximum_batching_window_in_seconds"></a> [queue\_maximum\_batching\_window\_in\_seconds](#input\_queue\_maximum\_batching\_window\_in\_seconds) | The maximum amount of time to gather records before invoking the function, in seconds (between 0 and 300) | `number` | `1` | no |
 | <a name="input_queue_message_retention_seconds"></a> [queue\_message\_retention\_seconds](#input\_queue\_message\_retention\_seconds) | Maximum amount of time a message will be retained in queue.<br>This value applies to both source queue and dead letter queue if one<br>exists. | `number` | `345600` | no |
 | <a name="input_retention_in_days"></a> [retention\_in\_days](#input\_retention\_in\_days) | Retention in days of cloudwatch log group | `number` | `365` | no |
+| <a name="input_sam_release_version"></a> [sam\_release\_version](#input\_sam\_release\_version) | Release version for SAM apps as defined on github.com/observeinc/aws-sam-apps. | `string` | `""` | no |
 | <a name="input_source_bucket_names"></a> [source\_bucket\_names](#input\_source\_bucket\_names) | A list of bucket names which the forwarder is allowed to read from.  This<br>list only affects permissions, and supports wildcards. In order to have<br>files copied to Filedrop, you must also subscribe S3 Bucket Notifications<br>to the forwarder. | `list(string)` | `[]` | no |
 | <a name="input_source_kms_key_arns"></a> [source\_kms\_key\_arns](#input\_source\_kms\_key\_arns) | A list of KMS Key ARNs the forwarder is allowed to use to decrypt objects in S3. | `list(string)` | `[]` | no |
 | <a name="input_source_topic_arns"></a> [source\_topic\_arns](#input\_source\_topic\_arns) | A list of SNS topics the forwarder is allowed to be subscribed to. | `list(string)` | `[]` | no |

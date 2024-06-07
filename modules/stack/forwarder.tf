@@ -23,5 +23,5 @@ module "forwarder" {
   debug_endpoint                           = var.debug_endpoint
   verbosity                                = var.verbosity
   code_uri                                 = var.forwarder.code_uri
-  code_version                             = try(coalesce(var.forwarder.code_version, var.code_version), null)
+  sam_release_version                      = try(coalesce(var.forwarder.sam_release_version, var.sam_release_version), null)
 }

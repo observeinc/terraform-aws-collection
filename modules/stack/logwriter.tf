@@ -19,7 +19,7 @@ module "logwriter" {
   debug_endpoint          = var.debug_endpoint
   verbosity               = var.verbosity
   code_uri                = var.logwriter.code_uri
-  code_version            = try(coalesce(var.logwriter.code_version, var.code_version), null)
+  sam_release_version     = try(coalesce(var.logwriter.sam_release_version, var.sam_release_version), null)
 
   depends_on = [aws_s3_bucket_notification.this]
 }
