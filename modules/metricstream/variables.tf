@@ -80,3 +80,10 @@ variable "buffering_size" {
   nullable    = false
   default     = 1
 }
+
+variable "sam_release_version" {
+  description = "Release version for SAM apps as defined on github.com/observeinc/aws-sam-apps."
+  type        = string
+  default     = ""
+  nullable    = false
+}

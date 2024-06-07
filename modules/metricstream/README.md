@@ -24,7 +24,7 @@ module "metric_stream" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.2 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 
 ## Providers
@@ -35,7 +35,9 @@ module "metric_stream" {
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_sam_asset"></a> [sam\_asset](#module\_sam\_asset) | ../sam_asset | n/a |
 
 ## Resources
 
@@ -67,6 +69,7 @@ No modules.
 | <a name="input_name"></a> [name](#input\_name) | Name for resources. | `string` | n/a | yes |
 | <a name="input_output_format"></a> [output\_format](#input\_output\_format) | The output format for CloudWatch Metrics. | `string` | `"json"` | no |
 | <a name="input_prefix"></a> [prefix](#input\_prefix) | Optional prefix to write log records to. | `string` | `""` | no |
+| <a name="input_sam_release_version"></a> [sam\_release\_version](#input\_sam\_release\_version) | Release version for SAM apps as defined on github.com/observeinc/aws-sam-apps. | `string` | `""` | no |
 
 ## Outputs
 
