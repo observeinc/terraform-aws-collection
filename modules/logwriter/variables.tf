@@ -28,7 +28,7 @@ variable "prefix" {
   description = "Optional prefix to write log records to."
   type        = string
   nullable    = false
-  default     = "cloudwatchlogs/"
+  default     = ""
 }
 
 variable "buffering_interval" {

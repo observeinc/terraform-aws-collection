@@ -4,7 +4,6 @@ module "logwriter" {
 
   name       = "${var.name}-logwriter"
   bucket_arn = aws_s3_bucket.this.arn
-  prefix     = "cloudwatchlogs/"
 
   log_group_name_patterns = var.logwriter.log_group_name_patterns
   log_group_name_prefixes = var.logwriter.log_group_name_prefixes
