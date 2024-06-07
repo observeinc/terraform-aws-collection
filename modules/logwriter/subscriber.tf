@@ -18,5 +18,5 @@ module "subscriber" {
   debug_endpoint                  = var.debug_endpoint
   verbosity                       = var.verbosity
   code_uri                        = var.code_uri
-  code_version                    = var.code_version
+  sam_release_version             = var.sam_release_version
 }

@@ -11,5 +11,5 @@ module "samversion" {
   source   = "../samversion"
   app      = "logwriter"
   function = "Subscriber"
-  release  = var.code_version
+  release  = var.sam_release_version
 }

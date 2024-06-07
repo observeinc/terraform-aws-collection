@@ -7,6 +7,7 @@ variable "app" {
 variable "function" {
   description = "Function name"
   type        = string
+  default     = ""
   nullable    = false
 }
 
