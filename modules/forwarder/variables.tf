@@ -54,6 +54,14 @@ variable "source_bucket_names" {
   type        = list(string)
   nullable    = false
   default     = []
+
+  validation {
+    # this check is not exhaustive, but it ensures wildcard can only be used as
+    # a suffix, and filters out most common misconfiguration of providing an
+    # ARN.
+    condition     = alltrue([for name in var.source_bucket_names : can(regex("^[a-z0-9-.]*(\\*)?$", name))])
+    error_message = "Invalid S3 bucket name"
+  }
 }
 
 variable "source_topic_arns" {
@@ -63,6 +71,11 @@ variable "source_topic_arns" {
   type        = list(string)
   nullable    = false
   default     = []
+
+  validation {
+    condition     = alltrue([for arn in var.source_topic_arns : can(regex("^arn:[^:]+:sns:", arn))])
+    error_message = "Invalid SNS ARN"
+  }
 }
 
 variable "source_kms_key_arns" {
@@ -72,6 +85,11 @@ variable "source_kms_key_arns" {
   type        = list(string)
   nullable    = false
   default     = []
+
+  validation {
+    condition     = alltrue([for arn in var.source_kms_key_arns : can(regex("^arn:[^:]+:kms:", arn))])
+    error_message = "Invalid KMS ARN"
+  }
 }
 
 variable "max_file_size" {
