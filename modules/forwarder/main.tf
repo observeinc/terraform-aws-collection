@@ -1,5 +1,5 @@
 locals {
-  code_uri        = var.code_uri != "" ? var.code_uri : module.samversion[0].code_uri
+  code_uri        = var.code_uri != "" ? var.code_uri : yamldecode(module.sam_asset[0].body)["Resources"]["Forwarder"]["Properties"]["CodeUri"]
   parsed_s3_uri   = regex("s3://(?P<bucket>[^/]+)/(?P<key>.+)", local.code_uri)
   destination_uri = var.destination.uri != "" ? var.destination.uri : "s3://${var.destination.bucket}/${var.destination.prefix}"
   name_prefix     = "${substr(var.name, 0, 37)}-"
@@ -21,10 +21,9 @@ data "aws_region" "current" {}
 
 data "aws_partition" "current" {}
 
-module "samversion" {
-  count    = var.code_uri != "" ? 0 : 1
-  source   = "../samversion"
-  app      = "forwarder"
-  function = "Forwarder"
-  release  = var.sam_release_version
+module "sam_asset" {
+  count           = var.code_uri != "" ? 0 : 1
+  source          = "../sam_asset"
+  asset           = "forwarder.yaml"
+  release_version = var.sam_release_version
 }
