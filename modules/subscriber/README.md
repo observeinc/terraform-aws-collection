@@ -27,6 +27,8 @@ This app is specifically to register new cloudwatch log groups for the `logwrite
 
 | Name | Type |
 |------|------|
+| [aws_cloudwatch_event_rule.discovery](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_rule) | resource |
+| [aws_cloudwatch_event_target.discovery](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target) | resource |
 | [aws_cloudwatch_log_group.log_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_iam_role.scheduler](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role.subscriber](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
