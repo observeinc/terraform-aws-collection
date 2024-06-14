@@ -92,6 +92,18 @@ variable "source_kms_key_arns" {
   }
 }
 
+variable "source_eventbridge_pattern" {
+  description = <<-EOF
+    EventBridge event pattern to trigger forwarder. By default, any
+    `s3:ObjectCreated` in EventBridge will trigger the forwarder. You can
+    disable this behavior by setting this variable to null. Alternatively, you
+    may make it more specific by extending the pattern.
+  EOF
+  type        = map(any)
+  nullable    = true
+  default     = {}
+}
+
 variable "max_file_size" {
   description = <<-EOF
     Max file size for objects to process (in bytes), default is 1GB
