@@ -17,6 +17,9 @@ resource "aws_cloudwatch_event_rule" "this" {
       # list must have elements, so we introduce an empty match
       for name in concat([""], var.source_bucket_names) : { "wildcard" : name }
     ],
+    "detail.object.key" = [
+      for key in concat([""], var.source_object_keys) : { "wildcard" : key }
+    ],
   })
 }
 

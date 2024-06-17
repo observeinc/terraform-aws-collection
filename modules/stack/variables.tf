@@ -30,6 +30,7 @@ variable "forwarder" {
   EOF
   type = object({
     source_bucket_names                      = optional(list(string), [])
+    source_object_keys                       = optional(list(string))
     source_topic_arns                        = optional(list(string), [])
     content_type_overrides                   = optional(list(object({ pattern = string, content_type = string })), [])
     max_file_size                            = optional(number)

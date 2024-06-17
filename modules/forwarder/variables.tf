@@ -64,6 +64,21 @@ variable "source_bucket_names" {
   }
 }
 
+variable "source_object_keys" {
+  description = <<-EOF
+    A list of object key patterns the forwarder is allowed to read from for
+    provided source buckets.
+  EOF
+  type        = list(string)
+  nullable    = false
+  default     = ["*"]
+
+  validation {
+    condition     = length(var.source_object_keys) > 0
+    error_message = "At least one S3 object key match must be provided."
+  }
+}
+
 variable "source_topic_arns" {
   description = <<-EOF
     A list of SNS topics the forwarder is allowed to be subscribed to.
@@ -220,3 +235,4 @@ variable "code_uri" {
   default     = ""
   nullable    = false
 }
+
