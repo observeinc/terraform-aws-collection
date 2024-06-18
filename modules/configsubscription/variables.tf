@@ -14,4 +14,11 @@ variable "name_prefix" {
   nullable    = false
 }
 
-
+variable "tag_account_alias" {
+  type        = bool
+  description = <<-EOF
+    Set tag based on account alias.
+  EOF
+  default     = true
+  nullable    = false
+}
