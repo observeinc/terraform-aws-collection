@@ -1,15 +1,15 @@
-# [2.20.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.19.0...v2.20.0) (2024-06-13)
+# [2.21.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.20.0...v2.21.0) (2024-06-18)
 
 
 ### Bug Fixes
 
-* **logwriter:** subscribe on log group creation ([#172](https://github.com/observeinc/terraform-aws-collection/issues/172)) ([be62a49](https://github.com/observeinc/terraform-aws-collection/commit/be62a491b261ce5cf15a9877e55e31fe06c84979))
+* **forwarder:** filter eventbridge triggers by source bucket ([#175](https://github.com/observeinc/terraform-aws-collection/issues/175)) ([d4d0197](https://github.com/observeinc/terraform-aws-collection/commit/d4d01972f9b6e8441699519932eea89009973f42))
 
 
 ### Features
 
-* bump lambda to 1.19.5 ([fec2174](https://github.com/observeinc/terraform-aws-collection/commit/fec2174b0604eded4744138bcf6247dfd495383a))
-* update sam release to 1.19.6 ([7483894](https://github.com/observeinc/terraform-aws-collection/commit/748389490d8bb6a82bc3c6451f9d94744696f6fb))
+* **forwarder:** add `source_object_keys` parameter ([#176](https://github.com/observeinc/terraform-aws-collection/issues/176)) ([f1ad080](https://github.com/observeinc/terraform-aws-collection/commit/f1ad0804f0a986ce5b6df5b5d649d4bdb9811102))
+* update sam release to 2.0.0 ([#177](https://github.com/observeinc/terraform-aws-collection/issues/177)) ([0cb909a](https://github.com/observeinc/terraform-aws-collection/commit/0cb909acef20e7ace60dd55fc79dc36a840885b2))
 
 
 
