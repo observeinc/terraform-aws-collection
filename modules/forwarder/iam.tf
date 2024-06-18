@@ -80,7 +80,11 @@ data "aws_iam_policy_document" "reader" {
       "s3:GetObject",
       "s3:GetObjectTagging",
     ]
-    resources = [for name in var.source_bucket_names : "arn:aws:s3:::${name}/*"]
+    # NOTE: this is a deviation from our CloudFormation template. In terraform
+    # we can compute the product of two lists, allowing us to be strict as to what buckets and keys we grant the function read access for. 
+    resources = [
+      for pair in setproduct(var.source_bucket_names, var.source_object_keys) : "arn:aws:s3:::${pair[0]}/${pair[1]}"
+    ]
   }
 }
 
