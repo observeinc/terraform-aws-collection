@@ -18,6 +18,8 @@ resource "aws_iam_role" "this" {
       policy = data.aws_iam_policy_document.notifications.json
     }
   }
+
+  tags = local.tags
 }
 
 data "aws_iam_policy_document" "assume_role" {

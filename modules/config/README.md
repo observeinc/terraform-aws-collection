@@ -71,6 +71,7 @@ No modules.
 | [aws_config_configuration_recorder_status.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_configuration_recorder_status) | resource |
 | [aws_config_delivery_channel.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_delivery_channel) | resource |
 | [aws_iam_role.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_iam_account_alias.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_account_alias) | data source |
 | [aws_iam_policy.service_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy) | data source |
 | [aws_iam_policy_document.assume_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.notifications](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
@@ -88,6 +89,7 @@ No modules.
 | <a name="input_name"></a> [name](#input\_name) | Name to set on AWS Config resources. | `string` | `"default"` | no |
 | <a name="input_prefix"></a> [prefix](#input\_prefix) | The prefix for the specified S3 bucket. | `string` | `""` | no |
 | <a name="input_sns_topic_arn"></a> [sns\_topic\_arn](#input\_sns\_topic\_arn) | The ARN of the SNS topic that AWS Config delivers notifications to. | `string` | `null` | no |
+| <a name="input_tag_account_alias"></a> [tag\_account\_alias](#input\_tag\_account\_alias) | Set tag based on account alias. | `bool` | `true` | no |
 
 ## Outputs
 

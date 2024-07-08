@@ -59,6 +59,7 @@ variable "config" {
     exclude_resource_types        = optional(list(string))
     delivery_frequency            = optional(string)
     include_global_resource_types = optional(bool)
+    tag_account_alias             = optional(bool)
   })
   default = null
 }
@@ -69,6 +70,7 @@ variable "configsubscription" {
   EOF
   type = object({
     delivery_bucket_name = string
+    tag_account_alias    = optional(bool)
   })
   default = null
 }

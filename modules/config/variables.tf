@@ -79,3 +79,12 @@ variable "sns_topic_arn" {
   default     = null
   nullable    = true
 }
+
+variable "tag_account_alias" {
+  type        = bool
+  description = <<-EOF
+    Set tag based on account alias.
+  EOF
+  default     = true
+  nullable    = false
+}
