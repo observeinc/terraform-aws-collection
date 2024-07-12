@@ -19,4 +19,10 @@ resource "aws_scheduler_schedule" "discovery_schedule" {
       }
     })
   }
+
+  lifecycle {
+    replace_triggered_by = [
+      aws_lambda_function.subscriber,
+    ]
+  }
 }
