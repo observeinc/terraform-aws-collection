@@ -1,14 +1,15 @@
-# [2.23.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.22.0...v2.23.0) (2024-07-16)
+# [2.24.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.23.0...v2.24.0) (2024-07-26)
 
 
 ### Bug Fixes
 
-* **subscriber:** replace scheduler on variable changes ([#178](https://github.com/observeinc/terraform-aws-collection/issues/178)) ([38c44d7](https://github.com/observeinc/terraform-aws-collection/commit/38c44d757288e4e36da24d0b3db65f85c3777539))
+* adjust provider source for examples ([#182](https://github.com/observeinc/terraform-aws-collection/issues/182)) ([3d2cbbb](https://github.com/observeinc/terraform-aws-collection/commit/3d2cbbba1580584131d7447bc5f753e7c50007c3))
+* **forwarder:** validate destination bucket name ([#181](https://github.com/observeinc/terraform-aws-collection/issues/181)) ([06347e7](https://github.com/observeinc/terraform-aws-collection/commit/06347e7c4f2a58abf8e2ac33cb5d1f43a7f1daa3))
 
 
 ### Features
 
-* bump SAM apps version to 2.1.0 ([#179](https://github.com/observeinc/terraform-aws-collection/issues/179)) ([56126f5](https://github.com/observeinc/terraform-aws-collection/commit/56126f51910f2c58109d8c6c0956d1a09a12c0c7))
+* add cloudtrail module ([#180](https://github.com/observeinc/terraform-aws-collection/issues/180)) ([84d1c90](https://github.com/observeinc/terraform-aws-collection/commit/84d1c901ced989e2437a2e12128ec65444b6b93c))
 
 
 
