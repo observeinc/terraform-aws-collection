@@ -42,6 +42,11 @@ variable "destination" {
     condition     = var.destination.uri == "" || can(regex("^https://.*", var.destination.uri))
     error_message = "URI must have https scheme"
   }
+
+  validation {
+    condition     = can(regex("^[a-z0-9-.]*$", var.destination.bucket))
+    error_message = "Invalid S3 bucket name"
+  }
 }
 
 variable "source_bucket_names" {

@@ -4,7 +4,7 @@
 variables {
   name = "test"
   destination = {
-    bucket = "bucket_name"
+    bucket = "bucket-name"
   }
   source_bucket_names = ["*", "a-b-c-", "a31asf"]
   source_topic_arns   = ["arn:aws:sns:us-west-2:123456789012:my-topic-name"]
@@ -78,5 +78,16 @@ run "invalid_source_kms_key_arn" {
 
   variables {
     source_kms_key_arns = ["foo"]
+  }
+}
+
+run "invalid_destination_bucket" {
+  command         = plan
+  expect_failures = [var.destination]
+
+  variables {
+    destination = {
+      bucket = "s3://foo"
+    }
   }
 }
