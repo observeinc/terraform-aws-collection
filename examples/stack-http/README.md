@@ -39,10 +39,10 @@ Note that this example may create resources which can cost money. Run terraform 
 
 | Name | Type |
 |------|------|
-| observe_datastream.this | resource |
-| observe_datastream_token.this | resource |
-| observe_ingest_info.this | data source |
-| observe_workspace.default | data source |
+| [observe_datastream.this](https://registry.terraform.io/providers/observeinc/observe/latest/docs/resources/datastream) | resource |
+| [observe_datastream_token.this](https://registry.terraform.io/providers/observeinc/observe/latest/docs/resources/datastream_token) | resource |
+| [observe_ingest_info.this](https://registry.terraform.io/providers/observeinc/observe/latest/docs/data-sources/ingest_info) | data source |
+| [observe_workspace.default](https://registry.terraform.io/providers/observeinc/observe/latest/docs/data-sources/workspace) | data source |
 
 ## Inputs
 
