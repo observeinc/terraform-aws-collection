@@ -40,10 +40,10 @@ Note that this example may create resources which can cost money. Run terraform 
 
 | Name | Type |
 |------|------|
-| observe_datastream.this | resource |
-| observe_filedrop.this | resource |
+| [observe_datastream.this](https://registry.terraform.io/providers/observeinc/observe/latest/docs/resources/datastream) | resource |
+| [observe_filedrop.this](https://registry.terraform.io/providers/observeinc/observe/latest/docs/resources/filedrop) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
-| observe_workspace.default | data source |
+| [observe_workspace.default](https://registry.terraform.io/providers/observeinc/observe/latest/docs/data-sources/workspace) | data source |
 
 ## Inputs
 
