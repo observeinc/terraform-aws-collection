@@ -70,5 +70,5 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_role"></a> [role](#output\_role) | IAM role to be assummed by Observe |
+| <a name="output_arn"></a> [arn](#output\_arn) | ARN for IAM role to be assumed by Observe |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
