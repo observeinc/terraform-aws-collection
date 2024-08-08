@@ -12,7 +12,7 @@ resource "aws_s3_bucket" "this" {
 }
 
 module "metric_stream" {
-  source     = "observeinc/cloudformation/aws//modules/metricstream"
+  source     = "observeinc/collection/aws//modules/metricstream"
   name       = random_pet.this.id
   bucket_arn = aws_s3_bucket.this.arn
 }
