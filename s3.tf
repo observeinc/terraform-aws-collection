@@ -1,7 +1,7 @@
 locals {
   create_s3_bucket = var.s3_bucket == null
   bucket_name      = local.create_s3_bucket ? "${local.name_prefix}${data.aws_region.current.name}-${random_string.this[0].id}" : var.s3_bucket.id
-  bucket_arn       = "arn:aws:s3:::${local.bucket_name}"
+  bucket_arn       = "arn:${data.aws_partition.current.id}:s3:::${local.bucket_name}"
   aws_logs_arn     = "${local.bucket_arn}/${local.s3_exported_prefix}AWSLogs/${data.aws_caller_identity.current.account_id}/*"
 
   s3_bucket = local.create_s3_bucket ? {

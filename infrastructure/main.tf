@@ -3,6 +3,8 @@ locals {
   repository   = "terraform-aws-collection"
 }
 
+data "aws_partition" "current" {}
+
 data "aws_iam_openid_connect_provider" "github_actions" {
   url = "https://token.actions.githubusercontent.com"
 }
@@ -47,7 +49,7 @@ resource "aws_iam_role" "github_actions_ci" {
 
 resource "aws_iam_role_policy_attachment" "admin_policy_attachment" {
   role       = aws_iam_role.github_actions_ci.name
-  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+  policy_arn = "arn:${data.aws_partition.current.id}:iam::aws:policy/AdministratorAccess"
 }
 
 resource "github_actions_secret" "aws_ci_role" {

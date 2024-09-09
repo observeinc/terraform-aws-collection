@@ -5,6 +5,8 @@ locals {
 
 data "aws_caller_identity" "current" {}
 
+data "aws_partition" "current" {}
+
 data "aws_iam_policy_document" "kms_default_key_policy" {
   statement {
     actions = [
@@ -12,7 +14,7 @@ data "aws_iam_policy_document" "kms_default_key_policy" {
     ]
     principals {
       identifiers = [
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+        "arn:${data.aws_partition.current.id}:iam::${data.aws_caller_identity.current.account_id}:root",
       ]
       type = "AWS"
     }
@@ -70,7 +72,7 @@ resource "observe_filedrop" "this" {
     provider {
       aws {
         region   = "us-west-2"
-        role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${local.name}"
+        role_arn = "arn:${data.aws_partition.current.id}:iam::${data.aws_caller_identity.current.account_id}:role/${local.name}"
       }
     }
   }

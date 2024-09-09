@@ -1,4 +1,3 @@
-
 # The below variables are all valid. We will validate them in first test, and
 # then successively override them with bad inputs.
 variables {

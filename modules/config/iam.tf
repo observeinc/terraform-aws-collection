@@ -43,7 +43,7 @@ data "aws_iam_policy_document" "writer" {
     ]
 
     resources = [
-      "arn:aws:s3:::${var.bucket}",
+      "arn:${data.aws_partition.current.id}:s3:::${var.bucket}",
     ]
   }
 
@@ -53,7 +53,7 @@ data "aws_iam_policy_document" "writer" {
     ]
 
     resources = [
-      "arn:aws:s3:::${var.bucket}/${var.prefix}AWSLogs/*",
+      "arn:${data.aws_partition.current.id}:s3:::${var.bucket}/${var.prefix}AWSLogs/*",
     ]
   }
 }
@@ -71,5 +71,5 @@ data "aws_iam_policy_document" "notifications" {
 }
 
 data "aws_iam_policy" "service_role" {
-  arn = "arn:aws:iam::aws:policy/service-role/AWS_ConfigRole"
+  arn = "arn:${data.aws_partition.current.id}:iam::aws:policy/service-role/AWS_ConfigRole"
 }
