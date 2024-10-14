@@ -43,7 +43,7 @@ module "lambda_log_subscription" {
   count = var.lambda_subscribe_logs ? 1 : 0
 
   source  = "observeinc/kinesis-firehose/aws//modules/cloudwatch_logs_subscription"
-  version = "2.2.0"
+  version = "2.3.0"
 
   kinesis_firehose = module.observe_kinesis_firehose
   log_group_names  = [local.lambda_log_group]
