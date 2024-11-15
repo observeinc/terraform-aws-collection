@@ -1,7 +1,7 @@
 locals {
   account_id = data.aws_caller_identity.current.account_id
   region     = data.aws_region.current.name
-  sqs_arn    = "arn:aws:sqs:${local.region}:${local.account_id}:${var.name}"
+  sqs_arn    = "arn:${data.aws_partition.current.id}:sqs:${local.region}:${local.account_id}:${var.name}"
   enable_dlq = var.queue_max_receive_count > 0
 }
 
@@ -29,7 +29,7 @@ resource "aws_sqs_queue" "this" {
         },
         Condition = {
           ArnEquals = {
-            "aws:SourceArn" = [for name in var.source_bucket_names : "arn:aws:s3:::${name}"]
+            "aws:SourceArn" = [for name in var.source_bucket_names : "arn:${data.aws_partition.current.id}:s3:::${name}"]
           }
         }
       },

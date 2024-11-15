@@ -5,3 +5,4 @@ terraform.tfvars
 tfplan
 
 .terraform.lock.hcl
+.idea
