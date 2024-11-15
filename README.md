@@ -99,11 +99,11 @@ module "observe_collection" {
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_lambda_log_subscription"></a> [lambda\_log\_subscription](#module\_lambda\_log\_subscription) | observeinc/kinesis-firehose/aws//modules/cloudwatch_logs_subscription | 2.2.0 |
+| <a name="module_lambda_log_subscription"></a> [lambda\_log\_subscription](#module\_lambda\_log\_subscription) | observeinc/kinesis-firehose/aws//modules/cloudwatch_logs_subscription | 2.3.0 |
 | <a name="module_observe_cloudwatch_logs_subscription"></a> [observe\_cloudwatch\_logs\_subscription](#module\_observe\_cloudwatch\_logs\_subscription) | observeinc/cloudwatch-logs-subscription/aws | 0.5.0 |
-| <a name="module_observe_cloudwatch_metrics"></a> [observe\_cloudwatch\_metrics](#module\_observe\_cloudwatch\_metrics) | observeinc/kinesis-firehose/aws//modules/cloudwatch_metrics | 2.2.0 |
-| <a name="module_observe_firehose_eventbridge"></a> [observe\_firehose\_eventbridge](#module\_observe\_firehose\_eventbridge) | observeinc/kinesis-firehose/aws//modules/eventbridge | 2.2.0 |
-| <a name="module_observe_kinesis_firehose"></a> [observe\_kinesis\_firehose](#module\_observe\_kinesis\_firehose) | observeinc/kinesis-firehose/aws | 2.2.0 |
+| <a name="module_observe_cloudwatch_metrics"></a> [observe\_cloudwatch\_metrics](#module\_observe\_cloudwatch\_metrics) | observeinc/kinesis-firehose/aws//modules/cloudwatch_metrics | 2.3.0 |
+| <a name="module_observe_firehose_eventbridge"></a> [observe\_firehose\_eventbridge](#module\_observe\_firehose\_eventbridge) | observeinc/kinesis-firehose/aws//modules/eventbridge | 2.3.0 |
+| <a name="module_observe_kinesis_firehose"></a> [observe\_kinesis\_firehose](#module\_observe\_kinesis\_firehose) | observeinc/kinesis-firehose/aws | 2.3.0 |
 | <a name="module_observe_lambda"></a> [observe\_lambda](#module\_observe\_lambda) | observeinc/lambda/aws | 3.6.0 |
 | <a name="module_observe_lambda_s3_bucket_subscription"></a> [observe\_lambda\_s3\_bucket\_subscription](#module\_observe\_lambda\_s3\_bucket\_subscription) | observeinc/lambda/aws//modules/s3_bucket_subscription | 3.6.0 |
 | <a name="module_observe_lambda_snapshot"></a> [observe\_lambda\_snapshot](#module\_observe\_lambda\_snapshot) | observeinc/lambda/aws//modules/snapshot | 3.6.0 |
@@ -119,6 +119,7 @@ module "observe_collection" {
 | [random_string.this](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy_document.bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
 ## Inputs

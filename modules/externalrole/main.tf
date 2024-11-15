@@ -1,3 +1,5 @@
+data "aws_partition" "current" {}
+
 resource "aws_iam_role" "this" {
   name = var.name
 
@@ -9,7 +11,7 @@ resource "aws_iam_role" "this" {
         Effect = "Allow",
         Principal = {
           AWS = [
-            "arn:aws:iam::${var.observe_aws_account_id}:root"
+            "arn:${data.aws_partition.current.id}:iam::${var.observe_aws_account_id}:root"
           ]
         },
         Condition = {
