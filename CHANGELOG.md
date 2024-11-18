@@ -1,15 +1,16 @@
-# [2.25.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.24.0...v2.25.0) (2024-08-08)
+# [2.26.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.25.0...v2.26.0) (2024-11-18)
 
 
 ### Bug Fixes
 
-* **externalrole:** adjust outputs. ([#186](https://github.com/observeinc/terraform-aws-collection/issues/186)) ([85696a7](https://github.com/observeinc/terraform-aws-collection/commit/85696a7f97e8cbf3d4f1588dc306c39b9da8117f))
+* bump sam-assets to 2.3.2 ([#193](https://github.com/observeinc/terraform-aws-collection/issues/193)) ([a526b37](https://github.com/observeinc/terraform-aws-collection/commit/a526b3767f7be73a0f14e03af00769610f280ca9))
 
 
 ### Features
 
-* add externalrole module ([#184](https://github.com/observeinc/terraform-aws-collection/issues/184)) ([65b2982](https://github.com/observeinc/terraform-aws-collection/commit/65b29824965de1b1c517362e0af3273b187b323f))
-* update dependencies ([d1b7c42](https://github.com/observeinc/terraform-aws-collection/commit/d1b7c424b1d5560309372aae1169d3d52bb5187a))
+* bump sam assets to 2.3.1  ([#190](https://github.com/observeinc/terraform-aws-collection/issues/190)) ([56915ea](https://github.com/observeinc/terraform-aws-collection/commit/56915ea2e39e6088320ecdaa5d230a748d93c534))
+* update dependencies ([ed79cbd](https://github.com/observeinc/terraform-aws-collection/commit/ed79cbd8bea678d589306d9142aad4e4dd136e7a))
+* Update to use aws_partition for AWS China (aws-cn) compatibility ([c3cdfee](https://github.com/observeinc/terraform-aws-collection/commit/c3cdfeeb9d504e185dacddd9377775203435b83d))
 
 
 
