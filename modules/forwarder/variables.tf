@@ -160,6 +160,13 @@ variable "lambda_env_vars" {
   default     = {}
 }
 
+variable "lambda_runtime" {
+  description = "Lambda runtime."
+  type        = string
+  default     = "provided.al2023"
+  nullable    = false
+}
+
 variable "retention_in_days" {
   description = "Retention in days of cloudwatch log group"
   type        = number
