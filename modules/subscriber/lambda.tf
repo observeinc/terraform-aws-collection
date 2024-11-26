@@ -9,7 +9,7 @@ resource "aws_lambda_function" "subscriber" {
   s3_key        = local.parsed_s3_uri["key"]
   role          = aws_iam_role.subscriber.arn
   handler       = "bootstrap"
-  runtime       = "provided.al2"
+  runtime       = var.lambda_runtime
   architectures = ["arm64"]
   memory_size   = var.lambda_memory_size
   timeout       = var.lambda_timeout

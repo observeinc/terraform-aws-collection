@@ -15,6 +15,7 @@ module "forwarder" {
   lambda_memory_size                       = var.forwarder.lambda_memory_size
   lambda_timeout                           = var.forwarder.lambda_timeout
   lambda_env_vars                          = var.forwarder.lambda_env_vars
+  lambda_runtime                           = var.forwarder.lambda_runtime
   retention_in_days                        = var.forwarder.retention_in_days
   queue_max_receive_count                  = var.forwarder.queue_max_receive_count
   queue_delay_seconds                      = var.forwarder.queue_delay_seconds

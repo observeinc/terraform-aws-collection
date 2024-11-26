@@ -137,6 +137,14 @@ variable "lambda_env_vars" {
   default     = null
 }
 
+variable "lambda_runtime" {
+  description = <<-EOF
+    Lambda runtime.
+  EOF
+  type        = string
+  default     = null
+}
+
 variable "debug_endpoint" {
   description = "Endpoint to send debugging telemetry to. Sets the OTEL_EXPORTER_OTLP_ENDPOINT environment variable for the lambda function."
   type        = string
