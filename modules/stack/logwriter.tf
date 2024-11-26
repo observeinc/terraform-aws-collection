@@ -15,6 +15,8 @@ module "logwriter" {
   discovery_rate          = var.logwriter.discovery_rate
   lambda_memory_size      = var.logwriter.lambda_memory_size
   lambda_timeout          = var.logwriter.lambda_timeout
+  lambda_env_vars         = var.logwriter.lambda_env_vars
+  lambda_runtime          = var.logwriter.lambda_runtime
   debug_endpoint          = var.debug_endpoint
   verbosity               = var.verbosity
   code_uri                = var.logwriter.code_uri

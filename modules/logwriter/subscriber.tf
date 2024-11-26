@@ -15,6 +15,7 @@ module "subscriber" {
   lambda_env_vars                 = var.lambda_env_vars
   lambda_memory_size              = var.lambda_memory_size
   lambda_timeout                  = var.lambda_timeout
+  lambda_runtime                  = var.lambda_runtime
   debug_endpoint                  = var.debug_endpoint
   verbosity                       = var.verbosity
   code_uri                        = var.code_uri

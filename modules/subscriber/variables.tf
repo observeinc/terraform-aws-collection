@@ -119,6 +119,13 @@ variable "lambda_env_vars" {
   default     = {}
 }
 
+variable "lambda_runtime" {
+  description = "Lambda runtime."
+  type        = string
+  default     = "provided.al2023"
+  nullable    = false
+}
+
 variable "debug_endpoint" {
   description = "Endpoint to send debugging telemetry to. Sets the OTEL_EXPORTER_OTLP_ENDPOINT environment variable for the lambda function."
   type        = string

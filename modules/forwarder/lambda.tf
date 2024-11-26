@@ -5,7 +5,7 @@ resource "aws_lambda_function" "this" {
   role          = aws_iam_role.this.arn
   architectures = ["arm64"]
   handler       = "bootstrap"
-  runtime       = "provided.al2"
+  runtime       = var.lambda_runtime
   memory_size   = var.lambda_memory_size != null ? var.lambda_memory_size : local.default_limits.memory_size
   timeout       = var.lambda_timeout != null ? var.lambda_timeout : local.default_limits.timeout
 
