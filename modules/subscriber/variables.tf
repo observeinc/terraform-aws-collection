@@ -38,7 +38,7 @@ variable "filter_pattern" {
 }
 
 variable "log_group_name_patterns" {
-  description = "List of patterns as strings. We will only subscribe to log groups that have names matching one of the provided strings based on strings based on a case-sensitive substring search. To subscribe to all log groups, use the wildcard operator *."
+  description = "List of patterns as strings. We will only subscribe to log groups that have names matching one of the provided strings based on strings based on a case-sensitive substring search. To subscribe to all log groups, use the operator `*`. The `*` character acts as a special selector for all log groups, not as a wildcard."
   type        = list(string)
   nullable    = false
   default     = []
@@ -52,7 +52,7 @@ variable "log_group_name_patterns" {
 }
 
 variable "log_group_name_prefixes" {
-  description = "List of prefixes as strings. The lambda function will only apply to log groups that start with a provided string. To subscribe to all log groups, use the wildcard operator *."
+  description = "List of prefixes as strings. The lambda function will only apply to log groups that start with a provided string. To subscribe to all log groups, use the operator `*`. The `*` character acts as a special selector for all log groups, not as a wildcard."
   type        = list(string)
   nullable    = false
   default     = []
