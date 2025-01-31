@@ -14,6 +14,15 @@ variable "name_prefix" {
   nullable    = false
 }
 
+variable "aws_account_alias" {
+  description = <<-EOF
+    Override AWS account alias tag.
+  EOF
+  type        = string
+  default     = null
+  nullable    = true
+}
+
 variable "tag_account_alias" {
   type        = bool
   description = <<-EOF
