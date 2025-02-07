@@ -29,6 +29,15 @@ jobs:
         else
             echo "can-write=true" >> $GITHUB_OUTPUT
         fi
+    - name: Terraform min/max versions
+      id: minMax
+      uses: clowdhaus/terraform-min-max@v1.3.1
+      with:
+      directory: ${{ matrix.directory }}
+    - name: Install Terraform v${{ steps.minMax.outputs.minVersion }}
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ steps.minMax.outputs.minVersion }}
 
   prepare_matrix:
     needs: [permission_check]
