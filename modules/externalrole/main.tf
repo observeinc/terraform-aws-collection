@@ -22,20 +22,20 @@ resource "aws_iam_role" "this" {
       }
     ]
   })
-}
 
-resource "aws_iam_role_policy" "allowed" {
-  name = "allowed"
-  role = aws_iam_role.this.name
+  inline_policy {
+    name = "allowed"
 
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Action   = var.allowed_actions,
-        Effect   = "Allow",
-        Resource = "*"
-      }
-    ]
-  })
+    policy = jsonencode({
+      Version = "2012-10-17",
+      Statement = [
+        {
+          Action = var.allowed_actions
+
+          Effect   = "Allow",
+          Resource = "*"
+        }
+      ]
+    })
+  }
 }

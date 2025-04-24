@@ -1,21 +1,20 @@
 resource "aws_iam_role" "firehose" {
   name_prefix        = local.name_prefix
   assume_role_policy = data.aws_iam_policy_document.firehose_assume_role_policy.json
-}
 
-locals {
-  firehose_policies = {
-    logging  = data.aws_iam_policy_document.firehose_logging.json
-    s3writer = data.aws_iam_policy_document.firehose_s3writer.json
+  dynamic "inline_policy" {
+    for_each = {
+      for k, v in {
+        logging  = data.aws_iam_policy_document.firehose_logging.json
+        s3writer = data.aws_iam_policy_document.firehose_s3writer.json
+      } : k => v
+    }
+
+    content {
+      name   = inline_policy.key
+      policy = inline_policy.value
+    }
   }
-}
-
-resource "aws_iam_role_policy" "firehose" {
-  for_each = local.firehose_policies
-
-  name   = each.key
-  role   = aws_iam_role.firehose.name
-  policy = each.value
 }
 
 data "aws_iam_policy_document" "firehose_assume_role_policy" {
@@ -58,12 +57,11 @@ data "aws_iam_policy_document" "firehose_s3writer" {
 resource "aws_iam_role" "metric_stream" {
   name_prefix        = local.name_prefix
   assume_role_policy = data.aws_iam_policy_document.metric_stream_assume_role_policy.json
-}
 
-resource "aws_iam_role_policy" "metric_stream_firehose" {
-  name   = "firehose"
-  role   = aws_iam_role.metric_stream.name
-  policy = data.aws_iam_policy_document.metric_stream_firehose.json
+  inline_policy {
+    name   = "firehose"
+    policy = data.aws_iam_policy_document.metric_stream_firehose.json
+  }
 }
 
 data "aws_iam_policy_document" "metric_stream_assume_role_policy" {

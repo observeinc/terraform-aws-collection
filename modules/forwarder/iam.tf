@@ -1,29 +1,24 @@
-locals {
-  role_policies = {
-    logging = data.aws_iam_policy_document.logging.json
-    queue   = data.aws_iam_policy_document.queue.json
-    writer  = var.destination.bucket != "" ? data.aws_iam_policy_document.writer.json : null
-    reader  = length(var.source_bucket_names) > 0 ? data.aws_iam_policy_document.reader.json : null
-    kms     = length(var.source_kms_key_arns) > 0 ? data.aws_iam_policy_document.kms.json : null
-  }
-
-  filtered_role_policies = {
-    for k, v in local.role_policies : k => v if v != null
-  }
-}
-
 resource "aws_iam_role" "this" {
   name               = var.destination.arn != "" ? var.name : null
   name_prefix        = var.destination.arn != "" ? null : local.name_prefix
   assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
-}
 
-resource "aws_iam_role_policy" "this" {
-  for_each = local.filtered_role_policies
+  dynamic "inline_policy" {
+    for_each = {
+      for k, v in {
+        logging = data.aws_iam_policy_document.logging.json
+        queue   = data.aws_iam_policy_document.queue.json
+        writer  = var.destination.bucket != "" ? data.aws_iam_policy_document.writer.json : null
+        reader  = length(var.source_bucket_names) > 0 ? data.aws_iam_policy_document.reader.json : null
+        kms     = length(var.source_kms_key_arns) > 0 ? data.aws_iam_policy_document.kms.json : null
+      } : k => v if v != null
+    }
 
-  name   = each.key
-  role   = aws_iam_role.this.name
-  policy = each.value
+    content {
+      name   = inline_policy.key
+      policy = inline_policy.value
+    }
+  }
 }
 
 data "aws_iam_policy_document" "lambda_assume_role_policy" {
