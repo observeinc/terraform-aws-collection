@@ -1,25 +1,31 @@
 resource "aws_iam_role" "this" {
   name_prefix        = "${var.name}-"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
+  tags               = local.tags
+}
 
-  managed_policy_arns = [
-    data.aws_iam_policy.service_role.arn
-  ]
+resource "aws_iam_role_policy_attachment" "service_role" {
+  role       = aws_iam_role.this.name
+  policy_arn = data.aws_iam_policy.service_role.arn
+}
 
-  inline_policy {
-    name   = "writer"
-    policy = data.aws_iam_policy_document.writer.json
-  }
+resource "aws_iam_role_policy" "writer" {
+  name   = "writer"
+  role   = aws_iam_role.this.name
+  policy = data.aws_iam_policy_document.writer.json
+}
 
-  dynamic "inline_policy" {
-    for_each = var.sns_topic_arn != null ? [1] : []
-    content {
-      name   = "notifications"
-      policy = data.aws_iam_policy_document.notifications.json
-    }
-  }
+# resource "aws_iam_role_policy" "notifications" {
+#   name   = "notifications"
+#   role   = aws_iam_role.this.name
+#   policy = data.aws_iam_policy_document.notifications.json
+# }
 
-  tags = local.tags
+resource "aws_iam_role_policy" "notifications" {
+  count  = var.sns_topic_arn != null && var.sns_topic_arn != "" ? 1 : 0
+  name   = "notifications"
+  role   = aws_iam_role.this.name
+  policy = data.aws_iam_policy_document.notifications.json
 }
 
 data "aws_iam_policy_document" "assume_role" {
@@ -59,14 +65,12 @@ data "aws_iam_policy_document" "writer" {
 }
 
 data "aws_iam_policy_document" "notifications" {
-  statement {
-    actions = [
-      "sns:Publish",
-    ]
-
-    resources = [
-      var.sns_topic_arn != null ? var.sns_topic_arn : "",
-    ]
+  dynamic "statement" {
+    for_each = var.sns_topic_arn != null && var.sns_topic_arn != "" ? [1] : []
+    content {
+      actions   = ["sns:Publish"]
+      resources = [var.sns_topic_arn]
+    }
   }
 }
 
