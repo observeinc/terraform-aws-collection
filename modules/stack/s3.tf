@@ -21,5 +21,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
       days = var.s3_bucket_lifecycle_expiration
     }
     status = "Enabled"
+    filter {
+      prefix = ""
+    }
   }
 }
