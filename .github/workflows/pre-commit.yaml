@@ -42,7 +42,7 @@ jobs:
         uses: actions/setup-python@v5
       - name: Terraform min/max versions
         id: minMax
-        uses: clowdhaus/terraform-min-max@v1.3.1
+        uses: clowdhaus/terraform-min-max@v1.3.2
         with:
           directory: ${{ matrix.directory }}
       - name: Install Terraform v${{ steps.minMax.outputs.minVersion }}
@@ -69,7 +69,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Terraform min/max versions
         id: minMax
-        uses: clowdhaus/terraform-min-max@v1.3.1
+        uses: clowdhaus/terraform-min-max@v1.3.2
     outputs:
       minVersion: ${{ steps.minMax.outputs.minVersion }}
       maxVersion: ${{ steps.minMax.outputs.maxVersion }}
