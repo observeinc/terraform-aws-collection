@@ -1,23 +1,30 @@
-
 resource "aws_iam_role" "subscriber" {
   name_prefix        = local.name_prefix
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+}
 
-  dynamic "inline_policy" {
-    for_each = {
-      for k, v in {
-        logging      = data.aws_iam_policy_document.logging_policy.json
-        pass         = data.aws_iam_policy_document.pass_policy.json
-        queue        = data.aws_iam_policy_document.queue_policy.json
-        subscription = data.aws_iam_policy_document.subscription_policy.json
-      } : k => v
-    }
+resource "aws_iam_role_policy" "logging" {
+  name   = "logging"
+  role   = aws_iam_role.subscriber.name
+  policy = data.aws_iam_policy_document.logging_policy.json
+}
 
-    content {
-      name   = inline_policy.key
-      policy = inline_policy.value
-    }
-  }
+resource "aws_iam_role_policy" "pass" {
+  name   = "pass"
+  role   = aws_iam_role.subscriber.name
+  policy = data.aws_iam_policy_document.pass_policy.json
+}
+
+resource "aws_iam_role_policy" "queue" {
+  name   = "queue"
+  role   = aws_iam_role.subscriber.name
+  policy = data.aws_iam_policy_document.queue_policy.json
+}
+
+resource "aws_iam_role_policy" "subscription" {
+  name   = "subscription"
+  role   = aws_iam_role.subscriber.name
+  policy = data.aws_iam_policy_document.subscription_policy.json
 }
 
 data "aws_iam_policy_document" "assume_role_policy" {
@@ -82,11 +89,12 @@ data "aws_iam_policy_document" "subscription_policy" {
 resource "aws_iam_role" "scheduler" {
   name_prefix        = local.name_prefix
   assume_role_policy = data.aws_iam_policy_document.scheduler_assume_role_policy.json
+}
 
-  inline_policy {
-    name   = "queue"
-    policy = data.aws_iam_policy_document.scheduler_queue.json
-  }
+resource "aws_iam_role_policy" "scheduler_queue" {
+  name   = "queue"
+  role   = aws_iam_role.scheduler.name
+  policy = data.aws_iam_policy_document.scheduler_queue.json
 }
 
 data "aws_iam_policy_document" "scheduler_assume_role_policy" {
