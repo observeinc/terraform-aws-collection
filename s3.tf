@@ -53,6 +53,7 @@ module "s3_bucket" {
   attach_lb_log_delivery_policy  = true
   attach_policy                  = true
   policy                         = data.aws_iam_policy_document.bucket.json
+  block_public_policy            = true
 
   tags = var.tags
 }
