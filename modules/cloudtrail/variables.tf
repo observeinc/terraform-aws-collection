@@ -19,7 +19,10 @@ variable "is_multi_region_trail" {
 }
 
 variable "exclude_management_event_sources" {
-  description = "A set of event sources to exclude."
+  description = <<-EOF
+    A list of management event sources to exclude from CloudTrail.
+    To capture all CloudTrail management events, leave this as an empty list ([]).
+  EOF
   type        = list(string)
   default     = ["kms.amazonaws.com", "rdsdata.amazonaws.com"]
   nullable    = true

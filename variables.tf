@@ -228,9 +228,11 @@ variable "kms_key_id" {
 
 variable "cloudtrail_enable" {
   description = <<-EOF
-    Whether to create a CloudTrail trail.
+    Whether to create a CloudTrail trail. 
+    Useful for avoiding the 'trails per region' quota of 5, such as when testing. 
+    If CloudTrail is already enabled in your AWS account, management events will still be collected by default—except for those from RDS and KMS, which are excluded. To disable collection of all CloudTrail management events, explicitly set cloudtrail_exclude_management_event_sources to ["*"].
     
-    Useful for avoiding the 'trails per region' quota of 5, such as when testing.
+    If you have existing CloudTrails and want to include their events, update cloudtrail_exclude_management_event_sources to control which services are included or excluded from event collection.
   EOF
   type        = bool
   default     = true
@@ -244,16 +246,15 @@ variable "cloudtrail_enable_log_file_validation" {
 
 variable "cloudtrail_exclude_management_event_sources" {
   description = <<-EOF
-    A list of management event sources to exclude.
+    A list of management event sources to exclude. 
+    To capture all CloudTrail management events, set this to an empty list ([]).
+    To exclude all CloudTrail management events, explicitly set to ["*"]
 
     See the following link for more info:
     https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-management-events-with-cloudtrail.html
   EOF
   type        = set(string)
-  default = [
-    "kms.amazonaws.com",
-    "rdsdata.amazonaws.com",
-  ]
+  default     = ["kms.amazonaws.com", "rdsdata.amazonaws.com"]
 }
 
 variable "cloudwatch_metrics_include_filters" {
