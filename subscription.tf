@@ -10,7 +10,7 @@ moved {
 module "observe_cloudwatch_logs_subscription" {
   count   = local.enable_subscription ? 1 : 0
   source  = "observeinc/cloudwatch-logs-subscription/aws"
-  version = "0.5.0"
+  version = "0.6.0"
 
   name             = var.log_subscription_name
   kinesis_firehose = module.observe_kinesis_firehose
