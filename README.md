@@ -100,7 +100,7 @@ module "observe_collection" {
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_lambda_log_subscription"></a> [lambda\_log\_subscription](#module\_lambda\_log\_subscription) | observeinc/kinesis-firehose/aws//modules/cloudwatch_logs_subscription | 2.3.0 |
-| <a name="module_observe_cloudwatch_logs_subscription"></a> [observe\_cloudwatch\_logs\_subscription](#module\_observe\_cloudwatch\_logs\_subscription) | observeinc/cloudwatch-logs-subscription/aws | 0.5.0 |
+| <a name="module_observe_cloudwatch_logs_subscription"></a> [observe\_cloudwatch\_logs\_subscription](#module\_observe\_cloudwatch\_logs\_subscription) | observeinc/cloudwatch-logs-subscription/aws | 0.6.0 |
 | <a name="module_observe_cloudwatch_metrics"></a> [observe\_cloudwatch\_metrics](#module\_observe\_cloudwatch\_metrics) | observeinc/kinesis-firehose/aws//modules/cloudwatch_metrics | 2.3.0 |
 | <a name="module_observe_firehose_eventbridge"></a> [observe\_firehose\_eventbridge](#module\_observe\_firehose\_eventbridge) | observeinc/kinesis-firehose/aws//modules/eventbridge | 2.3.0 |
 | <a name="module_observe_kinesis_firehose"></a> [observe\_kinesis\_firehose](#module\_observe\_kinesis\_firehose) | observeinc/kinesis-firehose/aws | 2.3.0 |
