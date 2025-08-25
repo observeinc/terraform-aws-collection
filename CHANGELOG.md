@@ -1,13 +1,10 @@
-# [2.27.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.26.0...v2.27.0) (2025-07-02)
+# [2.28.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.27.0...v2.28.0) (2025-08-25)
 
 
 ### Features
 
-* Add filter and prefix to S3 aws_s3_bucket_lifecycle_configuration ([81db031](https://github.com/observeinc/terraform-aws-collection/commit/81db031d763728d7d6c9e19a466dedb89db52d8a))
-* Explicitly set block_public_policy to true ([f68cc3e](https://github.com/observeinc/terraform-aws-collection/commit/f68cc3e6a978889aadab3738e60fbc488779f931))
-* parameterize runtime and default to al2023 ([#194](https://github.com/observeinc/terraform-aws-collection/issues/194)) ([8a00036](https://github.com/observeinc/terraform-aws-collection/commit/8a0003677b4c3519a3f776fbfed5b71136384ce1))
-* update dependencies ([f52e551](https://github.com/observeinc/terraform-aws-collection/commit/f52e551f38792a5baf016ade17eaf30267266636))
-* update dependencies ([2e350ff](https://github.com/observeinc/terraform-aws-collection/commit/2e350ffa1994cf7d3e2cd0d641198dbe787a9049))
+* Clarify how to update cloudtrail_exclude_management_event_sources when cloudtrail_enable is false but CloudTrail is already enabled in the AWS Account (IN-522). Updated default to exclude all CloudTrail events. ([4d969f7](https://github.com/observeinc/terraform-aws-collection/commit/4d969f797100c428087b2c801cb0ed4d53bd8226))
+* Update cloudwatch-logs-subscription to v0.6.0 ([a90cdd7](https://github.com/observeinc/terraform-aws-collection/commit/a90cdd7153e408b2264c08492d31ff2d146ae26d))
 
 
 
