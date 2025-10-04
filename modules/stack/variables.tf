@@ -61,6 +61,7 @@ variable "config" {
     delivery_frequency            = optional(string)
     include_global_resource_types = optional(bool)
     tag_account_alias             = optional(bool)
+    aws_account_alias             = optional(string)
   })
   default = null
 }
@@ -72,6 +73,7 @@ variable "configsubscription" {
   type = object({
     delivery_bucket_name = string
     tag_account_alias    = optional(bool)
+    aws_account_alias    = optional(string)
   })
   default = null
 }
