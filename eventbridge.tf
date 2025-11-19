@@ -1,21 +1,26 @@
 locals {
-  eventbridge_rules = coalesce(var.eventbridge_rules, {
-    wildcard = {
-      description = "Capture all events other than CloudTrail"
-      event_pattern = jsonencode({
-        detail-type = [{ anything-but = "AWS API Call via CloudTrail" }]
-      })
+  eventbridge_rules = coalesce(var.eventbridge_rules, merge(
+    {
+      wildcard = {
+        description = "Capture all events other than CloudTrail"
+        event_pattern = jsonencode({
+          detail-type = [{ anything-but = "AWS API Call via CloudTrail" }]
+        })
+      }
     },
-    cloudtrail = {
-      description = "Capture all CloudTrail events"
-      event_pattern = jsonencode({
-        detail-type = ["AWS API Call via CloudTrail"]
-        detail = {
-          eventSource = [{ anything-but = var.cloudtrail_exclude_management_event_sources }]
-        }
-      })
+    # Only include cloudtrail rule if not excluding all management events
+    var.cloudtrail_exclude_all_management_event_sources ? {} : {
+      cloudtrail = {
+        description = "Capture all CloudTrail events"
+        event_pattern = jsonencode({
+          detail-type = ["AWS API Call via CloudTrail"]
+          detail = {
+            eventSource = [{ anything-but = var.cloudtrail_exclude_management_event_sources }]
+          }
+        })
+      }
     }
-  })
+  ))
 }
 
 resource "aws_cloudwatch_event_rule" "rules" {
