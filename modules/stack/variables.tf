@@ -137,3 +137,23 @@ variable "sam_release_version" {
   type        = string
   default     = null
 }
+
+# Optional AWS Organizations ID. If set, we'll add an AllowAWSConfigFromOrg
+# statement on the SNS topic that restricts publishes by aws:PrincipalOrgID.
+variable "org_id" {
+  description = "Optional AWS Organizations ID. If set, adds an AllowAWSConfigFromOrg statement on the SNS topic that allows publishes by aws:PrincipalOrgID. Useful for AWS Control Tower integrations."
+  type        = string
+  default     = null
+}
+
+# Optional list of AWS SourceAccount IDs. If non-empty, we'll add a
+# statement that restricts publishes using the AWS:SourceAccount condition.
+# The current (audit) account ID is automatically included in the list.
+variable "source_accounts" {
+  type        = list(string)
+  default     = ["891377094505"]
+  description = <<-EOF
+    List of AWS account IDs allowed to publish to the SNS topic via AWS Config. Useful for sub-accounts in AWS Organizations and Control Tower integrations.
+    The current account ID is automatically included when this list is non-empty.
+  EOF
+}
