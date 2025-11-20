@@ -135,6 +135,21 @@ variable "dead_letter_queue_destination" {
   description = "Send failed events/function executions to a dead letter queue arn sns or sqs"
 }
 
+variable "lambda_vpc_config" {
+  description = "VPC configuration for Lambda function"
+  type = object({
+    security_groups = list(object({
+      id = string
+    }))
+    subnets = list(object({
+      arn = string
+      id  = string
+    }))
+  })
+  nullable = true
+  default  = null
+}
+
 variable "subscribed_s3_bucket_arns" {
   description = "List of additional S3 bucket ARNs to subscribe lambda to."
   type        = list(string)

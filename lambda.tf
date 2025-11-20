@@ -19,6 +19,7 @@ module "observe_lambda" {
   kms_key                       = var.lambda_kms_key
   retention_in_days             = var.retention_in_days
   dead_letter_queue_destination = var.dead_letter_queue_destination
+  vpc_config                    = var.lambda_vpc_config
 }
 
 module "observe_lambda_snapshot" {

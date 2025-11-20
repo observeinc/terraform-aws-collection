@@ -146,6 +146,7 @@ module "observe_collection" {
 | <a name="input_lambda_subscribe_logs"></a> [lambda\_subscribe\_logs](#input\_lambda\_subscribe\_logs) | Whether to subscribe to the Lambda function's logs and deliver them from CloudWatch to Observe via Kinesis Firehose. | `bool` | `true` | no |
 | <a name="input_lambda_timeout"></a> [lambda\_timeout](#input\_lambda\_timeout) | The amount of time that Lambda allows a function to run before stopping it.<br>The maximum allowed value is 900 seconds. | `number` | `120` | no |
 | <a name="input_lambda_version"></a> [lambda\_version](#input\_lambda\_version) | Lambda version | `string` | `"arm64/latest"` | no |
+| <a name="input_lambda_vpc_config"></a> [lambda\_vpc\_config](#input\_lambda\_vpc\_config) | VPC configuration for Lambda function | <pre>object({<br>    security_groups = list(object({<br>      id = string<br>    }))<br>    subnets = list(object({<br>      arn = string<br>      id  = string<br>    }))<br>  })</pre> | `null` | no |
 | <a name="input_log_subscription_name"></a> [log\_subscription\_name](#input\_log\_subscription\_name) | Name for log subscription resources to be created | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name for resources to be created | `string` | `"observe-collection"` | no |
 | <a name="input_observe_customer"></a> [observe\_customer](#input\_observe\_customer) | Observe Customer ID | `string` | n/a | yes |
