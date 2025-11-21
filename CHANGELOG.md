@@ -1,9 +1,10 @@
-## [2.28.1](https://github.com/observeinc/terraform-aws-collection/compare/v2.28.0...v2.28.1) (2025-11-19)
+# [2.29.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.28.1...v2.29.0) (2025-11-21)
 
 
-### Bug Fixes
+### Features
 
-* Add cloudtrail_exclude_all_management_event_sources to exclude all events when CloudTrail is previously enabled.  OB-51116 ([abed268](https://github.com/observeinc/terraform-aws-collection/commit/abed268c4b15e0b1af698ed1db6c2d2ffbf0cea8))
+* Add vpc_config ([4af2b10](https://github.com/observeinc/terraform-aws-collection/commit/4af2b1012ddcda4032eed6498b8084eea2044d02))
+* Added org_id and source_accounts to allow SNS topic to receive AWS Config events from sub-accounts ([0088681](https://github.com/observeinc/terraform-aws-collection/commit/008868178b02d0beafb1ddab8d282ee0325f32f9))
 
 
 
