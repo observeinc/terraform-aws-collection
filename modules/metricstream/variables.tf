@@ -87,3 +87,23 @@ variable "sam_release_version" {
   default     = ""
   nullable    = false
 }
+
+variable "retention_in_days" {
+  description = "Retention in days for cloudwatch log group."
+  type        = number
+  nullable    = false
+  default     = 365
+}
+
+variable "cloudwatch_log_kms_key" {
+  description = "KMS key to use for cloudwatch log encryption."
+  type        = string
+  nullable    = true
+  default     = null
+}
+
+variable "tags" {
+  description = "Tags to add to the resources."
+  type        = map(string)
+  default     = {}
+}

@@ -88,3 +88,9 @@ variable "tag_account_alias" {
   default     = true
   nullable    = false
 }
+
+variable "tags" {
+  description = "Tags to add to the resources."
+  type        = map(string)
+  default     = {}
+}

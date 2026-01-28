@@ -1,5 +1,7 @@
 resource "aws_s3_bucket" "this" {
   bucket_prefix = local.name_prefix
+
+  tags = var.tags
 }
 
 data "aws_iam_policy_document" "s3" {

@@ -14,6 +14,8 @@ resource "aws_cloudwatch_event_rule" "discovery" {
       }
     }
   EOF
+
+  tags = var.tags
 }
 
 resource "aws_cloudwatch_event_target" "discovery" {

@@ -46,6 +46,7 @@ variable "forwarder" {
     queue_maximum_batching_window_in_seconds = optional(number)
     code_uri                                 = optional(string)
     sam_release_version                      = optional(string)
+    cloudwatch_log_kms_key                   = optional(string)
   })
   default  = {}
   nullable = false
@@ -96,6 +97,8 @@ variable "logwriter" {
     lambda_runtime                  = optional(string)
     code_uri                        = optional(string)
     sam_release_version             = optional(string)
+    retention_in_days               = optional(number)
+    cloudwatch_log_kms_key          = optional(string)
   })
   default = null
 }
@@ -105,11 +108,13 @@ variable "metricstream" {
     Variables for AWS CloudWatch Metrics Stream collection.
   EOF
   type = object({
-    include_filters     = optional(list(object({ namespace = string, metric_names = optional(list(string)) })))
-    exclude_filters     = optional(list(object({ namespace = string, metric_names = optional(list(string)) })))
-    buffering_interval  = optional(number)
-    buffering_size      = optional(number)
-    sam_release_version = optional(string)
+    include_filters        = optional(list(object({ namespace = string, metric_names = optional(list(string)) })))
+    exclude_filters        = optional(list(object({ namespace = string, metric_names = optional(list(string)) })))
+    buffering_interval     = optional(number)
+    buffering_size         = optional(number)
+    sam_release_version    = optional(string)
+    cloudwatch_log_kms_key = optional(string)
+    retention_in_days      = optional(number)
   })
   default = null
 }
@@ -156,4 +161,10 @@ variable "source_accounts" {
     List of AWS account IDs allowed to publish to the SNS topic via AWS Config. Useful for sub-accounts in AWS Organizations and Control Tower integrations.
     The current account ID is automatically included when this list is non-empty.
   EOF
+}
+
+variable "tags" {
+  description = "Tags to add to the resources."
+  type        = map(string)
+  default     = {}
 }

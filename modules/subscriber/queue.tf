@@ -1,5 +1,7 @@
 resource "aws_sqs_queue" "dead_letter" {
   name = "${var.name}-deadletter"
+
+  tags = var.tags
 }
 
 resource "aws_sqs_queue" "queue" {
@@ -11,6 +13,8 @@ resource "aws_sqs_queue" "queue" {
     maxReceiveCount     = 4
   })
   visibility_timeout_seconds = var.lambda_timeout
+
+  tags = var.tags
 }
 
 resource "aws_sqs_queue_policy" "queue_policy" {

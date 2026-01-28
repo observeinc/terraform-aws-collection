@@ -17,6 +17,8 @@ resource "aws_cloudwatch_event_rule" "delivery" {
       }
     },
   )
+
+  tags = local.tags
 }
 
 resource "aws_cloudwatch_event_target" "delivery" {

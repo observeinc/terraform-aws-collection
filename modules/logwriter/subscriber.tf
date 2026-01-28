@@ -20,4 +20,7 @@ module "subscriber" {
   verbosity                       = var.verbosity
   code_uri                        = var.code_uri
   sam_release_version             = var.sam_release_version
+  cloudwatch_log_kms_key          = var.cloudwatch_log_kms_key
+  retention_in_days               = var.retention_in_days
+  tags                            = var.tags
 }

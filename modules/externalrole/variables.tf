@@ -47,3 +47,9 @@ variable "allowed_actions" {
     error_message = "At least one action must be provided."
   }
 }
+
+variable "tags" {
+  description = "Tags to add to the resources."
+  type        = map(string)
+  default     = {}
+}

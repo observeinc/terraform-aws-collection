@@ -248,3 +248,14 @@ variable "code_uri" {
   nullable    = false
 }
 
+variable "cloudwatch_log_kms_key" {
+  description = "KMS key to use for cloudwatch log encryption."
+  type        = string
+  default     = null
+}
+
+variable "tags" {
+  description = "Tags to add to the resources."
+  type        = map(string)
+  default     = {}
+}

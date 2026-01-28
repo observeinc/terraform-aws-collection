@@ -31,4 +31,6 @@ resource "aws_lambda_function" "subscriber" {
       VERBOSITY                       = var.verbosity
     }, var.lambda_env_vars)
   }
+
+  tags = var.tags
 }

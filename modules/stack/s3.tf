@@ -1,6 +1,7 @@
 resource "aws_s3_bucket" "this" {
   bucket_prefix = local.name_prefix
   force_destroy = true
+  tags          = var.tags
 }
 
 resource "aws_s3_bucket_notification" "this" {
