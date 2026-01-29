@@ -166,5 +166,6 @@ variable "sam_release_version" {
 variable "code_uri" {
   description = "S3 URI for lambda binary. If set, takes precedence over sam_release_version."
   type        = string
-  default     = null
+  default     = ""
+  nullable    = false
 }

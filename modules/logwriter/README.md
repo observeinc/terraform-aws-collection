@@ -50,7 +50,7 @@ module "logwriter" {
 }
 ```
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -94,7 +94,7 @@ module "logwriter" {
 | <a name="input_bucket_arn"></a> [bucket\_arn](#input\_bucket\_arn) | S3 Bucket ARN to write log records to. | `string` | n/a | yes |
 | <a name="input_buffering_interval"></a> [buffering\_interval](#input\_buffering\_interval) | Buffer incoming data for the specified period of time, in seconds, before<br>delivering it to S3. | `number` | `60` | no |
 | <a name="input_buffering_size"></a> [buffering\_size](#input\_buffering\_size) | Buffer incoming data to the specified size, in MiBs, before delivering it<br>to S3. | `number` | `1` | no |
-| <a name="input_code_uri"></a> [code\_uri](#input\_code\_uri) | S3 URI for lambda binary. If set, takes precedence over sam\_release\_version. | `string` | `null` | no |
+| <a name="input_code_uri"></a> [code\_uri](#input\_code\_uri) | S3 URI for lambda binary. If set, takes precedence over sam\_release\_version. | `string` | `""` | no |
 | <a name="input_debug_endpoint"></a> [debug\_endpoint](#input\_debug\_endpoint) | Endpoint to send debugging telemetry to. Sets the OTEL\_EXPORTER\_OTLP\_ENDPOINT environment variable for the lambda function. | `string` | `null` | no |
 | <a name="input_discovery_rate"></a> [discovery\_rate](#input\_discovery\_rate) | EventBridge rate expression for periodically triggering discovery. If not<br>set, no eventbridge rules are configured. | `string` | `null` | no |
 | <a name="input_exclude_log_group_name_patterns"></a> [exclude\_log\_group\_name\_patterns](#input\_exclude\_log\_group\_name\_patterns) | Exclude any log group names matching the provided set of regular<br>expressions. | `list(string)` | `null` | no |
@@ -120,4 +120,4 @@ module "logwriter" {
 | <a name="output_firehose_arn"></a> [firehose\_arn](#output\_firehose\_arn) | Kinesis Firehose Delivery Stream ARN |
 | <a name="output_log_group"></a> [log\_group](#output\_log\_group) | Kinesis Firehose Log Group |
 | <a name="output_subscriber"></a> [subscriber](#output\_subscriber) | Subscriber module |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->

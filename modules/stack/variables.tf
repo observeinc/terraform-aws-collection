@@ -83,7 +83,7 @@ variable "logwriter" {
   type = object({
     log_group_name_patterns         = optional(list(string))
     log_group_name_prefixes         = optional(list(string))
-    exclude_log_group_name_prefixes = optional(list(string))
+    exclude_log_group_name_patterns = optional(list(string))
     buffering_interval              = optional(number)
     buffering_size                  = optional(number)
     filter_name                     = optional(string)
