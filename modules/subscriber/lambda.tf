@@ -1,24 +1,25 @@
 resource "aws_lambda_event_source_mapping" "subscriber_sqs" {
   event_source_arn        = aws_sqs_queue.queue.arn
   function_name           = aws_lambda_function.subscriber.arn
-  batch_size              = 1
+  batch_size              = var.sqs_batch_size
   function_response_types = ["ReportBatchItemFailures"]
 
   scaling_config {
-    maximum_concurrency = 2
+    maximum_concurrency = var.sqs_maximum_concurrency
   }
 }
 
 resource "aws_lambda_function" "subscriber" {
-  function_name = var.name
-  s3_bucket     = local.parsed_s3_uri["bucket"]
-  s3_key        = local.parsed_s3_uri["key"]
-  role          = aws_iam_role.subscriber.arn
-  handler       = "bootstrap"
-  runtime       = var.lambda_runtime
-  architectures = ["arm64"]
-  memory_size   = var.lambda_memory_size
-  timeout       = var.lambda_timeout
+  function_name                  = var.name
+  s3_bucket                      = local.parsed_s3_uri["bucket"]
+  s3_key                         = local.parsed_s3_uri["key"]
+  role                           = aws_iam_role.subscriber.arn
+  handler                        = "bootstrap"
+  runtime                        = var.lambda_runtime
+  architectures                  = ["arm64"]
+  memory_size                    = var.lambda_memory_size
+  timeout                        = var.lambda_timeout
+  reserved_concurrent_executions = var.lambda_reserved_concurrency
 
   environment {
     variables = merge({
@@ -31,6 +32,8 @@ resource "aws_lambda_function" "subscriber" {
       ROLE_ARN                        = var.destination_iam_arn
       QUEUE_URL                       = aws_sqs_queue.queue.id
       NUM_WORKERS                     = var.num_workers
+      CLOUDWATCH_API_RATE_LIMIT       = var.cloudwatch_api_rate_limit
+      CLOUDWATCH_API_BURST            = var.cloudwatch_api_burst
       OTEL_EXPORTER_OTLP_ENDPOINT     = var.debug_endpoint
       OTEL_TRACES_EXPORTER            = var.debug_endpoint == "" ? "none" : "otlp"
       VERBOSITY                       = var.verbosity

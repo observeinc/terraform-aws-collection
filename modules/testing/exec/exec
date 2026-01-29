@@ -3,7 +3,7 @@ set -o pipefail
 # source environment variables from a JSON blob from stdin
 STDIN=$(</dev/stdin)
 ENV=$(echo "$STDIN" | jq -r 'to_entries | map("\(.key)=\(.value)") | @sh')
-eval "export ${ENV}"
+eval "export ${ENV}" > /dev/null 2>&1
 
 # if debug file is provided, write out and wait for it to be deleted
 # before proceeding

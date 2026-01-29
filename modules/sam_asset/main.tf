@@ -1,6 +1,6 @@
 locals {
   # updatecli will bump this value when new releases become available
-  latest_version = "2.11.1"
+  latest_version = "2.11.2"
 
   release_version = var.release_version != "" ? var.release_version : local.latest_version
 }

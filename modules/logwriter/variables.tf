@@ -107,9 +107,72 @@ variable "exclude_log_group_name_patterns" {
   default     = null
 }
 
+variable "wait_for_discovery_on_apply" {
+  description = <<-EOF
+    If true, subscriber null_resource.discovery_on_apply waits until the queue
+    drains and fails on DLQ growth. If false, enqueue discovery only (no apply
+    polling). Destroy-time cleanup behavior is separate.
+  EOF
+  type        = bool
+  default     = true
+}
+
+variable "cleanup_on_destroy" {
+  description = <<-EOF
+    If true, subscriber null_resource.cleanup_on_destroy runs delete-all cleanup
+    and waits on the queue during destroy. If false, skip that step. Does not
+    affect apply-time discovery.
+  EOF
+  type        = bool
+  default     = true
+}
+
 variable "num_workers" {
   description = <<-EOF
     Maximum number of concurrent workers when processing log groups.
+  EOF
+  type        = number
+  default     = null
+}
+
+variable "cloudwatch_api_rate_limit" {
+  description = <<-EOF
+    Per-invocation CloudWatch API request rate limit (requests/second) for
+    subscriber operations.
+  EOF
+  type        = number
+  default     = null
+}
+
+variable "cloudwatch_api_burst" {
+  description = <<-EOF
+    Per-invocation burst size for CloudWatch API limiter in subscriber.
+  EOF
+  type        = number
+  default     = null
+}
+
+variable "sqs_batch_size" {
+  description = <<-EOF
+    SQS batch size for subscriber event source mapping.
+  EOF
+  type        = number
+  default     = null
+}
+
+variable "sqs_maximum_concurrency" {
+  description = <<-EOF
+    Maximum concurrent Lambda invokes for subscriber SQS event source mapping.
+    Effective parallelism is also limited by lambda_reserved_concurrency when that is set lower.
+  EOF
+  type        = number
+  default     = null
+}
+
+variable "lambda_reserved_concurrency" {
+  description = <<-EOF
+    Optional reserved concurrency for subscriber Lambda.
+    Caps concurrent executions for this function (all triggers); if set below sqs_maximum_concurrency, it is the effective ceiling for SQS-driven invokes.
   EOF
   type        = number
   default     = null
@@ -177,7 +240,8 @@ variable "sam_release_version" {
 variable "code_uri" {
   description = "S3 URI for lambda binary. If set, takes precedence over sam_release_version."
   type        = string
-  default     = null
+  default     = ""
+  nullable    = false
 }
 
 variable "retention_in_days" {
