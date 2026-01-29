@@ -16,7 +16,7 @@ $ terraform apply
 Note that this example may create resources which can cost money. Run terraform destroy when you don't need these resources.
 
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -64,4 +64,4 @@ No inputs.
 |------|-------------|
 | <a name="output_datastream"></a> [datastream](#output\_datastream) | Observe Datastream containing data copied from source bucket. |
 | <a name="output_source_bucket"></a> [source\_bucket](#output\_source\_bucket) | Source bucket name to write objects to. This bucket is encrypted using KMS. |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
