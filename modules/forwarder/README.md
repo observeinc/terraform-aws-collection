@@ -53,7 +53,7 @@ module "forwarder" {
 }
 ```
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -129,7 +129,7 @@ module "forwarder" {
 |------|-------------|
 | <a name="output_log_group"></a> [log\_group](#output\_log\_group) | Lambda log group. |
 | <a name="output_queue_arn"></a> [queue\_arn](#output\_queue\_arn) | SQS Queue ARN. Events sent to this queue are delivered to the forwarder Lambda. |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
 
 ## License
 

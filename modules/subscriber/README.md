@@ -1,8 +1,16 @@
 # Observe AWS Subscriber
 
-This app is specifically to register new cloudwatch log groups for the `logwriter` app. It will scan over existing log groups on an interval and compare them to provided prefixes and patterns. If they match it will then register new subscriptions from the log group to a provided kinesis firehose data stream. 
+This app is specifically to register new cloudwatch log groups for the `logwriter` app. It will scan over existing log groups on an interval and compare them to provided prefixes and patterns. If they match it will then register new subscriptions from the log group to a provided kinesis firehose data stream.
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Automatic Cleanup
+
+This module includes automatic cleanup of subscription filters when using Terraform:
+- **On `terraform destroy`**: Automatically removes all managed subscription filters before deleting the Lambda
+- **On pattern updates**: Reconciles subscriptions when log group patterns change
+
+See [CLEANUP.md](./CLEANUP.md) for detailed information about how cleanup works in Terraform vs CloudFormation deployments.
+
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -10,12 +18,14 @@ This app is specifically to register new cloudwatch log groups for the `logwrite
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 | <a name="requirement_http"></a> [http](#requirement\_http) | >= 3.0 |
+| <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
+| <a name="provider_null"></a> [null](#provider\_null) | >= 3.0 |
 
 ## Modules
 
@@ -38,6 +48,7 @@ This app is specifically to register new cloudwatch log groups for the `logwrite
 | [aws_sqs_queue.dead_letter](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue) | resource |
 | [aws_sqs_queue.queue](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue) | resource |
 | [aws_sqs_queue_policy.queue_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue_policy) | resource |
+| [null_resource.cleanup_on_destroy](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [aws_iam_policy_document.assume_role_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.logging_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.pass_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
@@ -76,4 +87,4 @@ This app is specifically to register new cloudwatch log groups for the `logwrite
 |------|-------------|
 | <a name="output_function_arn"></a> [function\_arn](#output\_function\_arn) | Lambda Function ARN |
 | <a name="output_log_group"></a> [log\_group](#output\_log\_group) | Lambda log group |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->

@@ -14,13 +14,13 @@ mock_data "observe_ingest_info" {
 
 mock_resource "observe_datastream" {
   defaults = {
-    oid  = "o:::datastream:41567890"
+    oid = "o:::datastream:41567890"
   }
 }
 
 mock_resource "observe_datastream_token" {
   defaults = {
-    datastream  = "o:::datastream:41567890"
+    datastream = "o:::datastream:41567890"
     disabled   = false
     id         = "ds1vL16OMVWOwVjMeUac"
     name       = "stack-http"
@@ -31,10 +31,10 @@ mock_resource "observe_datastream_token" {
 
 mock_resource "observe_filedrop" {
   defaults = {
-    id         = "41000000"
-    name       = "filedrop-ds1pUUtmcrPETeLAwJeR"
-    oid        = "o:::filedrop:41567892"
-    status     = "running"
+    id     = "41000000"
+    name   = "filedrop-ds1pUUtmcrPETeLAwJeR"
+    oid    = "o:::filedrop:41567892"
+    status = "running"
     endpoint = [
       {
         s3 = [
