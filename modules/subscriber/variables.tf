@@ -120,6 +120,20 @@ variable "exclude_log_group_name_patterns" {
   }
 }
 
+variable "wait_for_discovery_on_apply" {
+  description = "If true, null_resource.discovery_on_apply blocks until the subscriber queue drains and fails if the DLQ grows. If false, only SendMessage runs (no polling on apply). Destroy-time cleanup polling is unchanged."
+  type        = bool
+  nullable    = false
+  default     = true
+}
+
+variable "cleanup_on_destroy" {
+  description = "If true, null_resource.cleanup_on_destroy runs the destroy provisioner (queued delete-all cleanup and queue wait). If false, that step is skipped. Does not disable apply-time discovery."
+  type        = bool
+  nullable    = false
+  default     = true
+}
+
 variable "discovery_rate" {
   description = "EventBridge scheduler rate expression for periodically triggering discovery. If not set, no scheduler is configured."
   type        = string
@@ -137,6 +151,66 @@ variable "num_workers" {
   type        = number
   nullable    = false
   default     = 1
+}
+
+variable "cloudwatch_api_rate_limit" {
+  description = "Per-invocation CloudWatch API request rate limit (requests/second)."
+  type        = number
+  nullable    = false
+  default     = 8
+
+  validation {
+    condition     = var.cloudwatch_api_rate_limit > 0
+    error_message = "cloudwatch_api_rate_limit must be > 0."
+  }
+}
+
+variable "cloudwatch_api_burst" {
+  description = "Per-invocation burst size for CloudWatch API limiter."
+  type        = number
+  nullable    = false
+  default     = 16
+
+  validation {
+    condition     = var.cloudwatch_api_burst > 0
+    error_message = "cloudwatch_api_burst must be > 0."
+  }
+}
+
+variable "sqs_batch_size" {
+  description = "SQS batch size for subscriber event source mapping."
+  type        = number
+  nullable    = false
+  default     = 5
+
+  validation {
+    condition     = var.sqs_batch_size >= 1 && var.sqs_batch_size <= 10
+    error_message = "sqs_batch_size must be between 1 and 10."
+  }
+}
+
+variable "sqs_maximum_concurrency" {
+  description = "Maximum concurrent Lambda invokes for subscriber SQS event source mapping. Effective parallelism is also limited by lambda_reserved_concurrency when that is set lower."
+  type        = number
+  nullable    = false
+  default     = 10
+
+  validation {
+    condition     = var.sqs_maximum_concurrency >= 2
+    error_message = "sqs_maximum_concurrency must be >= 2 (AWS minimum for scaling_config.maximum_concurrency)."
+  }
+}
+
+variable "lambda_reserved_concurrency" {
+  description = "Optional reserved concurrency for subscriber Lambda. Caps concurrent executions for this function (all triggers); if set below sqs_maximum_concurrency, it is the effective ceiling for SQS-driven invokes."
+  type        = number
+  nullable    = true
+  default     = null
+
+  validation {
+    condition     = var.lambda_reserved_concurrency == null || var.lambda_reserved_concurrency >= 1
+    error_message = "lambda_reserved_concurrency must be null or >= 1."
+  }
 }
 
 variable "lambda_memory_size" {
