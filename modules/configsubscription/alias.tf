@@ -3,7 +3,7 @@ data "aws_iam_account_alias" "current" {
 }
 
 locals {
-  tags = var.tag_account_alias ? {
+  tags = var.tag_account_alias ? merge({
     "observeinc.com/accountalias" = data.aws_iam_account_alias.current[0].account_alias
-  } : {}
+  }, var.tags) : var.tags
 }

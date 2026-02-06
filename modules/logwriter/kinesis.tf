@@ -15,4 +15,6 @@ resource "aws_kinesis_firehose_delivery_stream" "delivery_stream" {
       log_stream_name = aws_cloudwatch_log_stream.firehose.name
     }
   }
+
+  tags = var.tags
 }

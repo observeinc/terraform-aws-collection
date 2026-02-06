@@ -11,6 +11,7 @@ locals {
 
 resource "aws_sns_topic" "this" {
   name_prefix = "${var.name}-"
+  tags        = var.tags
 }
 
 resource "aws_sns_topic_policy" "this" {

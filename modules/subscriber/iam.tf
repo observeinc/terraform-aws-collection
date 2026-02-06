@@ -18,6 +18,8 @@ resource "aws_iam_role" "subscriber" {
       policy = inline_policy.value
     }
   }
+
+  tags = var.tags
 }
 
 data "aws_iam_policy_document" "assume_role_policy" {
@@ -39,7 +41,7 @@ data "aws_iam_policy_document" "logging_policy" {
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
-    resources = [aws_cloudwatch_log_group.log_group.arn]
+    resources = ["${aws_cloudwatch_log_group.log_group.arn}*"]
   }
 }
 
@@ -87,6 +89,8 @@ resource "aws_iam_role" "scheduler" {
     name   = "queue"
     policy = data.aws_iam_policy_document.scheduler_queue.json
   }
+
+  tags = var.tags
 }
 
 data "aws_iam_policy_document" "scheduler_assume_role_policy" {

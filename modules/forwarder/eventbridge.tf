@@ -21,6 +21,8 @@ resource "aws_cloudwatch_event_rule" "this" {
       for key in concat([""], var.source_object_keys) : { "wildcard" : key }
     ],
   })
+
+  tags = var.tags
 }
 
 resource "aws_cloudwatch_event_target" "this" {

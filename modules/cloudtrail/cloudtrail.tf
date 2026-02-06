@@ -7,6 +7,8 @@ resource "aws_cloudtrail" "this" {
     exclude_management_event_sources = var.exclude_management_event_sources
   }
 
+  tags = var.tags
+
   depends_on = [aws_s3_bucket_policy.this]
 }
 

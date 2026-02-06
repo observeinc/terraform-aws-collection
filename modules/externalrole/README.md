@@ -66,6 +66,7 @@ No modules.
 | <a name="input_datastream_ids"></a> [datastream\_ids](#input\_datastream\_ids) | Observe datastreams collected data is intended for. | `list(string)` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | Name for IAM role. | `string` | n/a | yes |
 | <a name="input_observe_aws_account_id"></a> [observe\_aws\_account\_id](#input\_observe\_aws\_account\_id) | AWS account ID for Observe tenant | `string` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags to add to the resources. | `map(string)` | `{}` | no |
 
 ## Outputs
 

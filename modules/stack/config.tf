@@ -11,6 +11,7 @@ module "config" {
   delivery_frequency            = var.config.delivery_frequency
   include_global_resource_types = var.config.include_global_resource_types
   tag_account_alias             = var.config.tag_account_alias
+  tags                          = var.tags
 
   depends_on = [aws_s3_bucket_notification.this]
 }

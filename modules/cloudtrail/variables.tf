@@ -27,3 +27,9 @@ variable "exclude_management_event_sources" {
   default     = ["kms.amazonaws.com", "rdsdata.amazonaws.com"]
   nullable    = true
 }
+
+variable "tags" {
+  description = "Tags to add to the resources."
+  type        = map(string)
+  default     = {}
+}

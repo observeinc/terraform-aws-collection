@@ -100,6 +100,7 @@ module "forwarder" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_cloudwatch_log_kms_key"></a> [cloudwatch\_log\_kms\_key](#input\_cloudwatch\_log\_kms\_key) | KMS key to use for cloudwatch log encryption. | `string` | `null` | no |
 | <a name="input_code_uri"></a> [code\_uri](#input\_code\_uri) | S3 URI for lambda binary. If set, takes precedence over sam\_release\_version. | `string` | `""` | no |
 | <a name="input_content_type_overrides"></a> [content\_type\_overrides](#input\_content\_type\_overrides) | A list of key value pairs. The key is a regular expression which is<br>applied to the S3 source (<bucket>/<key>) of forwarded files. The value<br>is the content type to set for matching files. For example,<br>`\.json$=application/x-ndjson` would forward all files ending in `.json`<br>as newline delimited JSON | <pre>list(object({<br>    pattern      = string<br>    content_type = string<br>  }))</pre> | `[]` | no |
 | <a name="input_debug_endpoint"></a> [debug\_endpoint](#input\_debug\_endpoint) | Endpoint to send debugging telemetry to. Sets the OTEL\_EXPORTER\_OTLP\_ENDPOINT environment variable for the lambda function. | `string` | `""` | no |
@@ -121,6 +122,7 @@ module "forwarder" {
 | <a name="input_source_kms_key_arns"></a> [source\_kms\_key\_arns](#input\_source\_kms\_key\_arns) | A list of KMS Key ARNs the forwarder is allowed to use to decrypt objects in S3. | `list(string)` | `[]` | no |
 | <a name="input_source_object_keys"></a> [source\_object\_keys](#input\_source\_object\_keys) | A list of object key patterns the forwarder is allowed to read from for<br>provided source buckets. | `list(string)` | <pre>[<br>  "*"<br>]</pre> | no |
 | <a name="input_source_topic_arns"></a> [source\_topic\_arns](#input\_source\_topic\_arns) | A list of SNS topics the forwarder is allowed to be subscribed to. | `list(string)` | `[]` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags to add to the resources. | `map(string)` | `{}` | no |
 | <a name="input_verbosity"></a> [verbosity](#input\_verbosity) | Logging verbosity for Lambda. Highest log verbosity is 9. | `number` | `1` | no |
 
 ## Outputs

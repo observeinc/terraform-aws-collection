@@ -56,12 +56,16 @@ resource "aws_sqs_queue" "this" {
       },
     ]
   })
+
+  tags = var.tags
 }
 
 resource "aws_sqs_queue" "dlq" {
   count                     = local.enable_dlq ? 1 : 0
   name                      = "${var.name}-dlq"
   message_retention_seconds = var.queue_message_retention_seconds
+
+  tags = var.tags
 }
 
 resource "aws_sqs_queue_redrive_allow_policy" "dlq" {

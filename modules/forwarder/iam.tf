@@ -19,6 +19,8 @@ resource "aws_iam_role" "this" {
       policy = inline_policy.value
     }
   }
+
+  tags = var.tags
 }
 
 data "aws_iam_policy_document" "lambda_assume_role_policy" {

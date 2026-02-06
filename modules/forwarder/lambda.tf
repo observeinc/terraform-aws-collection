@@ -21,11 +21,16 @@ resource "aws_lambda_function" "this" {
       VERBOSITY                   = var.verbosity
     }, var.lambda_env_vars)
   }
+
+  tags = var.tags
 }
 
 resource "aws_cloudwatch_log_group" "this" {
   name              = format("/aws/lambda/%s", var.name)
   retention_in_days = var.retention_in_days
+  kms_key_id        = var.cloudwatch_log_kms_key
+
+  tags = var.tags
 }
 
 resource "aws_lambda_event_source_mapping" "this" {

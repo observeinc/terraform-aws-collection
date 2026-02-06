@@ -38,4 +38,6 @@ resource "aws_iam_role" "this" {
       ]
     })
   }
+
+  tags = var.tags
 }

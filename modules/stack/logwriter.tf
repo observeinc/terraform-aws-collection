@@ -21,6 +21,9 @@ module "logwriter" {
   verbosity               = var.verbosity
   code_uri                = var.logwriter.code_uri
   sam_release_version     = try(coalesce(var.logwriter.sam_release_version, var.sam_release_version), null)
+  retention_in_days       = var.logwriter.retention_in_days
+  cloudwatch_log_kms_key  = var.logwriter.cloudwatch_log_kms_key
+  tags                    = var.tags
 
   depends_on = [aws_s3_bucket_notification.this]
 }

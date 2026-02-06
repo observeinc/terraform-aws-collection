@@ -12,6 +12,8 @@ resource "aws_cloudwatch_event_rule" "oversized" {
       }
     },
   )
+
+  tags = local.tags
 }
 
 resource "aws_cloudwatch_event_target" "oversized" {

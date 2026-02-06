@@ -91,6 +91,7 @@ No modules.
 | <a name="input_prefix"></a> [prefix](#input\_prefix) | The prefix for the specified S3 bucket. | `string` | `""` | no |
 | <a name="input_sns_topic_arn"></a> [sns\_topic\_arn](#input\_sns\_topic\_arn) | The ARN of the SNS topic that AWS Config delivers notifications to. | `string` | `null` | no |
 | <a name="input_tag_account_alias"></a> [tag\_account\_alias](#input\_tag\_account\_alias) | Set tag based on account alias. | `bool` | `true` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags to add to the resources. | `map(string)` | `{}` | no |
 
 ## Outputs
 

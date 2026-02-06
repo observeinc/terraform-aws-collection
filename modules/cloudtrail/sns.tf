@@ -1,5 +1,7 @@
 resource "aws_sns_topic" "this" {
   name_prefix = local.name_prefix
+
+  tags = var.tags
 }
 
 data "aws_iam_policy_document" "s3_to_sns" {
