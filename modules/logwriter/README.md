@@ -100,7 +100,7 @@ module "logwriter" {
 | <a name="input_discovery_rate"></a> [discovery\_rate](#input\_discovery\_rate) | EventBridge rate expression for periodically triggering discovery. If not<br>set, no eventbridge rules are configured. | `string` | `null` | no |
 | <a name="input_exclude_log_group_name_patterns"></a> [exclude\_log\_group\_name\_patterns](#input\_exclude\_log\_group\_name\_patterns) | Exclude any log group names matching the provided set of regular<br>expressions. | `list(string)` | `null` | no |
 | <a name="input_filter_name"></a> [filter\_name](#input\_filter\_name) | Subscription filter name. Existing filters that have this name as a prefix<br>will be removed. | `string` | `null` | no |
-| <a name="input_filter_pattern"></a> [filter\_pattern](#input\_filter\_pattern) | Subscription filter pattern. | `string` | `null` | no |
+| <a name="input_filter_pattern"></a> [filter\_pattern](#input\_filter\_pattern) | CloudWatch Logs subscription filter pattern. Only log events matching this pattern are delivered to Firehose.<br>Uses AWS CloudWatch filter pattern syntax. An empty string matches all events.<br>See https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html | `string` | `null` | no |
 | <a name="input_lambda_env_vars"></a> [lambda\_env\_vars](#input\_lambda\_env\_vars) | Environment variables to be passed into lambda. | `map(string)` | `null` | no |
 | <a name="input_lambda_memory_size"></a> [lambda\_memory\_size](#input\_lambda\_memory\_size) | Memory size for lambda function. | `number` | `null` | no |
 | <a name="input_lambda_runtime"></a> [lambda\_runtime](#input\_lambda\_runtime) | Lambda runtime. | `string` | `null` | no |
