@@ -62,7 +62,9 @@ variable "filter_name" {
 
 variable "filter_pattern" {
   description = <<-EOF
-    Subscription filter pattern.
+    CloudWatch Logs subscription filter pattern. Only log events matching this pattern are delivered to Firehose.
+    Uses AWS CloudWatch filter pattern syntax. An empty string matches all events.
+    See https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html
   EOF
   type        = string
   default     = null
