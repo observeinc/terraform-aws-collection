@@ -1,10 +1,9 @@
-# [2.29.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.28.1...v2.29.0) (2025-11-21)
+# [2.30.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.29.0...v2.30.0) (2026-02-24)
 
 
 ### Features
 
-* Add vpc_config ([4af2b10](https://github.com/observeinc/terraform-aws-collection/commit/4af2b1012ddcda4032eed6498b8084eea2044d02))
-* Added org_id and source_accounts to allow SNS topic to receive AWS Config events from sub-accounts ([0088681](https://github.com/observeinc/terraform-aws-collection/commit/008868178b02d0beafb1ddab8d282ee0325f32f9))
+* Update Observe Lambda version to 3.8.0 ([aa18a3f](https://github.com/observeinc/terraform-aws-collection/commit/aa18a3f9b0ec82b89007cf9a213d6a09b417eb19))
 
 
 
