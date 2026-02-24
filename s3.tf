@@ -184,7 +184,7 @@ data "aws_iam_policy_document" "bucket" {
 
 module "observe_lambda_s3_bucket_subscription" {
   source  = "observeinc/lambda/aws//modules/s3_bucket_subscription"
-  version = "3.6.0"
+  version = "3.8.0"
 
   lambda             = module.observe_lambda.lambda_function
   bucket_arns        = concat([local.s3_bucket.arn], var.subscribed_s3_bucket_arns)
