@@ -40,7 +40,7 @@ moved {
 module "observe_firehose_eventbridge" {
   count   = length(aws_cloudwatch_event_rule.rules) > 0 ? 1 : 0
   source  = "observeinc/kinesis-firehose/aws//modules/eventbridge"
-  version = "2.3.0"
+  version = "2.4.0"
 
   kinesis_firehose = module.observe_kinesis_firehose
   iam_name_prefix  = local.name_prefix
