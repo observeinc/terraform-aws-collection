@@ -1,9 +1,9 @@
-# [2.30.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.29.0...v2.30.0) (2026-02-24)
+# [2.31.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.30.0...v2.31.0) (2026-02-27)
 
 
 ### Features
 
-* Update Observe Lambda version to 3.8.0 ([aa18a3f](https://github.com/observeinc/terraform-aws-collection/commit/aa18a3f9b0ec82b89007cf9a213d6a09b417eb19))
+* Update dependencies ([82dfdaa](https://github.com/observeinc/terraform-aws-collection/commit/82dfdaaf53fe169a47556690ee86c4ecf324e72d))
 
 
 
