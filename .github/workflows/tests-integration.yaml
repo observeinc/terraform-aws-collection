@@ -29,15 +29,6 @@ jobs:
         else
             echo "can-write=true" >> $GITHUB_OUTPUT
         fi
-    - name: Terraform min/max versions
-      id: minMax
-      uses: clowdhaus/terraform-min-max@v2.1.0
-      with:
-      directory: ${{ matrix.directory }}
-    - name: Install Terraform v${{ steps.minMax.outputs.minVersion }}
-      uses: hashicorp/setup-terraform@v4.0.0
-      with:
-        terraform_version: ${{ steps.minMax.outputs.minVersion }}
 
   prepare_matrix:
     needs: [permission_check]
@@ -46,14 +37,14 @@ jobs:
     outputs:
       matrix: ${{ steps.find_hcl_files.outputs.matrix }}
     steps:
-    - uses: actions/checkout@v6.0.2
+    - uses: actions/checkout@v6
 
     - name: Setup the test matrix
       id: find_hcl_files
       run: |
         echo "matrix=$( find . -type d -name tests -print | sed 's:/[^/]*$::' | jq  -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
 
-    - uses: actions/checkout@v6.0.2
+    - uses: actions/checkout@v6
 
     - name: DCE Provision
       uses: observeinc/github-action-dce@1.0.1
@@ -87,7 +78,10 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: checkout
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@v6
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
 
     - name: Integration test for ${{ matrix.testfile }}
       run: DIR=${{ matrix.testfile }} make test-dir
