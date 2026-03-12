@@ -34,7 +34,7 @@ module "stack" {
   # source = "observeinc/collection/aws//modules/forwarder"
   # For validation purposes we will instead refer to a local version of the
   # module:
-  source = "../..//modules/stack"
+  source = "../..//modules/forwarder"
 
   name        = local.name
   destination = observe_filedrop.this.endpoint[0].s3[0]

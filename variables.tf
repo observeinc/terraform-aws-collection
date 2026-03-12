@@ -254,7 +254,7 @@ variable "cloudtrail_enable" {
 }
 
 variable "cloudtrail_enable_log_file_validation" {
-  description = "Whether log file integrity validation is enabled for CloudTrail. Defalults to false."
+  description = "Whether log file integrity validation is enabled for CloudTrail. Defaults to false."
   type        = bool
   default     = false
 }
