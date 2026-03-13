@@ -66,7 +66,7 @@ variable "log_group_name_prefixes" {
 }
 
 variable "exclude_log_group_name_patterns" {
-  description = "List of patterns as strings. This variable is usd to filter out log groups from subscription, and supports the use of regular expressions"
+  description = "List of patterns as strings. This variable is used to filter out log groups from subscription, and supports the use of regular expressions"
   type        = list(string)
   nullable    = false
   default     = []

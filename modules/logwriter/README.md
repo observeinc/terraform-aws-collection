@@ -36,7 +36,7 @@ resource "aws_cloudwatch_log_subscription_filter" "example" {
 
 ## Dynamically subscribing log groups
 
-This module embeds an optional [subscriber]("../subscriber/README.md") module
+This module embeds an optional [subscriber](../subscriber/README.md) module
 to dynamically subscribe log groups to the provisioned Kinesis Firehose. You
 can activate this mode by providing a set of `log_group_name_patterns` or
 `log_group_name_prefixes`:

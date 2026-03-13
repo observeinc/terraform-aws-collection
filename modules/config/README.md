@@ -6,7 +6,7 @@ This module sets up AWS Config to store configuration data to a provided S3 buck
 
 # Usage
 
-```json
+```terraform
 module "config" {
   source = "observeinc/collection/aws//modules/config"
   bucket = "my-example-bucket"
@@ -17,7 +17,7 @@ By omission, all resource types are collected, including global resources such a
 
 To disable collection for global resources, provide `include_global_resource_types`:
 
-```json
+```terraform
 module "config" {
   source                         = "observeinc/collection/aws//modules/config"
   bucket                         = "my-example-bucket"
@@ -27,7 +27,7 @@ module "config" {
 
 You can exclude specific resource types, provide `exclude_resource_types`:
 
-```json
+```terraform
 module "config" {
   source                  = "observeinc/collection/aws//modules/config"
   bucket                  = "my-example-bucket"
@@ -37,7 +37,7 @@ module "config" {
 
 To only collect certain resource types, provide `include_resource_types`:
 
-```json
+```terraform
 module "config" {
   source                  = "observeinc/collection/aws//modules/config"
   bucket                  = "my-example-bucket"
