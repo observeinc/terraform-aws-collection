@@ -34,7 +34,7 @@ Note that this example may create resources which can cost money. Run terraform 
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_stack"></a> [stack](#module\_stack) | ../..//modules/forwarder | n/a |
+| <a name="module_stack"></a> [stack](#module\_stack) | ../..//modules/stack | n/a |
 
 ## Resources
 

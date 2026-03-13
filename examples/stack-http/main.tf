@@ -23,10 +23,10 @@ resource "observe_datastream_token" "this" {
 
 module "stack" {
   # Prefer using the hashicorp registry:
-  # source = "observeinc/collection/aws//modules/forwarder"
+  # source = "observeinc/collection/aws//modules/stack"
   # For validation purposes we will instead refer to a local version of the
   # module:
-  source = "../..//modules/forwarder"
+  source = "../..//modules/stack"
 
   name = local.name
   destination = {

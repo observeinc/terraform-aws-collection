@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       can-write: ${{ steps.check.outputs.can-write }}
+      minVersion: ${{ steps.minMax.outputs.minVersion }}
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
     steps:
@@ -29,11 +30,10 @@ jobs:
         else
             echo "can-write=true" >> $GITHUB_OUTPUT
         fi
+    - uses: actions/checkout@v6.0.2
     - name: Terraform min/max versions
       id: minMax
       uses: clowdhaus/terraform-min-max@v2.1.0
-      with:
-      directory: ${{ matrix.directory }}
     - name: Install Terraform v${{ steps.minMax.outputs.minVersion }}
       uses: hashicorp/setup-terraform@v4.0.0
       with:
@@ -88,6 +88,11 @@ jobs:
 
     - name: checkout
       uses: actions/checkout@v6.0.2
+
+    - name: Install Terraform v${{ needs.permission_check.outputs.minVersion }}
+      uses: hashicorp/setup-terraform@v4.0.0
+      with:
+        terraform_version: ${{ needs.permission_check.outputs.minVersion }}
 
     - name: Integration test for ${{ matrix.testfile }}
       run: DIR=${{ matrix.testfile }} make test-dir
