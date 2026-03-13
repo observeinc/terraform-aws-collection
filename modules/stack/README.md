@@ -178,7 +178,7 @@ You can additionally configure other submodules in this manner:
 | <a name="input_org_id"></a> [org\_id](#input\_org\_id) | Optional AWS Organizations ID. If set, adds an AllowAWSConfigFromOrg statement on the SNS topic that allows publishes by aws:PrincipalOrgID. Useful for AWS Control Tower integrations. | `string` | `null` | no |
 | <a name="input_s3_bucket_lifecycle_expiration"></a> [s3\_bucket\_lifecycle\_expiration](#input\_s3\_bucket\_lifecycle\_expiration) | Expiration in days for S3 objects in collection bucket | `number` | `4` | no |
 | <a name="input_sam_release_version"></a> [sam\_release\_version](#input\_sam\_release\_version) | Release version for SAM apps as defined on github.com/observeinc/aws-sam-apps. | `string` | `null` | no |
-| <a name="input_source_accounts"></a> [source\_accounts](#input\_source\_accounts) | List of AWS account IDs allowed to publish to the SNS topic via AWS Config. Useful for sub-accounts in AWS Organizations and Control Tower integrations.<br/>The current account ID is automatically included when this list is non-empty. | `list(string)` | <pre>[<br/>  "891377094505"<br/>]</pre> | no |
+| <a name="input_source_accounts"></a> [source\_accounts](#input\_source\_accounts) | List of AWS account IDs allowed to publish to the SNS topic via AWS Config. Useful for sub-accounts in AWS Organizations and Control Tower integrations.<br/>The current account ID is automatically included when this list is non-empty. | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags to add to the resources. | `map(string)` | `{}` | no |
 | <a name="input_verbosity"></a> [verbosity](#input\_verbosity) | Logging verbosity for Lambda. Highest log verbosity is 9. | `number` | `null` | no |
 
