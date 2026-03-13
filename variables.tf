@@ -158,9 +158,16 @@ variable "subscribed_s3_bucket_arns" {
 
 variable "subscribed_log_group_matches" {
   description = <<-EOF
-    A list of regex patterns describing CloudWatch log groups to subscribe to.
+    A list of Python regular expressions. A log group is subscribed if its
+    name fully matches any pattern using re.fullmatch() (the entire log group
+    name must match, as if the pattern were anchored with ^ and $).
 
-    See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_matches for more info"
+    Examples:
+      [".*"]              - subscribe to all log groups
+      ["/aws/lambda/.*"]  - subscribe to log groups starting with "/aws/lambda/"
+      ["/aws/lambda/my-fn"] - subscribe only to the exact log group "/aws/lambda/my-fn"
+
+    See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_matches for more info.
   EOF
   type        = list(string)
   default     = []
@@ -168,9 +175,15 @@ variable "subscribed_log_group_matches" {
 
 variable "subscribed_log_group_excludes" {
   description = <<-EOF
-    A list of regex patterns describing CloudWatch log groups to NOT subscribe to.
+    A list of Python regular expressions. A log group whose name fully matches
+    any pattern using re.fullmatch() is excluded from subscription. Exclusions
+    take precedence over subscribed_log_group_matches.
 
-    See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_excludes for more info"
+    Examples:
+      ["/aws/elasticbeanstalk/.*"] - exclude all Elastic Beanstalk log groups
+      ["/aws/lambda/noisy-fn"]     - exclude only the exact log group "/aws/lambda/noisy-fn"
+
+    See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_excludes for more info.
   EOF
   type        = list(string)
   default     = []

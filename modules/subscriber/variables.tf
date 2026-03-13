@@ -38,7 +38,22 @@ variable "filter_pattern" {
 }
 
 variable "log_group_name_patterns" {
-  description = "List of patterns as strings. We will only subscribe to log groups that have names matching one of the provided strings based on strings based on a case-sensitive substring search. To subscribe to all log groups, use the operator `*`. The `*` character acts as a special selector for all log groups, not as a wildcard."
+  description = <<-EOF
+    List of log group name patterns. A log group is subscribed if its name
+    matches any pattern. Patterns matched using regexp.MatchString() (partial match),
+    so a plain string like "/aws/lambda" matches any log group whose name
+    contains that substring.
+
+    To subscribe to all log groups, use the special token "*". The "*"
+    character selects all log groups.
+
+    Matching is regex-based, characters like "." are treated
+    as regex metacharacters (matching any character), not literals.
+
+    Examples:
+      ["*"]                - subscribe to all log groups
+      ["/aws/lambda"]      - subscribe to any log group containing "/aws/lambda"
+  EOF
   type        = list(string)
   nullable    = false
   default     = []
@@ -52,7 +67,19 @@ variable "log_group_name_patterns" {
 }
 
 variable "log_group_name_prefixes" {
-  description = "List of prefixes as strings. The lambda function will only apply to log groups that start with a provided string. To subscribe to all log groups, use the operator `*`. The `*` character acts as a special selector for all log groups, not as a wildcard."
+  description = <<-EOF
+    List of log group name prefixes. A log group is subscribed if its name
+    starts with any of the provided strings. Internally each prefix is
+    converted to the regex "^<prefix>.*" and matched using
+    regexp.MatchString().
+
+    To subscribe to all log groups, use the special token "*". The "*"
+    character selects all log groups; it is not a glob wildcard.
+
+    Examples:
+      ["*"]           - subscribe to all log groups
+      ["/aws/lambda"] - subscribe to log groups whose names start with "/aws/lambda"
+  EOF
   type        = list(string)
   nullable    = false
   default     = []
@@ -66,7 +93,21 @@ variable "log_group_name_prefixes" {
 }
 
 variable "exclude_log_group_name_patterns" {
-  description = "List of patterns as strings. This variable is used to filter out log groups from subscription, and supports the use of regular expressions"
+  description = <<-EOF
+    List of Go regular expression patterns. Any log group whose name matches
+    a pattern is excluded from subscription, even if it matches an include
+    pattern. Patterns are joined with "|" into a single regex and matched
+    using regexp.MatchString() (partial match), so the pattern only needs to
+    appear somewhere in the log group name.
+
+    Exclusions take precedence over log_group_name_patterns and
+    log_group_name_prefixes.
+
+    Examples:
+      ["/aws/lambda/noisy-fn"]   - exclude log groups containing "/aws/lambda/noisy-fn"
+      ["^/aws/elasticbeanstalk"] - exclude log groups starting with "/aws/elasticbeanstalk"
+      ["/aws/lambda", "/aws/ecs"] - exclude log groups containing either substring
+  EOF
   type        = list(string)
   nullable    = false
   default     = []

@@ -1,7 +1,13 @@
 # Observe AWS Collection
 
+> **New users should start with the [`modules/stack`](modules/stack/README.md) module.** It is the actively maintained entry point for collecting AWS data into Observe and supports both Filedrop and HTTPS destinations.
+>
+> The root module documented below is **deprecated**. It uses a legacy Kinesis/Lambda-based architecture with `observe_customer`/`observe_token` authentication. Existing users looking to migrate should see the [migration guide](modules/stack/README.md#migrating-from-the-root-module).
+
+---
+
 This module assembles different methods of collecting data from AWS into
-Observe. It is intended as both a starting point and as a reference.
+Observe using the legacy Kinesis/Lambda-based architecture.
 
 The module sets up the following forwarding methods:
 
@@ -15,6 +21,8 @@ Given these egresses, we extract data from the following sources:
 - CloudTrail, via S3
 - EventBridge, via Firehose
 - AWS snapshot data, via Lambda
+
+> **Warning:** `cloudtrail_enable` defaults to `true`, which creates an `aws_cloudtrail` trail. AWS enforces a hard quota of **5 trails per region per account**. If you already have existing trails, set `cloudtrail_enable = false` to avoid exhausting this quota. Creating trails also has cost and compliance implications that should be evaluated before deployment.
 
 # Usage
 
@@ -161,9 +169,9 @@ module "observe_collection" {
 | <a name="input_snapshot_exclude"></a> [snapshot\_exclude](#input\_snapshot\_exclude) | List of actions to exclude from being executed on snapshot request. | `list(string)` | `[]` | no |
 | <a name="input_snapshot_include"></a> [snapshot\_include](#input\_snapshot\_include) | List of actions to include in snapshot request. | `list(string)` | `[]` | no |
 | <a name="input_snapshot_schedule_expression"></a> [snapshot\_schedule\_expression](#input\_snapshot\_schedule\_expression) | Rate at which snapshot is triggered. Must be valid EventBridge expression | `string` | `"rate(1 hour)"` | no |
-| <a name="input_subscribed_log_group_excludes"></a> [subscribed\_log\_group\_excludes](#input\_subscribed\_log\_group\_excludes) | A list of regex patterns describing CloudWatch log groups to NOT subscribe to.<br/><br/>See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_excludes for more info" | `list(string)` | `[]` | no |
+| <a name="input_subscribed_log_group_excludes"></a> [subscribed\_log\_group\_excludes](#input\_subscribed\_log\_group\_excludes) | A list of Python regular expressions. A log group whose name fully matches<br/>any pattern using re.fullmatch() is excluded from subscription. Exclusions<br/>take precedence over subscribed\_log\_group\_matches.<br/><br/>Examples:<br/>  ["/aws/elasticbeanstalk/.*"] - exclude all Elastic Beanstalk log groups<br/>  ["/aws/lambda/noisy-fn"]     - exclude only the exact log group "/aws/lambda/noisy-fn"<br/><br/>See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_excludes for more info. | `list(string)` | `[]` | no |
 | <a name="input_subscribed_log_group_filter_pattern"></a> [subscribed\_log\_group\_filter\_pattern](#input\_subscribed\_log\_group\_filter\_pattern) | A filter pattern for a CloudWatch Logs subscription filter.<br/><br/>See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_filter_pattern or<br/>https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html for more info" | `string` | `""` | no |
-| <a name="input_subscribed_log_group_matches"></a> [subscribed\_log\_group\_matches](#input\_subscribed\_log\_group\_matches) | A list of regex patterns describing CloudWatch log groups to subscribe to.<br/><br/>See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_matches for more info" | `list(string)` | `[]` | no |
+| <a name="input_subscribed_log_group_matches"></a> [subscribed\_log\_group\_matches](#input\_subscribed\_log\_group\_matches) | A list of Python regular expressions. A log group is subscribed if its<br/>name fully matches any pattern using re.fullmatch() (the entire log group<br/>name must match, as if the pattern were anchored with ^ and $).<br/><br/>Examples:<br/>  [".*"]              - subscribe to all log groups<br/>  ["/aws/lambda/.*"]  - subscribe to log groups starting with "/aws/lambda/"<br/>  ["/aws/lambda/my-fn"] - subscribe only to the exact log group "/aws/lambda/my-fn"<br/><br/>See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_matches for more info. | `list(string)` | `[]` | no |
 | <a name="input_subscribed_s3_bucket_arns"></a> [subscribed\_s3\_bucket\_arns](#input\_subscribed\_s3\_bucket\_arns) | List of additional S3 bucket ARNs to subscribe lambda to. | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
 
@@ -179,3 +187,100 @@ module "observe_collection" {
 ## License
 
 Apache 2 Licensed. See LICENSE for full details.
+
+<!-- BEGIN_TF_DOCS -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.2 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.0.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.31.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.8.1 |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_lambda_log_subscription"></a> [lambda\_log\_subscription](#module\_lambda\_log\_subscription) | observeinc/kinesis-firehose/aws//modules/cloudwatch_logs_subscription | 2.4.1 |
+| <a name="module_observe_cloudwatch_logs_subscription"></a> [observe\_cloudwatch\_logs\_subscription](#module\_observe\_cloudwatch\_logs\_subscription) | observeinc/cloudwatch-logs-subscription/aws | 0.6.0 |
+| <a name="module_observe_cloudwatch_metrics"></a> [observe\_cloudwatch\_metrics](#module\_observe\_cloudwatch\_metrics) | observeinc/kinesis-firehose/aws//modules/cloudwatch_metrics | 2.4.1 |
+| <a name="module_observe_firehose_eventbridge"></a> [observe\_firehose\_eventbridge](#module\_observe\_firehose\_eventbridge) | observeinc/kinesis-firehose/aws//modules/eventbridge | 2.4.1 |
+| <a name="module_observe_kinesis_firehose"></a> [observe\_kinesis\_firehose](#module\_observe\_kinesis\_firehose) | observeinc/kinesis-firehose/aws | 2.4.1 |
+| <a name="module_observe_lambda"></a> [observe\_lambda](#module\_observe\_lambda) | observeinc/lambda/aws | 3.8.0 |
+| <a name="module_observe_lambda_s3_bucket_subscription"></a> [observe\_lambda\_s3\_bucket\_subscription](#module\_observe\_lambda\_s3\_bucket\_subscription) | observeinc/lambda/aws//modules/s3_bucket_subscription | 3.8.0 |
+| <a name="module_observe_lambda_snapshot"></a> [observe\_lambda\_snapshot](#module\_observe\_lambda\_snapshot) | observeinc/lambda/aws//modules/snapshot | 3.8.0 |
+| <a name="module_s3_bucket"></a> [s3\_bucket](#module\_s3\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 4.0 |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [aws_cloudtrail.trail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudtrail) | resource |
+| [aws_cloudwatch_event_rule.rules](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_rule) | resource |
+| [aws_cloudwatch_log_group.group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
+| [random_string.this](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_iam_policy_document.bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
+| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_cloudtrail_enable"></a> [cloudtrail\_enable](#input\_cloudtrail\_enable) | Whether to create a CloudTrail trail.<br/>Useful for avoiding the 'trails per region' quota of 5, such as when testing.<br/>If CloudTrail is already enabled in your AWS account, management events will still be collected by default—except for those from RDS and KMS, which are excluded. To disable collection of all CloudTrail management events, set cloudtrail\_exclude\_all\_management\_event\_sources to true.<br/><br/>If you have existing CloudTrails and want to include their events, update cloudtrail\_exclude\_management\_event\_sources to control which services are included or excluded from event collection. | `bool` | `true` | no |
+| <a name="input_cloudtrail_enable_log_file_validation"></a> [cloudtrail\_enable\_log\_file\_validation](#input\_cloudtrail\_enable\_log\_file\_validation) | Whether log file integrity validation is enabled for CloudTrail. Defaults to false. | `bool` | `false` | no |
+| <a name="input_cloudtrail_exclude_all_management_event_sources"></a> [cloudtrail\_exclude\_all\_management\_event\_sources](#input\_cloudtrail\_exclude\_all\_management\_event\_sources) | When set to true, excludes ALL CloudTrail management events from being collected via EventBridge.<br/>This completely disables the CloudTrail EventBridge rule.<br/><br/>When false (default), CloudTrail events are collected based on cloudtrail\_exclude\_management\_event\_sources. | `bool` | `false` | no |
+| <a name="input_cloudtrail_exclude_management_event_sources"></a> [cloudtrail\_exclude\_management\_event\_sources](#input\_cloudtrail\_exclude\_management\_event\_sources) | A list of management event sources to exclude.<br/>To capture all CloudTrail management events, set this to an empty list ([]).<br/><br/>Note: This variable is ignored if cloudtrail\_exclude\_all\_management\_event\_sources is set to true.<br/><br/>See the following link for more info:<br/>https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-management-events-with-cloudtrail.html | `set(string)` | <pre>[<br/>  "kms.amazonaws.com",<br/>  "rdsdata.amazonaws.com"<br/>]</pre> | no |
+| <a name="input_cloudtrail_is_multi_region_trail"></a> [cloudtrail\_is\_multi\_region\_trail](#input\_cloudtrail\_is\_multi\_region\_trail) | Whether to enable multi region trail export | `bool` | `true` | no |
+| <a name="input_cloudwatch_metrics_exclude_filters"></a> [cloudwatch\_metrics\_exclude\_filters](#input\_cloudwatch\_metrics\_exclude\_filters) | Namespaces to exclude. Mutually exclusive with cloudwatch\_metrics\_include\_filters.<br/><br/>To disable Cloudwatch Metrics Stream entirely, use ["*"]. | `set(string)` | `[]` | no |
+| <a name="input_cloudwatch_metrics_include_filters"></a> [cloudwatch\_metrics\_include\_filters](#input\_cloudwatch\_metrics\_include\_filters) | Namespaces to include. Mutually exclusive with cloudwatch\_metrics\_exclude\_filters. | `set(string)` | `[]` | no |
+| <a name="input_dead_letter_queue_destination"></a> [dead\_letter\_queue\_destination](#input\_dead\_letter\_queue\_destination) | Send failed events/function executions to a dead letter queue arn sns or sqs | `string` | `null` | no |
+| <a name="input_enable_s3_bucket_eventbridge"></a> [enable\_s3\_bucket\_eventbridge](#input\_enable\_s3\_bucket\_eventbridge) | Enable sending bucket notifications to EventBridge | `bool` | `false` | no |
+| <a name="input_eventbridge_rules"></a> [eventbridge\_rules](#input\_eventbridge\_rules) | Eventbridge events matching these rules will be forwarded to Observe. Map<br/>keys are only used to provide stable resource addresses.<br/><br/>If null, a default set of rules will be used. | <pre>map(object({<br/>    description   = string<br/>    event_pattern = string<br/>  }))</pre> | `null` | no |
+| <a name="input_invoke_snapshot_on_start_enabled"></a> [invoke\_snapshot\_on\_start\_enabled](#input\_invoke\_snapshot\_on\_start\_enabled) | Toggle invocation of snapshot from Cloudformation. This can be useful for debug purposes if the lambda fails to complete successfully. | `bool` | `false` | no |
+| <a name="input_kms_key_id"></a> [kms\_key\_id](#input\_kms\_key\_id) | KMS key ARN to use to encrypt the logs delivered by CloudTrail. | `string` | `""` | no |
+| <a name="input_lambda_envvars"></a> [lambda\_envvars](#input\_lambda\_envvars) | Environment variables | `map(any)` | `{}` | no |
+| <a name="input_lambda_kms_key"></a> [lambda\_kms\_key](#input\_lambda\_kms\_key) | KMS key to encrypt environment variables | `object({ arn = string })` | `null` | no |
+| <a name="input_lambda_memory_size"></a> [lambda\_memory\_size](#input\_lambda\_memory\_size) | The amount of memory that your function has access to. Increasing the function's memory also increases its CPU allocation.<br/>The default value is 256 MB. The value must be a multiple of 64 MB. | `number` | `256` | no |
+| <a name="input_lambda_reserved_concurrent_executions"></a> [lambda\_reserved\_concurrent\_executions](#input\_lambda\_reserved\_concurrent\_executions) | The number of simultaneous executions to reserve for the function. | `number` | `100` | no |
+| <a name="input_lambda_s3_custom_rules"></a> [lambda\_s3\_custom\_rules](#input\_lambda\_s3\_custom\_rules) | List of rules to evaluate how to upload a given S3 object to Observe. | <pre>list(object({<br/>    pattern = string<br/>    headers = map(string)<br/>  }))</pre> | `[]` | no |
+| <a name="input_lambda_subscribe_logs"></a> [lambda\_subscribe\_logs](#input\_lambda\_subscribe\_logs) | Whether to subscribe to the Lambda function's logs and deliver them from CloudWatch to Observe via Kinesis Firehose. | `bool` | `true` | no |
+| <a name="input_lambda_timeout"></a> [lambda\_timeout](#input\_lambda\_timeout) | The amount of time that Lambda allows a function to run before stopping it.<br/>The maximum allowed value is 900 seconds. | `number` | `120` | no |
+| <a name="input_lambda_version"></a> [lambda\_version](#input\_lambda\_version) | Lambda version | `string` | `"arm64/latest"` | no |
+| <a name="input_lambda_vpc_config"></a> [lambda\_vpc\_config](#input\_lambda\_vpc\_config) | VPC configuration for Lambda function | <pre>object({<br/>    security_groups = list(object({<br/>      id = string<br/>    }))<br/>    subnets = list(object({<br/>      arn = string<br/>      id  = string<br/>    }))<br/>  })</pre> | `null` | no |
+| <a name="input_log_subscription_name"></a> [log\_subscription\_name](#input\_log\_subscription\_name) | Name for log subscription resources to be created | `string` | `null` | no |
+| <a name="input_name"></a> [name](#input\_name) | Name for resources to be created | `string` | `"observe-collection"` | no |
+| <a name="input_observe_customer"></a> [observe\_customer](#input\_observe\_customer) | Observe Customer ID | `string` | n/a | yes |
+| <a name="input_observe_domain"></a> [observe\_domain](#input\_observe\_domain) | Observe Domain | `string` | `"observeinc.com"` | no |
+| <a name="input_observe_token"></a> [observe\_token](#input\_observe\_token) | Observe Token | `string` | n/a | yes |
+| <a name="input_retention_in_days"></a> [retention\_in\_days](#input\_retention\_in\_days) | Retention in days of cloudwatch log group | `number` | `365` | no |
+| <a name="input_s3_bucket"></a> [s3\_bucket](#input\_s3\_bucket) | Override S3 bucket used to to stage data to be sent to Observe. | <pre>object({<br/>    id  = string<br/>    arn = string<br/>  })</pre> | `null` | no |
+| <a name="input_s3_exported_prefix"></a> [s3\_exported\_prefix](#input\_s3\_exported\_prefix) | Key prefix which is subscribed to be sent to Observe Lambda | `string` | `""` | no |
+| <a name="input_s3_lifecycle_rule"></a> [s3\_lifecycle\_rule](#input\_s3\_lifecycle\_rule) | List of maps containing configuration of object lifecycle management. | `any` | `[]` | no |
+| <a name="input_s3_logging"></a> [s3\_logging](#input\_s3\_logging) | Enable S3 access log collection | `bool` | `false` | no |
+| <a name="input_snapshot_action"></a> [snapshot\_action](#input\_snapshot\_action) | List of actions triggered by snapshot. Set to null to inherit all actions supported by the lambda. | `set(string)` | <pre>[<br/>  "autoscaling:Describe*",<br/>  "cloudformation:Describe*",<br/>  "cloudformation:List*",<br/>  "cloudfront:List*",<br/>  "dynamodb:Describe*",<br/>  "dynamodb:List*",<br/>  "ec2:Describe*",<br/>  "ecs:Describe*",<br/>  "ecs:List*",<br/>  "eks:Describe*",<br/>  "eks:List*",<br/>  "elasticache:Describe*",<br/>  "elasticloadbalancing:Describe*",<br/>  "events:List*",<br/>  "firehose:Describe*",<br/>  "firehose:List*",<br/>  "iam:Get*",<br/>  "iam:List*",<br/>  "kinesis:Describe*",<br/>  "kinesis:List*",<br/>  "lambda:List*",<br/>  "logs:Describe*",<br/>  "rds:Describe*",<br/>  "route53:List*",<br/>  "s3:GetBucket*",<br/>  "s3:List*",<br/>  "sns:Get*",<br/>  "sns:List*",<br/>  "sqs:Get*",<br/>  "sqs:List*"<br/>]</pre> | no |
+| <a name="input_snapshot_exclude"></a> [snapshot\_exclude](#input\_snapshot\_exclude) | List of actions to exclude from being executed on snapshot request. | `list(string)` | `[]` | no |
+| <a name="input_snapshot_include"></a> [snapshot\_include](#input\_snapshot\_include) | List of actions to include in snapshot request. | `list(string)` | `[]` | no |
+| <a name="input_snapshot_schedule_expression"></a> [snapshot\_schedule\_expression](#input\_snapshot\_schedule\_expression) | Rate at which snapshot is triggered. Must be valid EventBridge expression | `string` | `"rate(1 hour)"` | no |
+| <a name="input_subscribed_log_group_excludes"></a> [subscribed\_log\_group\_excludes](#input\_subscribed\_log\_group\_excludes) | A list of Python regular expressions. A log group whose name fully matches<br/>any pattern using re.fullmatch() is excluded from subscription. Exclusions<br/>take precedence over subscribed\_log\_group\_matches.<br/><br/>Examples:<br/>  ["/aws/elasticbeanstalk/.*"] - exclude all Elastic Beanstalk log groups<br/>  ["/aws/lambda/noisy-fn"]     - exclude only the exact log group "/aws/lambda/noisy-fn"<br/><br/>See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_excludes for more info. | `list(string)` | `[]` | no |
+| <a name="input_subscribed_log_group_filter_pattern"></a> [subscribed\_log\_group\_filter\_pattern](#input\_subscribed\_log\_group\_filter\_pattern) | A filter pattern for a CloudWatch Logs subscription filter.<br/><br/>See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_filter_pattern or<br/>https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html for more info" | `string` | `""` | no |
+| <a name="input_subscribed_log_group_matches"></a> [subscribed\_log\_group\_matches](#input\_subscribed\_log\_group\_matches) | A list of Python regular expressions. A log group is subscribed if its<br/>name fully matches any pattern using re.fullmatch() (the entire log group<br/>name must match, as if the pattern were anchored with ^ and $).<br/><br/>Examples:<br/>  [".*"]              - subscribe to all log groups<br/>  ["/aws/lambda/.*"]  - subscribe to log groups starting with "/aws/lambda/"<br/>  ["/aws/lambda/my-fn"] - subscribe only to the exact log group "/aws/lambda/my-fn"<br/><br/>See https://github.com/observeinc/terraform-aws-cloudwatch-logs-subscription#input_log_group_matches for more info. | `list(string)` | `[]` | no |
+| <a name="input_subscribed_s3_bucket_arns"></a> [subscribed\_s3\_bucket\_arns](#input\_subscribed\_s3\_bucket\_arns) | List of additional S3 bucket ARNs to subscribe lambda to. | `list(string)` | `[]` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_bucket"></a> [bucket](#output\_bucket) | S3 bucket subscribed to Observe Lambda |
+| <a name="output_observe_kinesis_firehose"></a> [observe\_kinesis\_firehose](#output\_observe\_kinesis\_firehose) | Observe Kinesis Firehose module |
+| <a name="output_observe_lambda"></a> [observe\_lambda](#output\_observe\_lambda) | Observe Lambda module |
+<!-- END_TF_DOCS -->
