@@ -26,7 +26,7 @@ variable "destination" {
 
 variable "forwarder" {
   description = <<-EOF
-    Variables for forwarder module.
+    Variables for forwarder module. See ../forwarder/README.md for attribute details.
   EOF
   type = object({
     source_bucket_names                      = optional(list(string), [])
@@ -54,7 +54,7 @@ variable "forwarder" {
 
 variable "config" {
   description = <<-EOF
-    Variables for AWS Config collection.
+    Variables for AWS Config collection. See ../config/README.md for attribute details.
   EOF
   type = object({
     include_resource_types        = list(string)
@@ -68,7 +68,7 @@ variable "config" {
 
 variable "configsubscription" {
   description = <<-EOF
-    Variables for AWS Config subscription.
+    Variables for AWS Config subscription. See ../configsubscription/README.md for attribute details.
   EOF
   type = object({
     delivery_bucket_name = string
@@ -79,7 +79,7 @@ variable "configsubscription" {
 
 variable "logwriter" {
   description = <<-EOF
-    Variables for AWS CloudWatch Logs collection.
+    Variables for AWS CloudWatch Logs collection. See ../logwriter/README.md for attribute details.
   EOF
   type = object({
     log_group_name_patterns         = optional(list(string))
@@ -105,7 +105,7 @@ variable "logwriter" {
 
 variable "metricstream" {
   description = <<-EOF
-    Variables for AWS CloudWatch Metrics Stream collection.
+    Variables for AWS CloudWatch Metrics Stream collection. See ../metricstream/README.md for attribute details.
   EOF
   type = object({
     include_filters        = optional(list(object({ namespace = string, metric_names = optional(list(string)) })))
@@ -156,7 +156,7 @@ variable "org_id" {
 # The current (audit) account ID is automatically included in the list.
 variable "source_accounts" {
   type        = list(string)
-  default     = ["891377094505"]
+  default     = []
   description = <<-EOF
     List of AWS account IDs allowed to publish to the SNS topic via AWS Config. Useful for sub-accounts in AWS Organizations and Control Tower integrations.
     The current account ID is automatically included when this list is non-empty.

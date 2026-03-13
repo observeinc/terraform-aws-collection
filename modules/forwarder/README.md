@@ -9,13 +9,15 @@ This is a minimal example for setting up a forwarder:
 - instantiate the forwarder module with the `observe_filedrop` and the `name` of the role you used in the previous step.
 
 ```hcl
+data "aws_caller_identity" "current" {}
+
 data "observe_workspace" "default" {
   name = "Default"
 }
 
 resource "random_pet" "this" {}
 
-data "observe_datastream" "this" {
+resource "observe_datastream" "this" {
   workspace = data.observe_workspace.default.oid
   name      = random_pet.this.id
 }

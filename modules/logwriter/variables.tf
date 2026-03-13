@@ -72,9 +72,12 @@ variable "filter_pattern" {
 
 variable "log_group_name_patterns" {
   description = <<-EOF
-    Subscribe to CloudWatch log groups matching any of the provided patterns
-    based on a case-sensitive substring search. To subscribe to all log groups
-    use the wildcard operator *.
+    List of log group name patterns. A log group is subscribed if its name
+    matches any pattern. Patterns are joined with "|" into a single Go
+    regular expression and matched using regexp.MatchString() (partial match),
+    so a plain string like "/aws/lambda" matches any log group whose name
+    contains that substring. To subscribe to all log groups, use the special
+    token "*" (not a glob wildcard).
   EOF
   type        = list(string)
   default     = null
@@ -82,8 +85,11 @@ variable "log_group_name_patterns" {
 
 variable "log_group_name_prefixes" {
   description = <<-EOF
-    Subscribe to CloudWatch log groups matching any of the provided prefixes.
-    To subscribe to all log groups use the wildcard operator *.
+    List of log group name prefixes. A log group is subscribed if its name
+    starts with any of the provided strings. Internally each prefix is
+    converted to the regex "^<prefix>.*" and matched using
+    regexp.MatchString(). To subscribe to all log groups, use the special
+    token "*" (not a glob wildcard).
   EOF
   type        = list(string)
   default     = null
@@ -91,8 +97,11 @@ variable "log_group_name_prefixes" {
 
 variable "exclude_log_group_name_patterns" {
   description = <<-EOF
-    Exclude any log group names matching the provided set of regular
-    expressions.
+    List of Go regular expression patterns. Any log group whose name matches
+    a pattern is excluded from subscription, even if it matches an include
+    pattern. Patterns are joined with "|" into a single regex and matched
+    using regexp.MatchString() (partial match). Exclusions take precedence
+    over log_group_name_patterns and log_group_name_prefixes.
   EOF
   type        = list(string)
   default     = null

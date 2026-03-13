@@ -7,7 +7,7 @@ This module configures an IAM role that can be assumed by Observe.
 ```hcl
 resource "random_pet" "this" {}
 
-data "observe_cloud_info" {}
+data "observe_cloud_info" "this" {}
 
 data "observe_workspace" "default" {
     name = "Default"
@@ -22,7 +22,7 @@ module "external_role" {
   source     = "observeinc/collection/aws//modules/externalrole"
   name       = random_pet.this.id
 
-  observe_aws_account_id = data.observe_cloud_info.account_id
+  observe_aws_account_id = data.observe_cloud_info.this.account_id
   datastream_ids         = [observe_datastream.example.id]
   allowed_actions        = [
     "cloudwatch:ListMetrics",
