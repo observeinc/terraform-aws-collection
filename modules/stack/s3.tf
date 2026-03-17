@@ -1,5 +1,6 @@
 resource "aws_s3_bucket" "this" {
-  bucket_prefix = local.name_prefix
+  bucket        = var.s3_bucket_name
+  bucket_prefix = var.s3_bucket_name == null ? local.name_prefix : null
   force_destroy = true
   tags          = var.tags
 }
