@@ -29,15 +29,6 @@ jobs:
         else
             echo "can-write=true" >> $GITHUB_OUTPUT
         fi
-    - name: Terraform min/max versions
-      id: minMax
-      uses: clowdhaus/terraform-min-max@v2.1.0
-      with:
-      directory: ${{ matrix.directory }}
-    - name: Install Terraform v${{ steps.minMax.outputs.minVersion }}
-      uses: hashicorp/setup-terraform@v4.0.0
-      with:
-        terraform_version: ${{ steps.minMax.outputs.minVersion }}
 
   prepare_matrix:
     needs: [permission_check]
@@ -88,6 +79,17 @@ jobs:
 
     - name: checkout
       uses: actions/checkout@v6.0.2
+
+    - name: Terraform min/max versions
+      id: minMax
+      uses: clowdhaus/terraform-min-max@v2.1.0
+      with:
+        directory: ${{ matrix.testfile }}
+
+    - name: Install Terraform v${{ steps.minMax.outputs.minVersion }}
+      uses: hashicorp/setup-terraform@v4.0.0
+      with:
+        terraform_version: ${{ steps.minMax.outputs.minVersion }}
 
     - name: Integration test for ${{ matrix.testfile }}
       run: DIR=${{ matrix.testfile }} make test-dir
