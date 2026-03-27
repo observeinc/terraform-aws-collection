@@ -33,7 +33,7 @@ jobs:
       id: minMax
       uses: clowdhaus/terraform-min-max@v2.1.0
       with:
-      directory: ${{ matrix.directory }}
+        directory: ${{ matrix.directory }}
     - name: Install Terraform v${{ steps.minMax.outputs.minVersion }}
       uses: hashicorp/setup-terraform@v4.0.0
       with:
