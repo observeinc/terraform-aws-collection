@@ -82,18 +82,20 @@ data "aws_iam_policy_document" "subscription_policy" {
 }
 
 resource "aws_iam_role" "scheduler" {
+  count              = local.has_discovery_rate ? 1 : 0
   name_prefix        = local.name_prefix
-  assume_role_policy = data.aws_iam_policy_document.scheduler_assume_role_policy.json
+  assume_role_policy = data.aws_iam_policy_document.scheduler_assume_role_policy[0].json
 
   inline_policy {
     name   = "queue"
-    policy = data.aws_iam_policy_document.scheduler_queue.json
+    policy = data.aws_iam_policy_document.scheduler_queue[0].json
   }
 
   tags = var.tags
 }
 
 data "aws_iam_policy_document" "scheduler_assume_role_policy" {
+  count = local.has_discovery_rate ? 1 : 0
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
@@ -105,6 +107,7 @@ data "aws_iam_policy_document" "scheduler_assume_role_policy" {
 }
 
 data "aws_iam_policy_document" "scheduler_queue" {
+  count = local.has_discovery_rate ? 1 : 0
   statement {
     effect = "Allow"
     actions = [

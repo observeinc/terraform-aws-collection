@@ -150,7 +150,7 @@ variable "lambda_timeout" {
   description = "Timeout in seconds for lambda function."
   type        = number
   nullable    = false
-  default     = 20
+  default     = 120
 }
 
 variable "lambda_env_vars" {

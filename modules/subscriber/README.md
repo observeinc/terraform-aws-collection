@@ -63,7 +63,7 @@ This app is specifically to register new cloudwatch log groups for the `logwrite
 | <a name="input_lambda_env_vars"></a> [lambda\_env\_vars](#input\_lambda\_env\_vars) | Environment variables to be passed into lambda. | `map(string)` | `{}` | no |
 | <a name="input_lambda_memory_size"></a> [lambda\_memory\_size](#input\_lambda\_memory\_size) | Memory size for lambda function. | `number` | `128` | no |
 | <a name="input_lambda_runtime"></a> [lambda\_runtime](#input\_lambda\_runtime) | Lambda runtime. | `string` | `"provided.al2023"` | no |
-| <a name="input_lambda_timeout"></a> [lambda\_timeout](#input\_lambda\_timeout) | Timeout in seconds for lambda function. | `number` | `20` | no |
+| <a name="input_lambda_timeout"></a> [lambda\_timeout](#input\_lambda\_timeout) | Timeout in seconds for lambda function. | `number` | `120` | no |
 | <a name="input_log_group_name_patterns"></a> [log\_group\_name\_patterns](#input\_log\_group\_name\_patterns) | List of log group name patterns. A log group is subscribed if its name<br/>matches any pattern. Patterns matched using regexp.MatchString() (partial match),<br/>so a plain string like "/aws/lambda" matches any log group whose name<br/>contains that substring.<br/><br/>To subscribe to all log groups, use the special token "*". The "*"<br/>character selects all log groups.<br/><br/>Matching is regex-based, characters like "." are treated<br/>as regex metacharacters (matching any character), not literals.<br/><br/>Examples:<br/>  ["*"]                - subscribe to all log groups<br/>  ["/aws/lambda"]      - subscribe to any log group containing "/aws/lambda" | `list(string)` | `[]` | no |
 | <a name="input_log_group_name_prefixes"></a> [log\_group\_name\_prefixes](#input\_log\_group\_name\_prefixes) | List of log group name prefixes. A log group is subscribed if its name<br/>starts with any of the provided strings. Internally each prefix is<br/>converted to the regex "^<prefix>.*" and matched using<br/>regexp.MatchString().<br/><br/>To subscribe to all log groups, use the special token "*". The "*"<br/>character selects all log groups; it is not a glob wildcard.<br/><br/>Examples:<br/>  ["*"]           - subscribe to all log groups<br/>  ["/aws/lambda"] - subscribe to log groups whose names start with "/aws/lambda" | `list(string)` | `[]` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name for resources. | `string` | n/a | yes |
@@ -94,7 +94,7 @@ This app is specifically to register new cloudwatch log groups for the `logwrite
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.36.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.100.0 |
 
 ## Modules
 
@@ -142,7 +142,7 @@ This app is specifically to register new cloudwatch log groups for the `logwrite
 | <a name="input_lambda_env_vars"></a> [lambda\_env\_vars](#input\_lambda\_env\_vars) | Environment variables to be passed into lambda. | `map(string)` | `{}` | no |
 | <a name="input_lambda_memory_size"></a> [lambda\_memory\_size](#input\_lambda\_memory\_size) | Memory size for lambda function. | `number` | `128` | no |
 | <a name="input_lambda_runtime"></a> [lambda\_runtime](#input\_lambda\_runtime) | Lambda runtime. | `string` | `"provided.al2023"` | no |
-| <a name="input_lambda_timeout"></a> [lambda\_timeout](#input\_lambda\_timeout) | Timeout in seconds for lambda function. | `number` | `20` | no |
+| <a name="input_lambda_timeout"></a> [lambda\_timeout](#input\_lambda\_timeout) | Timeout in seconds for lambda function. | `number` | `120` | no |
 | <a name="input_log_group_name_patterns"></a> [log\_group\_name\_patterns](#input\_log\_group\_name\_patterns) | List of log group name patterns. A log group is subscribed if its name<br/>matches any pattern. Patterns matched using regexp.MatchString() (partial match),<br/>so a plain string like "/aws/lambda" matches any log group whose name<br/>contains that substring.<br/><br/>To subscribe to all log groups, use the special token "*". The "*"<br/>character selects all log groups.<br/><br/>Matching is regex-based, characters like "." are treated<br/>as regex metacharacters (matching any character), not literals.<br/><br/>Examples:<br/>  ["*"]                - subscribe to all log groups<br/>  ["/aws/lambda"]      - subscribe to any log group containing "/aws/lambda" | `list(string)` | `[]` | no |
 | <a name="input_log_group_name_prefixes"></a> [log\_group\_name\_prefixes](#input\_log\_group\_name\_prefixes) | List of log group name prefixes. A log group is subscribed if its name<br/>starts with any of the provided strings. Internally each prefix is<br/>converted to the regex "^<prefix>.*" and matched using<br/>regexp.MatchString().<br/><br/>To subscribe to all log groups, use the special token "*". The "*"<br/>character selects all log groups; it is not a glob wildcard.<br/><br/>Examples:<br/>  ["*"]           - subscribe to all log groups<br/>  ["/aws/lambda"] - subscribe to log groups whose names start with "/aws/lambda" | `list(string)` | `[]` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name for resources. | `string` | n/a | yes |

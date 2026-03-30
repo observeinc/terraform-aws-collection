@@ -11,7 +11,7 @@ resource "aws_scheduler_schedule" "discovery_schedule" {
 
   target {
     arn      = aws_sqs_queue.queue.arn
-    role_arn = aws_iam_role.scheduler.arn
+    role_arn = aws_iam_role.scheduler[0].arn
     input = jsonencode({
       discover = {
         logGroupNamePatterns = var.log_group_name_patterns

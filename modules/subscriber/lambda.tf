@@ -1,6 +1,12 @@
 resource "aws_lambda_event_source_mapping" "subscriber_sqs" {
-  event_source_arn = aws_sqs_queue.queue.arn
-  function_name    = aws_lambda_function.subscriber.arn
+  event_source_arn        = aws_sqs_queue.queue.arn
+  function_name           = aws_lambda_function.subscriber.arn
+  batch_size              = 1
+  function_response_types = ["ReportBatchItemFailures"]
+
+  scaling_config {
+    maximum_concurrency = 2
+  }
 }
 
 resource "aws_lambda_function" "subscriber" {
@@ -24,7 +30,6 @@ resource "aws_lambda_function" "subscriber" {
       EXCLUDE_LOG_GROUP_NAME_PATTERNS = join(",", var.exclude_log_group_name_patterns)
       ROLE_ARN                        = var.destination_iam_arn
       QUEUE_URL                       = aws_sqs_queue.queue.id
-      VERBOSITY                       = 9
       NUM_WORKERS                     = var.num_workers
       OTEL_EXPORTER_OTLP_ENDPOINT     = var.debug_endpoint
       OTEL_TRACES_EXPORTER            = var.debug_endpoint == "" ? "none" : "otlp"
