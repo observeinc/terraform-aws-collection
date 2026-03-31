@@ -16,11 +16,17 @@ run "create_bucket" {
 
 run "install_logwriter" {
   variables {
-    name                    = run.setup.short
-    bucket_arn              = run.create_bucket.arn
-    discovery_rate          = "10 minutes"
-    filter_name             = "${run.setup.id}-filter"
-    log_group_name_patterns = ["${run.setup.short}"]
-    debug_endpoint          = "http://localhost:8080"
+    name                            = run.setup.short
+    bucket_arn                      = run.create_bucket.arn
+    discovery_rate                  = "10 minutes"
+    filter_name                     = "${run.setup.id}-filter"
+    log_group_name_patterns         = ["${run.setup.short}"]
+    exclude_log_group_name_patterns = ["^noisy-group"]
+    debug_endpoint                  = "http://localhost:8080"
+  }
+
+  assert {
+    condition     = output.subscriber != null
+    error_message = "subscriber should be created when patterns are set"
   }
 }
