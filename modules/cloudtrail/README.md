@@ -39,7 +39,7 @@ module "cloudtrail" {
 }
 ```
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -89,7 +89,7 @@ No modules.
 |------|-------------|
 | <a name="output_bucket"></a> [bucket](#output\_bucket) | S3 Bucket containing CloudTrail records |
 | <a name="output_topic"></a> [topic](#output\_topic) | SNS Topic containing bucket notifications |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
 
 ## License
 
