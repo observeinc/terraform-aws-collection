@@ -1,7 +1,7 @@
 resource "aws_sqs_queue" "dead_letter" {
   name = "${var.name}-deadletter"
 
-  tags = var.tags
+  tags = merge(var.tags, var.dead_letter_queue_tags)
 }
 
 resource "aws_sqs_queue" "queue" {

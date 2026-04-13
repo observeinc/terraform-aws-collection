@@ -168,3 +168,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "dead_letter_queue_tags" {
+  description = "Tags to add to dead-letter queues. Merged with tags variable, with these taking precedence for any overlapping keys."
+  type        = map(string)
+  default     = {}
+}

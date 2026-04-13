@@ -28,4 +28,5 @@ module "forwarder" {
   sam_release_version                      = try(coalesce(var.forwarder.sam_release_version, var.sam_release_version), null)
   cloudwatch_log_kms_key                   = var.forwarder.cloudwatch_log_kms_key
   tags                                     = var.tags
+  dead_letter_queue_tags                   = var.dead_letter_queue_tags
 }

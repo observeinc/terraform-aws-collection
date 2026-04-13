@@ -65,7 +65,7 @@ resource "aws_sqs_queue" "dlq" {
   name                      = "${var.name}-dlq"
   message_retention_seconds = var.queue_message_retention_seconds
 
-  tags = var.tags
+  tags = merge(var.tags, var.dead_letter_queue_tags)
 }
 
 resource "aws_sqs_queue_redrive_allow_policy" "dlq" {
