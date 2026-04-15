@@ -36,6 +36,11 @@ data "aws_iam_policy_document" "sns_topic_policy" {
     resources = [
       aws_sns_topic.this.arn,
     ]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
   }
 
   statement {
@@ -51,6 +56,11 @@ data "aws_iam_policy_document" "sns_topic_policy" {
     resources = [
       aws_sns_topic.this.arn,
     ]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
   }
 
   # Optional: if org_id is set, add an AllowAWSConfigFromOrg statement that

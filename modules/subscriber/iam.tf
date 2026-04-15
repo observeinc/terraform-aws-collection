@@ -30,6 +30,11 @@ data "aws_iam_policy_document" "assume_role_policy" {
       type        = "Service"
       identifiers = ["lambda.amazonaws.com"]
     }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
   }
 }
 
@@ -102,6 +107,11 @@ data "aws_iam_policy_document" "scheduler_assume_role_policy" {
     principals {
       type        = "Service"
       identifiers = ["scheduler.amazonaws.com"]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
     }
   }
 }

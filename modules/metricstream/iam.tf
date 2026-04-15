@@ -25,6 +25,11 @@ data "aws_iam_policy_document" "firehose_assume_role_policy" {
       type        = "Service"
       identifiers = ["firehose.amazonaws.com"]
     }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
   }
 }
 
@@ -71,6 +76,11 @@ data "aws_iam_policy_document" "metric_stream_assume_role_policy" {
     principals {
       type        = "Service"
       identifiers = ["streams.metrics.cloudwatch.amazonaws.com"]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
     }
   }
 }
