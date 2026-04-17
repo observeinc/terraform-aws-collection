@@ -198,3 +198,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "dead_letter_queue_tags" {
+  description = "Tags to add to the dead letter queue."
+  type        = map(string)
+  default     = {}
+}

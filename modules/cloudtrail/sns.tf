@@ -12,6 +12,11 @@ data "aws_iam_policy_document" "s3_to_sns" {
       type        = "Service"
       identifiers = ["s3.amazonaws.com"]
     }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
   }
 }
 

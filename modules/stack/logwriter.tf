@@ -25,6 +25,7 @@ module "logwriter" {
   retention_in_days               = var.logwriter.retention_in_days
   cloudwatch_log_kms_key          = var.logwriter.cloudwatch_log_kms_key
   tags                            = var.tags
+  dead_letter_queue_tags          = var.dead_letter_queue_tags
 
   depends_on = [aws_s3_bucket_notification.this]
 }
