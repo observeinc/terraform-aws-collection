@@ -1,3 +1,12 @@
+# [2.33.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.32.1...v2.33.0) (2026-04-20)
+
+
+### Features
+
+* update dependencies ([738f6af](https://github.com/observeinc/terraform-aws-collection/commit/738f6afe8cb10fda19b79af1b22c348c77c38fa0))
+
+
+
 ## [2.32.1](https://github.com/observeinc/terraform-aws-collection/compare/v2.32.0...v2.32.1) (2026-03-31)
 
 
