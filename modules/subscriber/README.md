@@ -7,7 +7,7 @@ This app is specifically to register new cloudwatch log groups for the `logwrite
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.8 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 | <a name="requirement_http"></a> [http](#requirement\_http) | >= 3.0 |
 

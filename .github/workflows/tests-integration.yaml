@@ -44,18 +44,6 @@ jobs:
       run: |
         echo "matrix=$( find . -type d -name tests -print | sed 's:/[^/]*$::' | jq  -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
 
-    - uses: actions/checkout@v6.0.2
-
-    - name: DCE Provision
-      uses: observeinc/github-action-dce@1.0.1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        budget-amount: ${{ vars.BUDGET_AMOUNT }}
-        budget-currency: 'USD'
-        expiry: '30m'
-        email: 'joao+gha@observeinc.com'
-
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
       if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
@@ -70,12 +58,12 @@ jobs:
       matrix:
         testfile: ${{fromJson(needs.prepare_matrix.outputs.matrix)}}
     steps:
-    - name: DCE Use
-      id: dce_setup
-      uses: observeinc/github-action-dce@1.0.1
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2
 
     - name: checkout
       uses: actions/checkout@v6.0.2
@@ -101,10 +89,4 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-    - name: DCE Cleanup
-      if: needs.permission_check.outputs.can-write == 'true'
-      uses: observeinc/github-action-dce@1.0.1
-      with:
-        action-type: 'decommission'
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    - run: echo "No DCE cleanup required"
