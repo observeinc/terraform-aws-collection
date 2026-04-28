@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 locals {
   has_discovery_rate = var.discovery_rate != ""
   name_prefix        = "${substr(var.name, 0, 37)}-"

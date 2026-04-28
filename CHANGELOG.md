@@ -1,3 +1,22 @@
+# [2.33.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.32.1...v2.33.0) (2026-04-20)
+
+
+### Features
+
+* update dependencies ([738f6af](https://github.com/observeinc/terraform-aws-collection/commit/738f6afe8cb10fda19b79af1b22c348c77c38fa0))
+
+
+
+## [2.32.1](https://github.com/observeinc/terraform-aws-collection/compare/v2.32.0...v2.32.1) (2026-03-31)
+
+
+### Bug Fixes
+
+* align subscriber module with aws-sam-apps for correctness ([4de15f8](https://github.com/observeinc/terraform-aws-collection/commit/4de15f8bc6b61b810a688e875c29f3c84212298e))
+* remove misplaced Terraform min/max version steps from permission_check job ([35276f5](https://github.com/observeinc/terraform-aws-collection/commit/35276f52c7762151e54418bd3eaae73ca2975424))
+
+
+
 # [2.32.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.31.0...v2.32.0) (2026-03-17)
 
 

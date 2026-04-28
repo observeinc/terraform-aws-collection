@@ -23,4 +23,5 @@ module "subscriber" {
   cloudwatch_log_kms_key          = var.cloudwatch_log_kms_key
   retention_in_days               = var.retention_in_days
   tags                            = var.tags
+  dead_letter_queue_tags          = var.dead_letter_queue_tags
 }

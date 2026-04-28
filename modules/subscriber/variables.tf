@@ -150,7 +150,7 @@ variable "lambda_timeout" {
   description = "Timeout in seconds for lambda function."
   type        = number
   nullable    = false
-  default     = 20
+  default     = 120
 }
 
 variable "lambda_env_vars" {
@@ -210,6 +210,12 @@ variable "cloudwatch_log_kms_key" {
 
 variable "tags" {
   description = "Tags to add to the resources."
+  type        = map(string)
+  default     = {}
+}
+
+variable "dead_letter_queue_tags" {
+  description = "Tags to add to the deadletter queue. Merged with tags variable, with these taking precedence for any overlapping keys."
   type        = map(string)
   default     = {}
 }

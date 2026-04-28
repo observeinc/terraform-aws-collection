@@ -220,10 +220,11 @@ module "stack" {
 |------|-------------|------|---------|:--------:|
 | <a name="input_config"></a> [config](#input\_config) | Variables for AWS Config collection. See ../config/README.md for attribute details. | <pre>object({<br/>    include_resource_types        = list(string)<br/>    exclude_resource_types        = optional(list(string))<br/>    delivery_frequency            = optional(string)<br/>    include_global_resource_types = optional(bool)<br/>    tag_account_alias             = optional(bool)<br/>  })</pre> | `null` | no |
 | <a name="input_configsubscription"></a> [configsubscription](#input\_configsubscription) | Variables for AWS Config subscription. See ../configsubscription/README.md for attribute details. | <pre>object({<br/>    delivery_bucket_name = string<br/>    tag_account_alias    = optional(bool)<br/>  })</pre> | `null` | no |
+| <a name="input_dead_letter_queue_tags"></a> [dead\_letter\_queue\_tags](#input\_dead\_letter\_queue\_tags) | Tags to add to dead-letter queues. Merged with tags variable, with these taking precedence for any overlapping keys. | `map(string)` | `{}` | no |
 | <a name="input_debug_endpoint"></a> [debug\_endpoint](#input\_debug\_endpoint) | Endpoint to send debugging telemetry to. Sets OTEL\_EXPORTER\_OTLP\_ENDPOINT environment variable for supported lambda functions. | `string` | `null` | no |
 | <a name="input_destination"></a> [destination](#input\_destination) | Destination filedrop | <pre>object({<br/>    arn    = optional(string, "")<br/>    bucket = optional(string, "")<br/>    prefix = optional(string, "")<br/>    # exclusively for backward compatible HTTP endpoint<br/>    uri = optional(string, "")<br/>  })</pre> | n/a | yes |
 | <a name="input_forwarder"></a> [forwarder](#input\_forwarder) | Variables for forwarder module. See ../forwarder/README.md for attribute details. | <pre>object({<br/>    source_bucket_names                      = optional(list(string), [])<br/>    source_object_keys                       = optional(list(string))<br/>    source_topic_arns                        = optional(list(string), [])<br/>    content_type_overrides                   = optional(list(object({ pattern = string, content_type = string })), [])<br/>    max_file_size                            = optional(number)<br/>    lambda_memory_size                       = optional(number)<br/>    lambda_timeout                           = optional(number)<br/>    lambda_env_vars                          = optional(map(string))<br/>    lambda_runtime                           = optional(string)<br/>    retention_in_days                        = optional(number)<br/>    queue_max_receive_count                  = optional(number)<br/>    queue_delay_seconds                      = optional(number)<br/>    queue_message_retention_seconds          = optional(number)<br/>    queue_batch_size                         = optional(number)<br/>    queue_maximum_batching_window_in_seconds = optional(number)<br/>    code_uri                                 = optional(string)<br/>    sam_release_version                      = optional(string)<br/>    cloudwatch_log_kms_key                   = optional(string)<br/>  })</pre> | `{}` | no |
-| <a name="input_logwriter"></a> [logwriter](#input\_logwriter) | Variables for AWS CloudWatch Logs collection. See ../logwriter/README.md for attribute details. | <pre>object({<br/>    log_group_name_patterns         = optional(list(string))<br/>    log_group_name_prefixes         = optional(list(string))<br/>    exclude_log_group_name_prefixes = optional(list(string))<br/>    buffering_interval              = optional(number)<br/>    buffering_size                  = optional(number)<br/>    filter_name                     = optional(string)<br/>    filter_pattern                  = optional(string)<br/>    num_workers                     = optional(number)<br/>    discovery_rate                  = optional(string, "24 hours")<br/>    lambda_memory_size              = optional(number)<br/>    lambda_timeout                  = optional(number)<br/>    lambda_env_vars                 = optional(map(string))<br/>    lambda_runtime                  = optional(string)<br/>    code_uri                        = optional(string)<br/>    sam_release_version             = optional(string)<br/>    retention_in_days               = optional(number)<br/>    cloudwatch_log_kms_key          = optional(string)<br/>  })</pre> | `null` | no |
+| <a name="input_logwriter"></a> [logwriter](#input\_logwriter) | Variables for AWS CloudWatch Logs collection. See ../logwriter/README.md for attribute details. | <pre>object({<br/>    log_group_name_patterns         = optional(list(string))<br/>    log_group_name_prefixes         = optional(list(string))<br/>    exclude_log_group_name_patterns = optional(list(string))<br/>    buffering_interval              = optional(number)<br/>    buffering_size                  = optional(number)<br/>    filter_name                     = optional(string)<br/>    filter_pattern                  = optional(string)<br/>    num_workers                     = optional(number)<br/>    discovery_rate                  = optional(string, "24 hours")<br/>    lambda_memory_size              = optional(number)<br/>    lambda_timeout                  = optional(number)<br/>    lambda_env_vars                 = optional(map(string))<br/>    lambda_runtime                  = optional(string)<br/>    code_uri                        = optional(string)<br/>    sam_release_version             = optional(string)<br/>    retention_in_days               = optional(number)<br/>    cloudwatch_log_kms_key          = optional(string)<br/>  })</pre> | `null` | no |
 | <a name="input_metricstream"></a> [metricstream](#input\_metricstream) | Variables for AWS CloudWatch Metrics Stream collection. See ../metricstream/README.md for attribute details. | <pre>object({<br/>    include_filters        = optional(list(object({ namespace = string, metric_names = optional(list(string)) })))<br/>    exclude_filters        = optional(list(object({ namespace = string, metric_names = optional(list(string)) })))<br/>    buffering_interval     = optional(number)<br/>    buffering_size         = optional(number)<br/>    sam_release_version    = optional(string)<br/>    cloudwatch_log_kms_key = optional(string)<br/>    retention_in_days      = optional(number)<br/>  })</pre> | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name of role. Since this name must be unique within the<br/>account, it will be reused for most of the resources created by this<br/>module. | `string` | n/a | yes |
 | <a name="input_org_id"></a> [org\_id](#input\_org\_id) | Optional AWS Organizations ID. If set, adds an AllowAWSConfigFromOrg statement on the SNS topic that allows publishes by aws:PrincipalOrgID. Useful for AWS Control Tower integrations. | `string` | `null` | no |
@@ -246,3 +247,71 @@ module "stack" {
 | <a name="output_metricstream"></a> [metricstream](#output\_metricstream) | MetricStream module |
 | <a name="output_topic"></a> [topic](#output\_topic) | SNS topic subscribed to forwarder |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.100.0 |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_config"></a> [config](#module\_config) | ../config | n/a |
+| <a name="module_configsubscription"></a> [configsubscription](#module\_configsubscription) | ../configsubscription | n/a |
+| <a name="module_forwarder"></a> [forwarder](#module\_forwarder) | ../forwarder | n/a |
+| <a name="module_logwriter"></a> [logwriter](#module\_logwriter) | ../logwriter | n/a |
+| <a name="module_metricstream"></a> [metricstream](#module\_metricstream) | ../metricstream | n/a |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [aws_s3_bucket.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
+| [aws_s3_bucket_lifecycle_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration) | resource |
+| [aws_s3_bucket_notification.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_notification) | resource |
+| [aws_sns_topic.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic) | resource |
+| [aws_sns_topic_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_policy) | resource |
+| [aws_sns_topic_subscription.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_subscription) | resource |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_iam_policy_document.sns_topic_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_config"></a> [config](#input\_config) | Variables for AWS Config collection. See ../config/README.md for attribute details. | <pre>object({<br/>    include_resource_types        = list(string)<br/>    exclude_resource_types        = optional(list(string))<br/>    delivery_frequency            = optional(string)<br/>    include_global_resource_types = optional(bool)<br/>    tag_account_alias             = optional(bool)<br/>  })</pre> | `null` | no |
+| <a name="input_configsubscription"></a> [configsubscription](#input\_configsubscription) | Variables for AWS Config subscription. See ../configsubscription/README.md for attribute details. | <pre>object({<br/>    delivery_bucket_name = string<br/>    tag_account_alias    = optional(bool)<br/>  })</pre> | `null` | no |
+| <a name="input_debug_endpoint"></a> [debug\_endpoint](#input\_debug\_endpoint) | Endpoint to send debugging telemetry to. Sets OTEL\_EXPORTER\_OTLP\_ENDPOINT environment variable for supported lambda functions. | `string` | `null` | no |
+| <a name="input_destination"></a> [destination](#input\_destination) | Destination filedrop | <pre>object({<br/>    arn    = optional(string, "")<br/>    bucket = optional(string, "")<br/>    prefix = optional(string, "")<br/>    # exclusively for backward compatible HTTP endpoint<br/>    uri = optional(string, "")<br/>  })</pre> | n/a | yes |
+| <a name="input_forwarder"></a> [forwarder](#input\_forwarder) | Variables for forwarder module. See ../forwarder/README.md for attribute details. | <pre>object({<br/>    source_bucket_names                      = optional(list(string), [])<br/>    source_object_keys                       = optional(list(string))<br/>    source_topic_arns                        = optional(list(string), [])<br/>    content_type_overrides                   = optional(list(object({ pattern = string, content_type = string })), [])<br/>    max_file_size                            = optional(number)<br/>    lambda_memory_size                       = optional(number)<br/>    lambda_timeout                           = optional(number)<br/>    lambda_env_vars                          = optional(map(string))<br/>    lambda_runtime                           = optional(string)<br/>    retention_in_days                        = optional(number)<br/>    queue_max_receive_count                  = optional(number)<br/>    queue_delay_seconds                      = optional(number)<br/>    queue_message_retention_seconds          = optional(number)<br/>    queue_batch_size                         = optional(number)<br/>    queue_maximum_batching_window_in_seconds = optional(number)<br/>    code_uri                                 = optional(string)<br/>    sam_release_version                      = optional(string)<br/>    cloudwatch_log_kms_key                   = optional(string)<br/>  })</pre> | `{}` | no |
+| <a name="input_logwriter"></a> [logwriter](#input\_logwriter) | Variables for AWS CloudWatch Logs collection. See ../logwriter/README.md for attribute details. | <pre>object({<br/>    log_group_name_patterns         = optional(list(string))<br/>    log_group_name_prefixes         = optional(list(string))<br/>    exclude_log_group_name_patterns = optional(list(string))<br/>    buffering_interval              = optional(number)<br/>    buffering_size                  = optional(number)<br/>    filter_name                     = optional(string)<br/>    filter_pattern                  = optional(string)<br/>    num_workers                     = optional(number)<br/>    discovery_rate                  = optional(string, "24 hours")<br/>    lambda_memory_size              = optional(number)<br/>    lambda_timeout                  = optional(number)<br/>    lambda_env_vars                 = optional(map(string))<br/>    lambda_runtime                  = optional(string)<br/>    code_uri                        = optional(string)<br/>    sam_release_version             = optional(string)<br/>    retention_in_days               = optional(number)<br/>    cloudwatch_log_kms_key          = optional(string)<br/>  })</pre> | `null` | no |
+| <a name="input_metricstream"></a> [metricstream](#input\_metricstream) | Variables for AWS CloudWatch Metrics Stream collection. See ../metricstream/README.md for attribute details. | <pre>object({<br/>    include_filters        = optional(list(object({ namespace = string, metric_names = optional(list(string)) })))<br/>    exclude_filters        = optional(list(object({ namespace = string, metric_names = optional(list(string)) })))<br/>    buffering_interval     = optional(number)<br/>    buffering_size         = optional(number)<br/>    sam_release_version    = optional(string)<br/>    cloudwatch_log_kms_key = optional(string)<br/>    retention_in_days      = optional(number)<br/>  })</pre> | `null` | no |
+| <a name="input_name"></a> [name](#input\_name) | Name of role. Since this name must be unique within the<br/>account, it will be reused for most of the resources created by this<br/>module. | `string` | n/a | yes |
+| <a name="input_org_id"></a> [org\_id](#input\_org\_id) | Optional AWS Organizations ID. If set, adds an AllowAWSConfigFromOrg statement on the SNS topic that allows publishes by aws:PrincipalOrgID. Useful for AWS Control Tower integrations. | `string` | `null` | no |
+| <a name="input_s3_bucket_lifecycle_expiration"></a> [s3\_bucket\_lifecycle\_expiration](#input\_s3\_bucket\_lifecycle\_expiration) | Expiration in days for S3 objects in collection bucket | `number` | `4` | no |
+| <a name="input_sam_release_version"></a> [sam\_release\_version](#input\_sam\_release\_version) | Release version for SAM apps as defined on github.com/observeinc/aws-sam-apps. | `string` | `null` | no |
+| <a name="input_source_accounts"></a> [source\_accounts](#input\_source\_accounts) | List of AWS account IDs allowed to publish to the SNS topic via AWS Config. Useful for sub-accounts in AWS Organizations and Control Tower integrations.<br/>The current account ID is automatically included when this list is non-empty. | `list(string)` | `[]` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags to add to the resources. | `map(string)` | `{}` | no |
+| <a name="input_verbosity"></a> [verbosity](#input\_verbosity) | Logging verbosity for Lambda. Highest log verbosity is 9. | `number` | `null` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_bucket"></a> [bucket](#output\_bucket) | S3 bucket subscribed to forwarder |
+| <a name="output_config"></a> [config](#output\_config) | Config module |
+| <a name="output_configsubscription"></a> [configsubscription](#output\_configsubscription) | ConfigSubscription module |
+| <a name="output_forwarder"></a> [forwarder](#output\_forwarder) | Forwarder module |
+| <a name="output_logwriter"></a> [logwriter](#output\_logwriter) | LogWriter module |
+| <a name="output_metricstream"></a> [metricstream](#output\_metricstream) | MetricStream module |
+| <a name="output_topic"></a> [topic](#output\_topic) | SNS topic subscribed to forwarder |
+<!-- END_TF_DOCS -->
