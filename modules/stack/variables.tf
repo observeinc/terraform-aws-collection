@@ -131,6 +131,17 @@ variable "s3_bucket_lifecycle_expiration" {
   default     = 4
 }
 
+variable "s3_bucket_name" {
+  description = <<-EOF
+    Optional explicit name for the collection S3 bucket. When set, the bucket is created with this exact name
+    instead of being generated from a prefix. Useful when importing an existing bucket, since the AWS provider's
+    import populates `bucket` but leaves `bucket_prefix` empty, which would otherwise force a destructive replace.
+    When null (default), behavior is unchanged and `bucket_prefix` is used.
+  EOF
+  type        = string
+  default     = null
+}
+
 variable "verbosity" {
   description = "Logging verbosity for Lambda. Highest log verbosity is 9."
   type        = number
