@@ -40,7 +40,7 @@ module "stack" {
 - AWS Config must already be enabled in the target account and region with a configuration recorder and delivery channel.
 - The `target_arn` must accept EventBridge events (e.g., an SQS queue or Lambda function).
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -82,7 +82,7 @@ No modules.
 ## Outputs
 
 No outputs.
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
 
 ## License
 
