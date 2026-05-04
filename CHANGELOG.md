@@ -1,3 +1,17 @@
+# [2.34.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.33.0...v2.34.0) (2026-05-04)
+
+
+### Bug Fixes
+
+* CloudWatch Log Group subscription handling ([4f03b09](https://github.com/observeinc/terraform-aws-collection/commit/4f03b090c3f528856d48b9ce8e052c59decda5f8))
+
+
+### Features
+
+* update dependencies ([2cd930b](https://github.com/observeinc/terraform-aws-collection/commit/2cd930b66f335d47b68a6db24792a1717174ce78))
+
+
+
 # [2.33.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.32.1...v2.33.0) (2026-04-20)
 
 
