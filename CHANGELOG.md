@@ -1,3 +1,12 @@
+# [2.35.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.34.0...v2.35.0) (2026-05-06)
+
+
+### Features
+
+* add optional s3_bucket_name variable to stack module ([54416c6](https://github.com/observeinc/terraform-aws-collection/commit/54416c65209fb92783452c0786032e9aabb101aa))
+
+
+
 # [2.34.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.33.0...v2.34.0) (2026-05-04)
 
 
