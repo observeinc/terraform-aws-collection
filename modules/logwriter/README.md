@@ -52,45 +52,57 @@ module "logwriter" {
 }
 ```
 
-> **⚠️ Behavior Change for Existing Users**
+> **⚠️ Behavior Change**
 >
-> Starting in version 2.33.0, when you update `log_group_name_patterns`,
-> `log_group_name_prefixes`, or `exclude_log_group_name_patterns`, Terraform
-> will **wait by default** for the subscriber Lambda to reconcile subscriptions
-> (add new matches, remove old ones) before completing the apply. This ensures
-> your actual CloudWatch Log Group subscriptions match your declared configuration.
+> Starting in this version, `local-exec` provisioners are **disabled by default**.
+> The defaults for `wait_for_discovery_on_apply` and `cleanup_on_destroy` have
+> changed to `false`.
 >
-> **Previous behavior**: Pattern changes only updated the Lambda's environment
-> variables. Subscriptions were reconciled asynchronously on the next scheduled
-> discovery run (`discovery_rate` 24 hours by default).
+> **Default behavior**: Discovery only runs via the EventBridge scheduler
+> (`discovery_rate`). No AWS CLI is required on the Terraform runner. Destroy
+> does not clean up subscription filters automatically.
 >
-> **New behavior**: Pattern changes trigger immediate discovery with queue
-> polling (up to 20 minutes with stagnation checks).
->
-> To restore the previous fire-and-forget behavior, set:
+> **Opt-in for apply-time discovery and destroy-time cleanup**:
 > ```hcl
-> wait_for_discovery_on_apply = false
+> wait_for_discovery_on_apply = true
+> cleanup_on_destroy          = true
 > ```
+> This requires the AWS CLI on the Terraform runner. Provisioners activate
+> automatically when either variable is set to `true`.
 
 ### Subscription lifecycle management
 
 When dynamic subscription is enabled, the [subscriber](../subscriber/README.md)
-module uses **two** `null_resource`s so **pattern updates** do not run
-delete-all cleanup (see subscriber README for the full table).
+module uses two `null_resource`s for apply-time discovery and destroy-time
+cleanup. These are **disabled by default**.
+
+When `wait_for_discovery_on_apply = true` or `cleanup_on_destroy = true`:
 
 - **On `terraform apply`**: `null_resource.discovery_on_apply` queues a
   full-prune discovery via SQS. That reconciles subscriptions (adds and
   removes) to match current patterns and related settings. **`wait_for_discovery_on_apply`**
-  (default `true`) controls whether Terraform **waits** and polls the queue
-  (with stagnation and DLQ checks) until work completes; set it to `false` to
-  enqueue only and return.
+  controls whether Terraform **waits** and polls the queue until work
+  completes; set it to `false` to enqueue only and return.
 
 - **On `terraform destroy`**: `null_resource.cleanup_on_destroy` queues
-  delete-all cleanup and **always waits** (same polling guardrails, up to ~20
-  minutes) while `cleanup_on_destroy = true`, so the stack is not destroyed
-  while subscription removal is still in flight. Set **`cleanup_on_destroy = false`**
-  to skip that step entirely. This input does **not** affect apply-time
-  discovery.
+  delete-all cleanup and waits for completion when `cleanup_on_destroy = true`.
+  This removes all managed subscription filters before infrastructure teardown.
+
+When both are `false` (default):
+
+- Discovery runs only via the EventBridge scheduler (`discovery_rate`).
+  New subscriptions are added and stale ones removed on the next scheduled run.
+- No cleanup runs on destroy, see [Deleting existing subscriptions on uninstall](https://github.com/observeinc/aws-sam-apps/blob/main/docs/logwriter.md#deleting-existing-subscriptions-on-uninstall). Subscription filters pointing to the deleted
+  Firehose will remain but will fail silently (no data loss, but they occupy
+  a subscription filter slot on the log group).
+
+### Prerequisites
+
+The `local-exec` provisioners (when `wait_for_discovery_on_apply = true` or
+`cleanup_on_destroy = true`) require the **AWS CLI** on the Terraform runner. The SQS queue resource policies
+automatically grant the Terraform caller `sqs:SendMessage` and
+`sqs:GetQueueAttributes` permissions, so no additional IAM configuration is
+needed.
 
 ### Tuning for large environments
 
@@ -102,34 +114,49 @@ throughput and API rate limiting:
 | `sqs_batch_size` | `5` | Messages per Lambda invocation from SQS |
 | `sqs_maximum_concurrency` | `10` | Maximum concurrent subscriber Lambda invocations |
 | `lambda_reserved_concurrency` | `null` | Optional hard cap on Lambda concurrency |
+| `lambda_timeout` | `120` | Lambda timeout in seconds (max 900) |
+| `lambda_memory_size` | `128` | Lambda memory in MB |
 | `cloudwatch_api_rate_limit` | `8` | CloudWatch API requests/second per invocation |
 | `cloudwatch_api_burst` | `16` | CloudWatch API burst allowance per invocation |
+| `num_workers` | `1` | Concurrent workers per Lambda invocation |
+| `discovery_rate` | `""` | EventBridge schedule (e.g., `"24 hours"`, `"4 hours"`) |
 
-With the SQS-driven orchestration (`batch_size=5`, `maximum_concurrency=10`) and
-the 200-groups-per-invocation chunking, cleanup of ~1,700 subscription filters
-completes in approximately 10 minutes. The `MAX_WAIT_SECONDS=1200` (20 min)
-guardrail, stagnation detection, and DLQ monitoring ensure `terraform destroy`
-fails fast rather than hanging indefinitely.
+#### Recommended settings by scale
 
-**Observed timings** (us-east-1, ~3,000 log groups):
+| Log groups | `lambda_timeout` | `lambda_memory_size` | `num_workers` | `sqs_maximum_concurrency` | `discovery_rate` | Notes |
+|---|---|---|---|---|---|---|
+| < 500 | `120` (default) | `128` (default) | `1` | `10` | `"24 hours"` | Defaults work well |
+| 500 – 2,000 | `300` | `256` | `2` | `10` | `"12 hours"` | Increase timeout for larger scan |
+| 2,000 – 5,000 | `600` | `512` | `3` | `10` | `"4 hours"` | More memory for concurrent work |
+| 5,000 – 10,000 | `900` | `512` | `3` | `5` | `"4 hours"` | Reduce concurrency to avoid API throttling |
+| > 10,000 | `900` | `512` | `3` | `5` | `"60 minutes"` | Consider splitting by pattern/prefix |
 
-| Operation | Wall time | Notes |
+#### Observed timings
+
+Tested in us-east-1 with ~3,000 log groups:
+
+| Operation | Wall time | Configuration |
 |---|---|---|
-| `terraform apply` (full stack creation + discovery) | ~3 min | Resource creation dominates; discovery drain adds ~20s |
-| `terraform destroy` cleanup drain (~1,700 filters) | ~10 min | Queue stays at `in_flight=1` while Lambda processes batches |
-| `terraform destroy` total (cleanup + resource teardown) | ~16 min | Resource deletion adds ~6 min after cleanup completes |
+| Full discovery (EventBridge scheduled) | ~4 min | SQS fan-out with `batch_size=5`, `max_concurrency=10` |
+| Full discovery (apply-time, `wait_for_discovery_on_apply=true`) | ~4 min | Same, plus polling wait |
+| Cleanup on destroy (`cleanup_on_destroy=true`) | ~13 min | Single Lambda invocation processing all groups |
+| Terraform apply (full stack creation + discovery) | ~3 min | Resource creation dominates |
+| Terraform destroy (cleanup + resource teardown) | ~19 min | Cleanup ~13 min + resource deletion ~6 min |
 
-The apply phase is relatively fast regardless of log group count.
-The stagnation timeout in the provisioner scripts is based on **subscriber
-`lambda_timeout` × 2** (minimum 180s), not `discovery_rate`.
+**How discovery works**: Each Lambda invocation processes up to 200 log groups
+(paginated in batches of 50). If more groups remain, a continuation message is
+enqueued to SQS. With `sqs_maximum_concurrency=10` and `sqs_batch_size=5`,
+up to 10 Lambda invocations process groups in parallel, each handling 200
+groups per invocation. For 3,000 log groups, this means ~15 continuation
+messages processed across multiple concurrent Lambda invocations.
 
-### Prerequisites
-
-The subscription lifecycle provisioners use `local-exec` with the **AWS CLI**,
-which must be available on the machine running Terraform (local workstation,
-CI runner, etc.). The AWS CLI must be configured with credentials that have
-permission to call `sqs:SendMessage` and `sqs:GetQueueAttributes` on the
-subscriber queues.
+**CloudWatch API limits**: The subscriber Lambda rate-limits itself to
+`cloudwatch_api_rate_limit` requests/second (default 8) per invocation. With
+10 concurrent invocations, the effective aggregate rate is ~80 req/s. The
+[CloudWatch Logs API quotas](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/cloudwatch_limits_cwl.html)
+allow 10 DescribeLogGroups and 10 DescribeSubscriptionFilters requests/second
+per account by default. If you see throttling, reduce `sqs_maximum_concurrency`
+or `cloudwatch_api_rate_limit`.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -175,7 +202,7 @@ subscriber queues.
 | <a name="input_bucket_arn"></a> [bucket\_arn](#input\_bucket\_arn) | S3 Bucket ARN to write log records to. | `string` | n/a | yes |
 | <a name="input_buffering_interval"></a> [buffering\_interval](#input\_buffering\_interval) | Buffer incoming data for the specified period of time, in seconds, before<br/>delivering it to S3. | `number` | `60` | no |
 | <a name="input_buffering_size"></a> [buffering\_size](#input\_buffering\_size) | Buffer incoming data to the specified size, in MiBs, before delivering it<br/>to S3. | `number` | `1` | no |
-| <a name="input_cleanup_on_destroy"></a> [cleanup\_on\_destroy](#input\_cleanup\_on\_destroy) | If true, subscriber null\_resource.cleanup\_on\_destroy runs delete-all cleanup<br/>and waits on the queue during destroy. If false, skip that step. Does not<br/>affect apply-time discovery. | `bool` | `true` | no |
+| <a name="input_cleanup_on_destroy"></a> [cleanup\_on\_destroy](#input\_cleanup\_on\_destroy) | If true, subscriber null\_resource.cleanup\_on\_destroy runs delete-all cleanup<br/>and waits on the queue during destroy. If false, skip that step. Does not<br/>affect apply-time discovery. When true, requires the AWS CLI on the Terraform runner. | `bool` | `false` | no |
 | <a name="input_cloudwatch_api_burst"></a> [cloudwatch\_api\_burst](#input\_cloudwatch\_api\_burst) | Per-invocation burst size for CloudWatch API limiter in subscriber. | `number` | `null` | no |
 | <a name="input_cloudwatch_api_rate_limit"></a> [cloudwatch\_api\_rate\_limit](#input\_cloudwatch\_api\_rate\_limit) | Per-invocation CloudWatch API request rate limit (requests/second) for<br/>subscriber operations. | `number` | `null` | no |
 | <a name="input_cloudwatch_log_kms_key"></a> [cloudwatch\_log\_kms\_key](#input\_cloudwatch\_log\_kms\_key) | KMS key to use for cloudwatch log encryption. | `string` | `null` | no |
@@ -202,7 +229,7 @@ subscriber queues.
 | <a name="input_sqs_maximum_concurrency"></a> [sqs\_maximum\_concurrency](#input\_sqs\_maximum\_concurrency) | Maximum concurrent Lambda invokes for subscriber SQS event source mapping.<br/>Effective parallelism is also limited by lambda\_reserved\_concurrency when that is set lower. | `number` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags to add to the resources. | `map(string)` | `{}` | no |
 | <a name="input_verbosity"></a> [verbosity](#input\_verbosity) | Logging verbosity for Lambda. Highest log verbosity is 9. | `number` | `null` | no |
-| <a name="input_wait_for_discovery_on_apply"></a> [wait\_for\_discovery\_on\_apply](#input\_wait\_for\_discovery\_on\_apply) | If true, subscriber null\_resource.discovery\_on\_apply waits until the queue<br/>drains and fails on DLQ growth. If false, enqueue discovery only (no apply<br/>polling). Destroy-time cleanup behavior is separate. | `bool` | `true` | no |
+| <a name="input_wait_for_discovery_on_apply"></a> [wait\_for\_discovery\_on\_apply](#input\_wait\_for\_discovery\_on\_apply) | If true, subscriber null\_resource.discovery\_on\_apply waits until the queue<br/>drains and fails on DLQ growth. If false, enqueue discovery only (no apply<br/>polling). Destroy-time cleanup behavior is separate.<br/>When true, requires the AWS CLI on the Terraform runner. | `bool` | `false` | no |
 
 ## Outputs
 
