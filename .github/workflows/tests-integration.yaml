@@ -87,7 +87,7 @@ jobs:
         directory: ${{ matrix.testfile }}
 
     - name: Install Terraform v${{ steps.minMax.outputs.minVersion }}
-      uses: hashicorp/setup-terraform@v4.0.0
+      uses: hashicorp/setup-terraform@v4.0.1
       with:
         terraform_version: ${{ steps.minMax.outputs.minVersion }}
 
