@@ -1,3 +1,20 @@
+# [3.0.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.35.0...v3.0.0) (2026-05-20)
+
+
+### Bug Fixes
+
+* add SQS resource policies and disable local-exec provisioners by default ([9e75077](https://github.com/observeinc/terraform-aws-collection/commit/9e7507720b105ba06c362018c9bbf44ef805ffe7))
+
+
+### BREAKING CHANGES
+
+* wait_for_discovery_on_apply and cleanup_on_destroy now
+default to false. Discovery relies on the EventBridge scheduler by default.
+Set wait_for_discovery_on_apply=true and cleanup_on_destroy=true to
+activate provisioners introduced in https://github.com/observeinc/terraform-aws-collection/releases/tag/v2.34.0.
+
+
+
 # [2.35.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.34.0...v2.35.0) (2026-05-06)
 
 
