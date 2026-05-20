@@ -11,11 +11,12 @@
 
 resource "null_resource" "cleanup_on_destroy" {
   triggers = {
-    function_arn       = aws_lambda_function.subscriber.arn
-    queue_url          = aws_sqs_queue.queue.id
-    dlq_url            = aws_sqs_queue.dead_letter.id
-    lambda_timeout     = tostring(var.lambda_timeout)
-    cleanup_on_destroy = tostring(var.cleanup_on_destroy)
+    function_arn        = aws_lambda_function.subscriber.arn
+    queue_url           = aws_sqs_queue.queue.id
+    dlq_url             = aws_sqs_queue.dead_letter.id
+    lambda_timeout      = tostring(var.lambda_timeout)
+    cleanup_on_destroy  = tostring(var.cleanup_on_destroy)
+    enable_provisioners = tostring(local.enable_provisioners)
   }
 
   provisioner "local-exec" {
@@ -23,8 +24,14 @@ resource "null_resource" "cleanup_on_destroy" {
     command = <<-EOT
       set -euo pipefail
 
-      if [ "${lookup(self.triggers, "cleanup_on_destroy", "true")}" != "true" ]; then
-        echo "Skipping cleanup during destroy (cleanup_on_destroy=false)." >&2
+      if [ "${lookup(self.triggers, "enable_provisioners", "false")}" != "true" ]; then
+        echo "Skipping all provisioner operations (enable_provisioners=false)." >&2
+        exit 0
+      fi
+
+      if [ "${lookup(self.triggers, "cleanup_on_destroy", "false")}" != "true" ]; then
+        echo "Skipping subscription filter cleanup during destroy (cleanup_on_destroy=false)." >&2
+        echo "WARNING: Subscription filters will remain and must be manually removed." >&2
         exit 0
       fi
 
@@ -133,6 +140,7 @@ resource "null_resource" "discovery_on_apply" {
     queue_url                       = aws_sqs_queue.queue.id
     dlq_url                         = aws_sqs_queue.dead_letter.id
     lambda_timeout                  = tostring(var.lambda_timeout)
+    enable_provisioners             = tostring(local.enable_provisioners)
     wait_for_discovery_on_apply     = tostring(var.wait_for_discovery_on_apply)
     log_group_name_patterns         = join(",", var.log_group_name_patterns)
     log_group_name_prefixes         = join(",", var.log_group_name_prefixes)
@@ -146,6 +154,11 @@ resource "null_resource" "discovery_on_apply" {
   provisioner "local-exec" {
     command = <<-EOT
       set -euo pipefail
+
+      if [ "${lookup(self.triggers, "enable_provisioners", "false")}" != "true" ]; then
+        echo "Skipping discovery on apply (provisioners disabled)." >&2
+        exit 0
+      fi
 
       REGION=$(echo ${self.triggers.function_arn} | cut -d: -f4)
       QUEUE_URL="${self.triggers.queue_url}"

@@ -112,19 +112,20 @@ variable "wait_for_discovery_on_apply" {
     If true, subscriber null_resource.discovery_on_apply waits until the queue
     drains and fails on DLQ growth. If false, enqueue discovery only (no apply
     polling). Destroy-time cleanup behavior is separate.
+    When true, requires the AWS CLI on the Terraform runner.
   EOF
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "cleanup_on_destroy" {
   description = <<-EOF
     If true, subscriber null_resource.cleanup_on_destroy runs delete-all cleanup
     and waits on the queue during destroy. If false, skip that step. Does not
-    affect apply-time discovery.
+    affect apply-time discovery. When true, requires the AWS CLI on the Terraform runner.
   EOF
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "num_workers" {

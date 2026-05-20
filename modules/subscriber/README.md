@@ -2,22 +2,18 @@
 
 This app is specifically to register new cloudwatch log groups for the `logwriter` app. It will scan over existing log groups on an interval and compare them to provided prefixes and patterns. If they match it will then register new subscriptions from the log group to a provided kinesis firehose data stream.
 
-## Subscription lifecycle (`local-exec` + SQS)
+## Subscription lifecycle
 
-Two `null_resource`s split **destroy-time cleanup** from **apply-time discovery** so pattern changes do not replace the destroy resource (which would run delete-all cleanup during replacement).
+Two `null_resource`s provide optional apply-time discovery and destroy-time cleanup via `local-exec` provisioners. **Both are disabled by default**.
 
-| Resource | When it runs | Triggers (summary) |
-|----------|----------------|---------------------|
-| `null_resource.cleanup_on_destroy` | **Destroy only** (`when = destroy` provisioner) | Infra: Lambda ARN, queue URLs, timeout, `cleanup_on_destroy` |
-| `null_resource.discovery_on_apply` | **Create** (after apply changes this resource) | Patterns/prefixes/excludes, filter name/pattern, Firehose/role ARNs, queues, `wait_for_discovery_on_apply` |
+| Variable | Default | Effect |
+|----------|---------|--------|
+| `wait_for_discovery_on_apply` | `false` | When `true`, Terraform sends a discovery message via SQS and polls until complete. Automatically enables the apply provisioner. |
+| `cleanup_on_destroy` | `false` | When `true`, Terraform runs delete-all cleanup on destroy and waits for completion. Automatically enables the destroy provisioner. |
 
-**Destroy (`cleanup_on_destroy`)**  
-Queues a delete-all cleanup message and **polls until the main queue is empty** (stagnation and DLQ growth fail the run). That avoids tearing down the Lambda and queues while cleanup is still in flight, which would leave **orphaned subscription filters**. There is no fire-and-forget option for this path when `cleanup_on_destroy = true`; skipping cleanup entirely is `cleanup_on_destroy = false`.
+Provisioners activate automatically when either variable is set to `true`. When both are `false` (default), no `local-exec` runs and no AWS CLI is needed.
 
-**Apply (`discovery_on_apply`)**  
-Queues a fullyPrune discovery (reconcile adds and removals). If **`wait_for_discovery_on_apply`** is `true` (default), Terraform uses the same style of queue polling and DLQ checks until work finishes. Set **`wait_for_discovery_on_apply = false`** to only `SendMessage` and return without waiting.
-
-The input **`cleanup_on_destroy`** only gates the **destroy** provisioner on `null_resource.cleanup_on_destroy`; it does not disable apply-time discovery.
+When provisioners are disabled, subscription management relies entirely on the EventBridge scheduler (`discovery_rate`). New log groups matching the configured patterns are subscribed on the next scheduled run.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -56,11 +52,13 @@ The input **`cleanup_on_destroy`** only gates the **destroy** provisioner on `nu
 | [aws_scheduler_schedule.discovery_schedule](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/scheduler_schedule) | resource |
 | [aws_sqs_queue.dead_letter](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue) | resource |
 | [aws_sqs_queue.queue](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue) | resource |
+| [aws_sqs_queue_policy.dead_letter_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue_policy) | resource |
 | [aws_sqs_queue_policy.queue_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue_policy) | resource |
 | [null_resource.cleanup_on_destroy](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [null_resource.discovery_on_apply](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy_document.assume_role_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.dead_letter_queue](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.logging_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.pass_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.queue](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
@@ -73,7 +71,7 @@ The input **`cleanup_on_destroy`** only gates the **destroy** provisioner on `nu
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cleanup_on_destroy"></a> [cleanup\_on\_destroy](#input\_cleanup\_on\_destroy) | If true, null\_resource.cleanup\_on\_destroy runs the destroy provisioner (queued delete-all cleanup and queue wait). If false, that step is skipped. Does not disable apply-time discovery. | `bool` | `true` | no |
+| <a name="input_cleanup_on_destroy"></a> [cleanup\_on\_destroy](#input\_cleanup\_on\_destroy) | If true, null\_resource.cleanup\_on\_destroy runs the destroy provisioner (queued delete-all cleanup and queue wait). If false, that step is skipped. Does not disable apply-time discovery. When true, requires the AWS CLI on the Terraform runner. | `bool` | `false` | no |
 | <a name="input_cloudwatch_api_burst"></a> [cloudwatch\_api\_burst](#input\_cloudwatch\_api\_burst) | Per-invocation burst size for CloudWatch API limiter. | `number` | `16` | no |
 | <a name="input_cloudwatch_api_rate_limit"></a> [cloudwatch\_api\_rate\_limit](#input\_cloudwatch\_api\_rate\_limit) | Per-invocation CloudWatch API request rate limit (requests/second). | `number` | `8` | no |
 | <a name="input_cloudwatch_log_kms_key"></a> [cloudwatch\_log\_kms\_key](#input\_cloudwatch\_log\_kms\_key) | KMS key to use for cloudwatch log encryption. | `string` | `null` | no |
@@ -101,7 +99,7 @@ The input **`cleanup_on_destroy`** only gates the **destroy** provisioner on `nu
 | <a name="input_sqs_maximum_concurrency"></a> [sqs\_maximum\_concurrency](#input\_sqs\_maximum\_concurrency) | Maximum concurrent Lambda invokes for subscriber SQS event source mapping. Effective parallelism is also limited by lambda\_reserved\_concurrency when that is set lower. | `number` | `10` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags to add to the resources. | `map(string)` | `{}` | no |
 | <a name="input_verbosity"></a> [verbosity](#input\_verbosity) | Logging verbosity for Lambda. Highest log verbosity is 9. | `number` | `1` | no |
-| <a name="input_wait_for_discovery_on_apply"></a> [wait\_for\_discovery\_on\_apply](#input\_wait\_for\_discovery\_on\_apply) | If true, null\_resource.discovery\_on\_apply blocks until the subscriber queue drains and fails if the DLQ grows. If false, only SendMessage runs (no polling on apply). Destroy-time cleanup polling is unchanged. | `bool` | `true` | no |
+| <a name="input_wait_for_discovery_on_apply"></a> [wait\_for\_discovery\_on\_apply](#input\_wait\_for\_discovery\_on\_apply) | If true, null\_resource.discovery\_on\_apply blocks until the subscriber queue drains and fails if the DLQ grows. If false, only SendMessage runs (no polling on apply). Destroy-time cleanup polling is unchanged. When true, requires the AWS CLI on the Terraform runner. | `bool` | `false` | no |
 
 ## Outputs
 

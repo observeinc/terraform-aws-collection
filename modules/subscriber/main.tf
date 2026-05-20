@@ -1,8 +1,9 @@
 data "aws_caller_identity" "current" {}
 
 locals {
-  has_discovery_rate = var.discovery_rate != ""
-  name_prefix        = "${substr(var.name, 0, 37)}-"
+  has_discovery_rate  = var.discovery_rate != ""
+  enable_provisioners = var.wait_for_discovery_on_apply || var.cleanup_on_destroy
+  name_prefix         = "${substr(var.name, 0, 37)}-"
 
   code_uri      = var.code_uri != "" ? var.code_uri : yamldecode(module.sam_asset[0].body)["Resources"]["Subscriber"]["Properties"]["CodeUri"]
   parsed_s3_uri = regex("s3://(?P<bucket>[^/]+)/(?P<key>.+)", local.code_uri)

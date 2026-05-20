@@ -121,17 +121,17 @@ variable "exclude_log_group_name_patterns" {
 }
 
 variable "wait_for_discovery_on_apply" {
-  description = "If true, null_resource.discovery_on_apply blocks until the subscriber queue drains and fails if the DLQ grows. If false, only SendMessage runs (no polling on apply). Destroy-time cleanup polling is unchanged."
+  description = "If true, null_resource.discovery_on_apply blocks until the subscriber queue drains and fails if the DLQ grows. If false, only SendMessage runs (no polling on apply). Destroy-time cleanup polling is unchanged. When true, requires the AWS CLI on the Terraform runner."
   type        = bool
   nullable    = false
-  default     = true
+  default     = false
 }
 
 variable "cleanup_on_destroy" {
-  description = "If true, null_resource.cleanup_on_destroy runs the destroy provisioner (queued delete-all cleanup and queue wait). If false, that step is skipped. Does not disable apply-time discovery."
+  description = "If true, null_resource.cleanup_on_destroy runs the destroy provisioner (queued delete-all cleanup and queue wait). If false, that step is skipped. Does not disable apply-time discovery. When true, requires the AWS CLI on the Terraform runner."
   type        = bool
   nullable    = false
-  default     = true
+  default     = false
 }
 
 variable "discovery_rate" {

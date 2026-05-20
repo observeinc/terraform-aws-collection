@@ -37,4 +37,39 @@ data "aws_iam_policy_document" "queue" {
       values   = [data.aws_caller_identity.current.account_id]
     }
   }
+
+  dynamic "statement" {
+    for_each = local.enable_provisioners ? [1] : []
+    content {
+      effect = "Allow"
+      actions = [
+        "sqs:SendMessage",
+        "sqs:GetQueueAttributes",
+      ]
+      resources = [aws_sqs_queue.queue.arn]
+      principals {
+        type        = "AWS"
+        identifiers = [data.aws_caller_identity.current.arn]
+      }
+    }
+  }
+}
+
+resource "aws_sqs_queue_policy" "dead_letter_policy" {
+  count     = local.enable_provisioners ? 1 : 0
+  policy    = data.aws_iam_policy_document.dead_letter_queue[0].json
+  queue_url = aws_sqs_queue.dead_letter.id
+}
+
+data "aws_iam_policy_document" "dead_letter_queue" {
+  count = local.enable_provisioners ? 1 : 0
+  statement {
+    effect    = "Allow"
+    actions   = ["sqs:GetQueueAttributes"]
+    resources = [aws_sqs_queue.dead_letter.arn]
+    principals {
+      type        = "AWS"
+      identifiers = [data.aws_caller_identity.current.arn]
+    }
+  }
 }
