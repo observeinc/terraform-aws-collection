@@ -20,8 +20,9 @@ resource "null_resource" "cleanup_on_destroy" {
   }
 
   provisioner "local-exec" {
-    when    = destroy
-    command = <<-EOT
+    when        = destroy
+    interpreter = ["/bin/bash", "-c"]
+    command     = <<-EOT
       set -euo pipefail
 
       if [ "${lookup(self.triggers, "enable_provisioners", "false")}" != "true" ]; then
@@ -152,7 +153,8 @@ resource "null_resource" "discovery_on_apply" {
   }
 
   provisioner "local-exec" {
-    command = <<-EOT
+    interpreter = ["/bin/bash", "-c"]
+    command     = <<-EOT
       set -euo pipefail
 
       if [ "${lookup(self.triggers, "enable_provisioners", "false")}" != "true" ]; then

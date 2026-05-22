@@ -14,4 +14,6 @@ resource "aws_cloudtrail" "trail" {
       exclude_management_event_sources = var.cloudtrail_exclude_management_event_sources
     }
   }
+
+  depends_on = [module.s3_bucket]
 }

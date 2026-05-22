@@ -1,6 +1,17 @@
+resource "random_string" "run" {
+  length  = 8
+  special = false
+  upper   = false
+}
+
 locals {
-  name        = basename(abspath(path.root))
-  name_prefix = "${local.name}-"
+  example           = basename(abspath(path.root))
+  run_suffix        = coalesce(var.test_run_id, random_string.run.result)
+  run_short         = substr(local.run_suffix, max(0, length(local.run_suffix) - 8), 8)
+  name              = "tac-${local.run_suffix}-${local.example}"
+  bucket_prefix     = substr("t-${local.run_short}-${substr(local.example, 0, 22)}-", 0, 37)
+  bucket_prefix_src = substr("${trimsuffix(local.bucket_prefix, "-")}-src-", 0, 37)
+  bucket_prefix_dst = substr("${trimsuffix(local.bucket_prefix, "-")}-dst-", 0, 37)
 }
 
 data "aws_caller_identity" "current" {}
@@ -30,12 +41,12 @@ resource "aws_kms_key" "source" {
 }
 
 resource "aws_s3_bucket" "source" {
-  bucket_prefix = "${local.name_prefix}-source"
+  bucket_prefix = local.bucket_prefix_src
   force_destroy = true
 }
 
 resource "aws_s3_bucket" "destination" {
-  bucket_prefix = "${local.name_prefix}-destination"
+  bucket_prefix = local.bucket_prefix_dst
   force_destroy = true
 }
 

@@ -38,6 +38,7 @@ run "install" {
     logwriter = {
       log_group_name_patterns         = ["*"]
       exclude_log_group_name_patterns = ["^/aws/elasticbeanstalk"]
+      lambda_timeout                  = 600
     }
 
     metricstream = {
