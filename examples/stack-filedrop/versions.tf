@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.3"
+  required_version = ">= 1.11"
 
   required_providers {
     aws = {
@@ -10,6 +10,10 @@ terraform {
     observe = {
       source  = "observeinc/observe"
       version = "~> 0.14"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = ">= 3.5.1"
     }
   }
 }

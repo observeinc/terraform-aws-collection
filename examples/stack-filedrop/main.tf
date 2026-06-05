@@ -1,5 +1,13 @@
+resource "random_string" "run" {
+  length  = 8
+  special = false
+  upper   = false
+}
+
 locals {
-  name = basename(abspath(path.root))
+  example    = basename(abspath(path.root))
+  run_suffix = coalesce(var.test_run_id, random_string.run.result)
+  name       = "tac-${local.run_suffix}-${local.example}"
 }
 
 data "aws_caller_identity" "current" {}

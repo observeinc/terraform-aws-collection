@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "direct" {
-  bucket_prefix = "${local.name_prefix}direct-"
+  bucket_prefix = substr("${trimsuffix(local.bucket_prefix, "-")}-dir-", 0, 37)
   force_destroy = true
 }
 

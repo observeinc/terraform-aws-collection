@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "sns" {
-  bucket_prefix = "${local.name_prefix}sns-"
+  bucket_prefix = substr("${trimsuffix(local.bucket_prefix, "-")}-sns-", 0, 37)
   force_destroy = true
 }
 

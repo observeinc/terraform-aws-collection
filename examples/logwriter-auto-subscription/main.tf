@@ -1,11 +1,22 @@
+resource "random_string" "run" {
+  length  = 8
+  special = false
+  upper   = false
+}
+
 locals {
-  name        = basename(abspath(path.root))
+  example     = basename(abspath(path.root))
+  run_suffix  = coalesce(var.test_run_id, random_string.run.result)
+  run_short   = substr(local.run_suffix, max(0, length(local.run_suffix) - 8), 8)
+  name        = "tac-${local.run_suffix}-${local.example}"
   name_prefix = "${local.name}-"
+  # S3 bucket_prefix is limited to 37 characters; keep full name on logwriter/CW resources.
+  bucket_prefix = substr("t-${local.run_short}-${substr(local.example, 0, 22)}-", 0, 37)
 }
 
 # This is the bucket where data will be written to.
 resource "aws_s3_bucket" "this" {
-  bucket_prefix = local.name_prefix
+  bucket_prefix = local.bucket_prefix
   force_destroy = true
 }
 
