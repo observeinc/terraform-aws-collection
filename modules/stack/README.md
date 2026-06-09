@@ -134,6 +134,31 @@ You can additionally configure other submodules in this manner:
 - the `configsubscription` [module](../configsubscription/README.md) enables subscribing to a pre-existing [AWS Config](https://aws.amazon.com/config/) install. 
 - the `metricstream` [module](../metricstream/README.md) enables [AWS Cloudwatch Metrics Stream](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Metric-Streams.html) collection. 
 
+### Log subscription and local-exec provisioners
+
+When `logwriter` is configured, two variables control optional apply-time discovery and destroy-time cleanup:
+
+| Variable | Default in stack module | Behavior |
+|---|---|---|
+| `wait_for_discovery_on_apply` | `true` | Terraform blocks on apply until subscription discovery completes |
+| `cleanup_on_destroy` | `true` | Terraform removes all subscription filters before destroying infrastructure |
+
+> **Important: these provisioners use Terraform runner environment credentials, not the AWS provider credentials.**
+>
+> When `wait_for_discovery_on_apply = true` or `cleanup_on_destroy = true`, the module runs `local-exec` provisioners that shell out to the `aws` CLI. The CLI resolves credentials from the **Terraform runner's OS environment** (environment variables like `AWS_ACCESS_KEY_ID`, `~/.aws/credentials`, or instance/container metadata) — completely independently of the credentials configured in your `provider "aws"` block.
+>
+> In many CI/CD and remote execution environments — Spacelift, Terraform Cloud/HCP Terraform with OIDC, GitHub Actions, HashiCorp Vault dynamic credentials, or AWS SSO — the AWS provider credentials are injected at the provider level but are **not** available as OS environment variables for child processes. This produces `sqs:SendMessage` or `sqs:GetQueueAttributes` access denied errors even though the provider itself is fully authorized.
+>
+> To disable the provisioners and avoid this issue, set both variables to `false`:
+> ```terraform
+> logwriter = {
+>   log_group_name_patterns         = ["*"]
+>   wait_for_discovery_on_apply     = false
+>   cleanup_on_destroy              = false
+> }
+> ```
+> With both set to `false`, no AWS CLI is needed on the runner. Subscription discovery runs via the EventBridge scheduler (`discovery_rate`). See the [logwriter module](../logwriter/README.md#subscription-lifecycle-management) for more details on lifecycle behavior.
+
 ## Migrating from the root module
 
 The root module (documented in the top-level [README](../../README.md)) is no longer maintained. This section describes how to migrate to the `stack` module.

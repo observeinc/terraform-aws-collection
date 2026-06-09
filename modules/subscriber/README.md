@@ -13,6 +13,12 @@ Two `null_resource`s provide optional apply-time discovery and destroy-time clea
 
 Provisioners activate automatically when either variable is set to `true`. When both are `false` (default), no `local-exec` runs and no AWS CLI is needed.
 
+> **Important: when enabled, these provisioners use Terraform runner environment credentials — not the AWS provider credentials.**
+>
+> The `local-exec` provisioners shell out to the `aws` CLI. The CLI resolves credentials from the **runner's OS environment** (environment variables like `AWS_ACCESS_KEY_ID`, `~/.aws/credentials`, or instance/container metadata). This is independent of the credentials configured in your `provider "aws"` block.
+>
+> In environments using Spacelift, Terraform Cloud/HCP Terraform with OIDC, GitHub Actions, HashiCorp Vault dynamic credentials, or AWS SSO, provider credentials may be injected at the provider level but are **not** available as OS environment variables. Setting either variable to `true` in these environments will produce `sqs:SendMessage` or `sqs:GetQueueAttributes` access denied errors even though the provider is authorized. Leave both at `false` (the default) to avoid this.
+
 When provisioners are disabled, subscription management relies entirely on the EventBridge scheduler (`discovery_rate`). New log groups matching the configured patterns are subscribed on the next scheduled run.
 
 <!-- BEGIN_TF_DOCS -->

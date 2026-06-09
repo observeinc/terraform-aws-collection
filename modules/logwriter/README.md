@@ -99,10 +99,17 @@ When both are `false` (default):
 ### Prerequisites
 
 The `local-exec` provisioners (when `wait_for_discovery_on_apply = true` or
-`cleanup_on_destroy = true`) require the **AWS CLI** on the Terraform runner. The SQS queue resource policies
-automatically grant the Terraform caller `sqs:SendMessage` and
-`sqs:GetQueueAttributes` permissions, so no additional IAM configuration is
-needed.
+`cleanup_on_destroy = true`) require the **AWS CLI** on the Terraform runner.
+
+> **Important: the AWS CLI uses Terraform runner environment credentials — not the AWS provider credentials.**
+>
+> The provisioners shell out to the `aws` CLI, which resolves credentials from the **runner's OS environment** (environment variables like `AWS_ACCESS_KEY_ID`, `~/.aws/credentials`, or instance/container metadata). This is independent of the credentials configured in your `provider "aws"` block.
+>
+> In environments using Spacelift, Terraform Cloud/HCP Terraform with OIDC, GitHub Actions, HashiCorp Vault dynamic credentials, or AWS SSO, the provider credentials may be injected at the provider level but are **not** available as OS environment variables. This produces `sqs:SendMessage` or `sqs:GetQueueAttributes` access denied errors even though the provider is otherwise authorized.
+>
+> If you hit this issue, set both variables to `false` and let discovery run via the EventBridge scheduler instead.
+
+The SQS queue resource policies automatically grant the Terraform caller `sqs:SendMessage` and `sqs:GetQueueAttributes` permissions, so no additional IAM configuration is needed — provided the runner's AWS CLI credentials match the caller identity that Terraform uses.
 
 ### Tuning for large environments
 
