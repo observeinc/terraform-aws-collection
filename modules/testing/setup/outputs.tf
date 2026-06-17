@@ -15,7 +15,7 @@ output "short" {
 
 output "region" {
   description = "AWS Region in use"
-  value       = data.aws_region.current.name
+  value       = data.aws_region.current.region
 }
 
 output "account_id" {

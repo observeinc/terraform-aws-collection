@@ -61,7 +61,7 @@ data "aws_iam_policy_document" "writer" {
       "s3:PutObjectTagging",
     ]
 
-    resources = var.destination.arn != "" ? ["*"] : ["arn:${data.aws_partition.current.id}:s3:::${var.destination.bucket}/${var.destination.prefix}*"]
+    resources = var.destination.arn != "" ? ["*"] : ["arn:${data.aws_partition.current.partition}:s3:::${var.destination.bucket}/${var.destination.prefix}*"]
 
     dynamic "condition" {
       for_each = var.destination.arn != "" ? [1] : []
@@ -79,7 +79,7 @@ data "aws_iam_policy_document" "reader" {
     actions = [
       "s3:ListBucket",
     ]
-    resources = [for name in var.source_bucket_names : "arn:${data.aws_partition.current.id}:s3:::${name}"]
+    resources = [for name in var.source_bucket_names : "arn:${data.aws_partition.current.partition}:s3:::${name}"]
   }
 
   statement {
@@ -90,7 +90,7 @@ data "aws_iam_policy_document" "reader" {
     # NOTE: this is a deviation from our CloudFormation template. In terraform
     # we can compute the product of two lists, allowing us to be strict as to what buckets and keys we grant the function read access for. 
     resources = [
-      for pair in setproduct(var.source_bucket_names, var.source_object_keys) : "arn:${data.aws_partition.current.id}:s3:::${pair[0]}/${pair[1]}"
+      for pair in setproduct(var.source_bucket_names, var.source_object_keys) : "arn:${data.aws_partition.current.partition}:s3:::${pair[0]}/${pair[1]}"
     ]
   }
 }

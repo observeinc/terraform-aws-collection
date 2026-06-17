@@ -8,7 +8,7 @@ locals {
 data "aws_region" "current" {}
 
 data "http" "manifest" {
-  url = "https://observeinc-${data.aws_region.current.name}.s3.amazonaws.com/aws-sam-apps/${local.release_version}/${var.asset}"
+  url = "https://observeinc-${data.aws_region.current.region}.s3.amazonaws.com/aws-sam-apps/${local.release_version}/${var.asset}"
 
   lifecycle {
     postcondition {

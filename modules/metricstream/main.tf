@@ -1,6 +1,6 @@
 locals {
   account_id      = data.aws_caller_identity.current.account_id
-  region          = data.aws_region.current.name
+  region          = data.aws_region.current.region
   name_prefix     = "${substr(var.name, 0, 37)}-"
   use_recommended = var.include_filters == null && var.exclude_filters == null
   recommended     = local.use_recommended ? yamldecode(module.sam_asset[0].body) : null
