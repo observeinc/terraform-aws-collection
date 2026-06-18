@@ -107,3 +107,34 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "enable_tag_enrichment" {
+  description = <<-EOF
+    Enable the metrictag Lambda as a Firehose data transformation that enriches
+    CloudWatch metric stream records with AWS resource tags.
+  EOF
+  type        = bool
+  nullable    = false
+  default     = false
+}
+
+variable "tag_enrichment_cache_ttl_seconds" {
+  description = <<-EOF
+    How long (in seconds) the metrictag Lambda caches tagged resource lists per
+    namespace/region. Set to 0 to disable caching. Only used when
+    enable_tag_enrichment is true.
+  EOF
+  type        = number
+  nullable    = false
+  default     = 600
+}
+
+variable "metrictag_code_uri" {
+  description = <<-EOF
+    S3 URI for the metrictag Lambda binary. If set, takes precedence over
+    sam_release_version. Only used when enable_tag_enrichment is true.
+  EOF
+  type        = string
+  nullable    = false
+  default     = ""
+}

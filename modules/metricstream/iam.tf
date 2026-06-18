@@ -4,10 +4,12 @@ resource "aws_iam_role" "firehose" {
 
   dynamic "inline_policy" {
     for_each = {
-      for k, v in {
+      for k, v in merge({
         logging  = data.aws_iam_policy_document.firehose_logging.json
         s3writer = data.aws_iam_policy_document.firehose_s3writer.json
-      } : k => v
+        }, var.enable_tag_enrichment ? {
+        lambda_transform = data.aws_iam_policy_document.firehose_lambda_transform[0].json
+      } : {}) : k => v
     }
 
     content {
@@ -56,6 +58,18 @@ data "aws_iam_policy_document" "firehose_s3writer" {
       var.bucket_arn,
       "${var.bucket_arn}/${var.prefix}*"
     ]
+  }
+}
+
+data "aws_iam_policy_document" "firehose_lambda_transform" {
+  count = var.enable_tag_enrichment ? 1 : 0
+  statement {
+    effect = "Allow"
+    actions = [
+      "lambda:InvokeFunction",
+      "lambda:GetFunctionConfiguration"
+    ]
+    resources = ["${aws_lambda_function.metrictag[0].arn}*"]
   }
 }
 

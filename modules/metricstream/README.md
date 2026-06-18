@@ -37,6 +37,7 @@ module "metric_stream" {
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_metrictag_asset"></a> [metrictag\_asset](#module\_metrictag\_asset) | ../sam_asset | n/a |
 | <a name="module_sam_asset"></a> [sam\_asset](#module\_sam\_asset) | ../sam_asset | n/a |
 
 ## Resources
@@ -44,17 +45,25 @@ module "metric_stream" {
 | Name | Type |
 |------|------|
 | [aws_cloudwatch_log_group.firehose_log_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
+| [aws_cloudwatch_log_group.metrictag](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_cloudwatch_log_stream.firehose_log_stream](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_stream) | resource |
 | [aws_cloudwatch_metric_stream.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_stream) | resource |
 | [aws_iam_role.firehose](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role.metric_stream](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_iam_role.metrictag](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_kinesis_firehose_delivery_stream.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kinesis_firehose_delivery_stream) | resource |
+| [aws_lambda_function.metrictag](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function) | resource |
+| [aws_lambda_permission.metrictag_firehose](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy_document.firehose_assume_role_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.firehose_lambda_transform](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.firehose_logging](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.firehose_s3writer](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.metric_stream_assume_role_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.metric_stream_firehose](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.metrictag_assume_role_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.metrictag_logging](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.metrictag_tagging](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
 ## Inputs
@@ -65,13 +74,16 @@ module "metric_stream" {
 | <a name="input_buffering_interval"></a> [buffering\_interval](#input\_buffering\_interval) | Buffer incoming data for the specified period of time, in seconds, before<br/>delivering it to S3. | `number` | `60` | no |
 | <a name="input_buffering_size"></a> [buffering\_size](#input\_buffering\_size) | Buffer incoming data to the specified size, in MiBs, before delivering it<br/>to S3. | `number` | `1` | no |
 | <a name="input_cloudwatch_log_kms_key"></a> [cloudwatch\_log\_kms\_key](#input\_cloudwatch\_log\_kms\_key) | KMS key to use for cloudwatch log encryption. | `string` | `null` | no |
+| <a name="input_enable_tag_enrichment"></a> [enable\_tag\_enrichment](#input\_enable\_tag\_enrichment) | Enable the metrictag Lambda as a Firehose data transformation that enriches<br/>CloudWatch metric stream records with AWS resource tags. | `bool` | `false` | no |
 | <a name="input_exclude_filters"></a> [exclude\_filters](#input\_exclude\_filters) | List of exclusion filters. Mutually exclusive with inclusion filters. | <pre>list(object({<br/>    namespace    = string<br/>    metric_names = list(string)<br/>  }))</pre> | `null` | no |
 | <a name="input_include_filters"></a> [include\_filters](#input\_include\_filters) | List of inclusion filters. If neither include\_filters or exclude\_filters is<br/>set, a default filter will be used. | <pre>list(object({<br/>    namespace    = string<br/>    metric_names = list(string)<br/>  }))</pre> | `null` | no |
+| <a name="input_metrictag_code_uri"></a> [metrictag\_code\_uri](#input\_metrictag\_code\_uri) | S3 URI for the metrictag Lambda binary. If set, takes precedence over<br/>sam\_release\_version. Only used when enable\_tag\_enrichment is true. | `string` | `""` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name for resources. | `string` | n/a | yes |
 | <a name="input_output_format"></a> [output\_format](#input\_output\_format) | The output format for CloudWatch Metrics. | `string` | `"json"` | no |
 | <a name="input_prefix"></a> [prefix](#input\_prefix) | Optional prefix to write log records to. | `string` | `""` | no |
 | <a name="input_retention_in_days"></a> [retention\_in\_days](#input\_retention\_in\_days) | Retention in days for cloudwatch log group. | `number` | `365` | no |
 | <a name="input_sam_release_version"></a> [sam\_release\_version](#input\_sam\_release\_version) | Release version for SAM apps as defined on github.com/observeinc/aws-sam-apps. | `string` | `""` | no |
+| <a name="input_tag_enrichment_cache_ttl_seconds"></a> [tag\_enrichment\_cache\_ttl\_seconds](#input\_tag\_enrichment\_cache\_ttl\_seconds) | How long (in seconds) the metrictag Lambda caches tagged resource lists per<br/>namespace/region. Set to 0 to disable caching. Only used when<br/>enable\_tag\_enrichment is true. | `number` | `600` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags to add to the resources. | `map(string)` | `{}` | no |
 
 ## Outputs
