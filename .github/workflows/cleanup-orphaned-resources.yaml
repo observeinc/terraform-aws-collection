@@ -1,0 +1,247 @@
+name: Cleanup Orphaned CI Resources
+
+on:
+  schedule:
+    - cron: '0 * * * *' # every hour
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+    steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v6
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2
+
+    - name: Delete orphaned CloudTrail trails
+      # examples/simple uses random_pet naming + ci-run-id tag
+      run: |
+        set -uo pipefail
+        is_active() {
+          local s; s=$(gh run view "$1" --repo "$REPO" --json status --jq '.status' 2>/dev/null || echo "unknown")
+          [[ "$s" == "in_progress" || "$s" == "queued" || "$s" == "waiting" ]]
+        }
+
+        trail_arns=$(aws cloudtrail describe-trails --include-shadow-trails false \
+          --query 'trailList[*].TrailARN' --output text | tr '\t' '\n' | grep -v '^None$')
+        [[ -z "$trail_arns" ]] && echo "No trails found" && exit 0
+
+        for arn in $trail_arns; do
+          run_id=$(aws cloudtrail list-tags --resource-id-list "$arn" \
+            --query "ResourceTagList[0].TagsList[?Key=='ci-run-id'].Value | [0]" \
+            --output text 2>/dev/null || echo "")
+          [[ -z "$run_id" || "$run_id" == "None" ]] && continue
+          if is_active "$run_id"; then
+            echo "SKIP trail $arn (run $run_id active)"
+          else
+            name=$(aws cloudtrail describe-trails --trail-name-list "$arn" \
+              --query 'trailList[0].Name' --output text)
+            echo "DELETE trail $name (run $run_id)"
+            aws cloudtrail delete-trail --name "$arn"
+          fi
+        done
+
+    - name: Delete orphaned SQS queues
+      # examples use naming: tac-<run_id>-<example>
+      run: |
+        set -uo pipefail
+        is_active() {
+          local s; s=$(gh run view "$1" --repo "$REPO" --json status --jq '.status' 2>/dev/null || echo "unknown")
+          [[ "$s" == "in_progress" || "$s" == "queued" || "$s" == "waiting" ]]
+        }
+
+        queue_urls=$(aws sqs list-queues --queue-name-prefix "tac-" \
+          --query 'QueueUrls[]' --output text 2>/dev/null | tr '\t' '\n' | grep -v '^None$' || true)
+        [[ -z "$queue_urls" ]] && echo "No tac- queues found" && exit 0
+
+        for url in $queue_urls; do
+          name="${url##*/}"
+          run_id=$(echo "$name" | grep -oP '^tac-\K[0-9]+' || echo "")
+          [[ -z "$run_id" ]] && continue
+          if is_active "$run_id"; then
+            echo "SKIP queue $name (run $run_id active)"
+          else
+            echo "DELETE queue $name (run $run_id)"
+            aws sqs delete-queue --queue-url "$url"
+          fi
+        done
+
+    - name: Delete orphaned CloudWatch log groups
+      # Lambda: /aws/lambda/tac-<run_id>-<example>
+      # Firehose: /aws/firehose/tac-<run_id>-<example>
+      run: |
+        set -uo pipefail
+        is_active() {
+          local s; s=$(gh run view "$1" --repo "$REPO" --json status --jq '.status' 2>/dev/null || echo "unknown")
+          [[ "$s" == "in_progress" || "$s" == "queued" || "$s" == "waiting" ]]
+        }
+
+        log_groups=$(
+          { aws logs describe-log-groups --log-group-name-prefix "/aws/lambda/tac-" \
+              --query 'logGroups[*].logGroupName' --output text 2>/dev/null | tr '\t' '\n';
+            aws logs describe-log-groups --log-group-name-prefix "/aws/firehose/tac-" \
+              --query 'logGroups[*].logGroupName' --output text 2>/dev/null | tr '\t' '\n'; } \
+          | grep -v '^None$' || true)
+        [[ -z "$log_groups" ]] && echo "No tac- log groups found" && exit 0
+
+        for lg in $log_groups; do
+          run_id=$(echo "$lg" | grep -oP '/(lambda|firehose)/tac-\K[0-9]+' || echo "")
+          [[ -z "$run_id" ]] && continue
+          if is_active "$run_id"; then
+            echo "SKIP log group $lg (run $run_id active)"
+          else
+            echo "DELETE log group $lg (run $run_id)"
+            aws logs delete-log-group --log-group-name "$lg"
+          fi
+        done
+
+    - name: Delete orphaned Lambda functions
+      run: |
+        set -uo pipefail
+        is_active() {
+          local s; s=$(gh run view "$1" --repo "$REPO" --json status --jq '.status' 2>/dev/null || echo "unknown")
+          [[ "$s" == "in_progress" || "$s" == "queued" || "$s" == "waiting" ]]
+        }
+
+        functions=$(aws lambda list-functions \
+          --query 'Functions[?starts_with(FunctionName, `tac-`)].FunctionName' \
+          --output text 2>/dev/null | tr '\t' '\n' | grep -v '^None$' || true)
+        [[ -z "$functions" ]] && echo "No tac- Lambda functions found" && exit 0
+
+        for fn in $functions; do
+          run_id=$(echo "$fn" | grep -oP '^tac-\K[0-9]+' || echo "")
+          [[ -z "$run_id" ]] && continue
+          if is_active "$run_id"; then
+            echo "SKIP Lambda $fn (run $run_id active)"
+          else
+            echo "DELETE Lambda $fn (run $run_id)"
+            aws lambda delete-function --function-name "$fn"
+          fi
+        done
+
+    - name: Delete orphaned SNS topics
+      run: |
+        set -uo pipefail
+        is_active() {
+          local s; s=$(gh run view "$1" --repo "$REPO" --json status --jq '.status' 2>/dev/null || echo "unknown")
+          [[ "$s" == "in_progress" || "$s" == "queued" || "$s" == "waiting" ]]
+        }
+
+        topic_arns=$(aws sns list-topics --query 'Topics[*].TopicArn' --output text \
+          2>/dev/null | tr '\t' '\n' | grep ':tac-' || true)
+        [[ -z "$topic_arns" ]] && echo "No tac- SNS topics found" && exit 0
+
+        for arn in $topic_arns; do
+          name="${arn##*:}"
+          run_id=$(echo "$name" | grep -oP '^tac-\K[0-9]+' || echo "")
+          [[ -z "$run_id" ]] && continue
+          if is_active "$run_id"; then
+            echo "SKIP SNS topic $name (run $run_id active)"
+          else
+            echo "DELETE SNS topic $name (run $run_id)"
+            aws sns delete-topic --topic-arn "$arn"
+          fi
+        done
+
+    - name: Delete orphaned Kinesis Firehose delivery streams
+      # Logwriter examples create Firehose streams named tac-<run_id>-<example>
+      run: |
+        set -uo pipefail
+        is_active() {
+          local s; s=$(gh run view "$1" --repo "$REPO" --json status --jq '.status' 2>/dev/null || echo "unknown")
+          [[ "$s" == "in_progress" || "$s" == "queued" || "$s" == "waiting" ]]
+        }
+
+        # list-delivery-streams paginates at 10; walk all pages
+        next=""
+        while true; do
+          if [[ -z "$next" ]]; then
+            page=$(aws firehose list-delivery-streams --output json)
+          else
+            page=$(aws firehose list-delivery-streams --output json \
+              --exclusive-start-delivery-stream-name "$next")
+          fi
+          names=$(echo "$page" | python3 -c \
+            "import sys,json; d=json.load(sys.stdin); print('\n'.join(d['DeliveryStreamNames']))")
+          has_more=$(echo "$page" | python3 -c \
+            "import sys,json; d=json.load(sys.stdin); print(d['HasMoreDeliveryStreams'])")
+
+          while IFS= read -r stream; do
+            run_id=$(echo "$stream" | grep -oP '^tac-\K[0-9]+' || echo "")
+            [[ -z "$run_id" ]] && continue
+            if is_active "$run_id"; then
+              echo "SKIP Firehose $stream (run $run_id active)"
+            else
+              echo "DELETE Firehose $stream (run $run_id)"
+              aws firehose delete-delivery-stream --delivery-stream-name "$stream"
+            fi
+          done <<< "$names"
+
+          [[ "$has_more" == "False" ]] && break
+          next=$(echo "$names" | tail -1)
+        done
+
+    - name: Delete orphaned EventBridge rules
+      # Rules named tac-<run_id>-<example>-<random_suffix>; must remove targets before deleting rule
+      run: |
+        set -uo pipefail
+        is_active() {
+          local s; s=$(gh run view "$1" --repo "$REPO" --json status --jq '.status' 2>/dev/null || echo "unknown")
+          [[ "$s" == "in_progress" || "$s" == "queued" || "$s" == "waiting" ]]
+        }
+
+        rules=$(aws events list-rules \
+          --query "Rules[?starts_with(Name, 'tac-')].Name" \
+          --output text 2>/dev/null | tr '\t' '\n' | grep -v '^None$' || true)
+        [[ -z "$rules" ]] && echo "No tac- EventBridge rules found" && exit 0
+
+        while IFS= read -r rule; do
+          run_id=$(echo "$rule" | grep -oP '^tac-\K[0-9]+' || echo "")
+          [[ -z "$run_id" ]] && continue
+          if is_active "$run_id"; then
+            echo "SKIP EventBridge rule $rule (run $run_id active)"
+          else
+            echo "DELETE EventBridge rule $rule (run $run_id)"
+            target_ids=$(aws events list-targets-by-rule --rule "$rule" \
+              --query 'Targets[*].Id' --output text 2>/dev/null | tr '\t' '\n' | grep -v '^None$' || true)
+            [[ -n "$target_ids" ]] && aws events remove-targets --rule "$rule" \
+              --ids $target_ids 2>/dev/null || true
+            aws events delete-rule --name "$rule"
+          fi
+        done <<< "$rules"
+
+    - name: Delete orphaned Lambda event source mappings
+      # SQS-to-Lambda mappings left behind when Lambda function was created but not cleaned up
+      run: |
+        set -uo pipefail
+        is_active() {
+          local s; s=$(gh run view "$1" --repo "$REPO" --json status --jq '.status' 2>/dev/null || echo "unknown")
+          [[ "$s" == "in_progress" || "$s" == "queued" || "$s" == "waiting" ]]
+        }
+
+        mappings=$(aws lambda list-event-source-mappings \
+          --query "EventSourceMappings[?contains(FunctionArn, ':tac-')].[UUID,FunctionArn]" \
+          --output text 2>/dev/null | tr '\t' ' ' | grep -v '^None' || true)
+        [[ -z "$mappings" ]] && echo "No tac- event source mappings found" && exit 0
+
+        while IFS= read -r line; do
+          uuid=$(echo "$line" | awk '{print $1}')
+          fn_arn=$(echo "$line" | awk '{print $2}')
+          fn_name="${fn_arn##*:}"
+          run_id=$(echo "$fn_name" | grep -oP '^tac-\K[0-9]+' || echo "")
+          [[ -z "$run_id" ]] && continue
+          if is_active "$run_id"; then
+            echo "SKIP event source mapping $uuid ($fn_name, run $run_id active)"
+          else
+            echo "DELETE event source mapping $uuid ($fn_name, run $run_id)"
+            aws lambda delete-event-source-mapping --uuid "$uuid" 2>/dev/null || true
+          fi
+        done <<< "$mappings"

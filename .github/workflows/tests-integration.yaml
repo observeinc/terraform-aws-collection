@@ -80,7 +80,15 @@ jobs:
         terraform_version: ${{ steps.minMax.outputs.minVersion }}
 
     - name: Integration test for ${{ matrix.testfile }}
+      id: test
       run: DIR=${{ matrix.testfile }} make test-dir
+      env:
+        AWS_REGION: us-west-2
+        TF_VAR_test_run_id: ${{ github.run_id }}
+
+    - name: Cleanup on failure
+      if: failure() && steps.test.outcome == 'failure'
+      run: terraform -chdir=${{ matrix.testfile }} destroy -auto-approve -var 'observe_customer=1' -var 'observe_token=dskey:secret'
       env:
         AWS_REGION: us-west-2
         TF_VAR_test_run_id: ${{ github.run_id }}

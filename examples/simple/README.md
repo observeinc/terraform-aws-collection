@@ -66,6 +66,7 @@ No outputs.
 | <a name="input_observe_customer"></a> [observe\_customer](#input\_observe\_customer) | Observe Customer ID | `string` | n/a | yes |
 | <a name="input_observe_domain"></a> [observe\_domain](#input\_observe\_domain) | Observe domain | `string` | `null` | no |
 | <a name="input_observe_token"></a> [observe\_token](#input\_observe\_token) | Observe token | `string` | n/a | yes |
+| <a name="input_test_run_id"></a> [test\_run\_id](#input\_test\_run\_id) | CI run ID used to tag resources for orphan detection and cleanup. | `string` | `"local"` | no |
 
 ## Outputs
 

@@ -13,3 +13,9 @@ variable "observe_domain" {
   type        = string
   default     = null
 }
+
+variable "test_run_id" {
+  description = "CI run ID used to tag resources for orphan detection and cleanup."
+  type        = string
+  default     = "local"
+}
