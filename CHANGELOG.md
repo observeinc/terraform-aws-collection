@@ -1,3 +1,29 @@
+# [4.0.0](https://github.com/observeinc/terraform-aws-collection/compare/v3.0.0...v4.0.0) (2026-06-23)
+
+
+### Bug Fixes
+
+* use regional S3 endpoint in sam_asset URL ([#266](https://github.com/observeinc/terraform-aws-collection/issues/266)) ([1f538eb](https://github.com/observeinc/terraform-aws-collection/commit/1f538eb9af3894bb7bc5f6ab1eb36f590e3c49e8))
+
+
+### Continuous Integration
+
+* replace DCE with direct AWS credentials in integration tests ([cdd6c81](https://github.com/observeinc/terraform-aws-collection/commit/cdd6c81301e300ab4f436014b86975b611c6cc6d))
+
+
+### Features
+
+* update dependencies ([#261](https://github.com/observeinc/terraform-aws-collection/issues/261)) ([4d72c5d](https://github.com/observeinc/terraform-aws-collection/commit/4d72c5dc71714033a3ad41e67f7f52dcd1f4b027))
+
+
+### BREAKING CHANGES
+
+* Minimum supported Terraform version is now >= 1.11
+(previously >= 1.2 for the root module and >= 1.3 for most submodules).
+Upgrade Terraform to 1.11 or newer before upgrading this module.
+
+
+
 # [3.0.0](https://github.com/observeinc/terraform-aws-collection/compare/v2.35.0...v3.0.0) (2026-05-20)
 
 
