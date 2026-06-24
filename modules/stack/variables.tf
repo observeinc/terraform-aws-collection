@@ -122,6 +122,9 @@ variable "metricstream" {
     sam_release_version    = optional(string)
     cloudwatch_log_kms_key = optional(string)
     retention_in_days      = optional(number)
+
+    enable_tag_enrichment            = optional(bool)
+    tag_enrichment_cache_ttl_seconds = optional(number)
   })
   default = null
 }
