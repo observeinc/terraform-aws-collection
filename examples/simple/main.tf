@@ -7,4 +7,5 @@ module "observe_collection" {
   observe_customer = var.observe_customer
   observe_token    = var.observe_token
   observe_domain   = var.observe_domain
+  tags             = { "ci-run-id" = var.test_run_id }
 }
