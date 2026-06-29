@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6.0.2
       - name: Install Python
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v6.3.0
       - name: Build matrix
         id: matrix
         run: |
@@ -39,7 +39,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6.0.2
       - name: Install Python
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v6.3.0
       - name: Terraform min/max versions
         id: minMax
         uses: clowdhaus/terraform-min-max@v2.1.0
@@ -98,7 +98,7 @@ jobs:
           echo "Disk space after cleanup:"
           df -h
       - name: Install Python
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v6.3.0
       - name: Install Terraform v${{ matrix.version }}
         uses: hashicorp/setup-terraform@v4.0.1
         with:
