@@ -2,7 +2,7 @@ name: Cleanup Orphaned CI Resources
 
 on:
   schedule:
-    - cron: '0 * * * *' # every hour
+    - cron: '0 3 * * *' # daily at 03:00 UTC
   workflow_dispatch:
 
 jobs:
@@ -30,7 +30,7 @@ jobs:
           [[ "$s" == "in_progress" || "$s" == "queued" || "$s" == "waiting" ]]
         }
 
-        trail_arns=$(aws cloudtrail describe-trails --include-shadow-trails false \
+        trail_arns=$(aws cloudtrail describe-trails --no-include-shadow-trails \
           --query 'trailList[*].TrailARN' --output text | tr '\t' '\n' | grep -v '^None$')
         [[ -z "$trail_arns" ]] && echo "No trails found" && exit 0
 
