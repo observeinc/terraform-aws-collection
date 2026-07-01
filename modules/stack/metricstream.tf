@@ -12,5 +12,9 @@ module "metricstream" {
   sam_release_version    = try(coalesce(var.metricstream.sam_release_version, var.sam_release_version), null)
   cloudwatch_log_kms_key = var.metricstream.cloudwatch_log_kms_key
   retention_in_days      = var.metricstream.retention_in_days
-  tags                   = var.tags
+
+  enable_tag_enrichment            = coalesce(var.metricstream.enable_tag_enrichment, false)
+  tag_enrichment_cache_ttl_seconds = coalesce(var.metricstream.tag_enrichment_cache_ttl_seconds, 600)
+
+  tags = var.tags
 }
