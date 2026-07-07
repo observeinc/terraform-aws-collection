@@ -65,6 +65,7 @@ module "metric_stream" {
 | <a name="input_buffering_interval"></a> [buffering\_interval](#input\_buffering\_interval) | Buffer incoming data for the specified period of time, in seconds, before<br/>delivering it to S3. | `number` | `60` | no |
 | <a name="input_buffering_size"></a> [buffering\_size](#input\_buffering\_size) | Buffer incoming data to the specified size, in MiBs, before delivering it<br/>to S3. | `number` | `1` | no |
 | <a name="input_cloudwatch_log_kms_key"></a> [cloudwatch\_log\_kms\_key](#input\_cloudwatch\_log\_kms\_key) | KMS key to use for cloudwatch log encryption. | `string` | `null` | no |
+| <a name="input_compression_format"></a> [compression\_format](#input\_compression\_format) | Compression format for Firehose S3 delivery. GZIP is recommended to reduce S3 storage costs and data transfer. | `string` | `"UNCOMPRESSED"` | no |
 | <a name="input_exclude_filters"></a> [exclude\_filters](#input\_exclude\_filters) | List of exclusion filters. Mutually exclusive with inclusion filters. | <pre>list(object({<br/>    namespace    = string<br/>    metric_names = list(string)<br/>  }))</pre> | `null` | no |
 | <a name="input_include_filters"></a> [include\_filters](#input\_include\_filters) | List of inclusion filters. If neither include\_filters or exclude\_filters is<br/>set, a default filter will be used. | <pre>list(object({<br/>    namespace    = string<br/>    metric_names = list(string)<br/>  }))</pre> | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name for resources. | `string` | n/a | yes |

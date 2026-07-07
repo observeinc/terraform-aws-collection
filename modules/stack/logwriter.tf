@@ -31,6 +31,7 @@ module "logwriter" {
   sam_release_version             = try(coalesce(var.logwriter.sam_release_version, var.sam_release_version), null)
   retention_in_days               = var.logwriter.retention_in_days
   cloudwatch_log_kms_key          = var.logwriter.cloudwatch_log_kms_key
+  compression_format              = var.logwriter.compression_format
   tags                            = var.tags
   dead_letter_queue_tags          = var.dead_letter_queue_tags
 

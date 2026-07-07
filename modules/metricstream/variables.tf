@@ -102,6 +102,18 @@ variable "cloudwatch_log_kms_key" {
   default     = null
 }
 
+variable "compression_format" {
+  description = "Compression format for Firehose S3 delivery. GZIP is recommended to reduce S3 storage costs and data transfer."
+  type        = string
+  nullable    = false
+  default     = "UNCOMPRESSED"
+
+  validation {
+    condition     = contains(["UNCOMPRESSED", "GZIP", "ZIP", "Snappy", "HADOOP_SNAPPY"], var.compression_format)
+    error_message = "compression_format must be one of: UNCOMPRESSED, GZIP, ZIP, Snappy, HADOOP_SNAPPY."
+  }
+}
+
 variable "tags" {
   description = "Tags to add to the resources."
   type        = map(string)

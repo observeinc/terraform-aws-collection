@@ -106,6 +106,7 @@ variable "logwriter" {
     sam_release_version             = optional(string)
     retention_in_days               = optional(number)
     cloudwatch_log_kms_key          = optional(string)
+    compression_format              = optional(string)
   })
   default = null
 }
@@ -122,6 +123,7 @@ variable "metricstream" {
     sam_release_version    = optional(string)
     cloudwatch_log_kms_key = optional(string)
     retention_in_days      = optional(number)
+    compression_format     = optional(string)
   })
   default = null
 }

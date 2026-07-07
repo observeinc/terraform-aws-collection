@@ -214,6 +214,7 @@ or `cloudwatch_api_rate_limit`.
 | <a name="input_cloudwatch_api_rate_limit"></a> [cloudwatch\_api\_rate\_limit](#input\_cloudwatch\_api\_rate\_limit) | Per-invocation CloudWatch API request rate limit (requests/second) for<br/>subscriber operations. | `number` | `null` | no |
 | <a name="input_cloudwatch_log_kms_key"></a> [cloudwatch\_log\_kms\_key](#input\_cloudwatch\_log\_kms\_key) | KMS key to use for cloudwatch log encryption. | `string` | `null` | no |
 | <a name="input_code_uri"></a> [code\_uri](#input\_code\_uri) | S3 URI for lambda binary. If set, takes precedence over sam\_release\_version. | `string` | `""` | no |
+| <a name="input_compression_format"></a> [compression\_format](#input\_compression\_format) | Compression format for Firehose S3 delivery. GZIP is recommended to reduce S3 storage costs and data transfer. | `string` | `"UNCOMPRESSED"` | no |
 | <a name="input_dead_letter_queue_tags"></a> [dead\_letter\_queue\_tags](#input\_dead\_letter\_queue\_tags) | Tags to add to the dead letter queue. | `map(string)` | `{}` | no |
 | <a name="input_debug_endpoint"></a> [debug\_endpoint](#input\_debug\_endpoint) | Endpoint to send debugging telemetry to. Sets the OTEL\_EXPORTER\_OTLP\_ENDPOINT environment variable for the lambda function. | `string` | `null` | no |
 | <a name="input_discovery_rate"></a> [discovery\_rate](#input\_discovery\_rate) | EventBridge rate expression for periodically triggering discovery. If not<br/>set, no eventbridge rules are configured. | `string` | `null` | no |

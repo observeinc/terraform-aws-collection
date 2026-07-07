@@ -9,6 +9,7 @@ resource "aws_kinesis_firehose_delivery_stream" "delivery_stream" {
     error_output_prefix = "${var.prefix}AWSLogs/${local.account_id}/cloudwatchlogs/${local.region}/errors/"
     buffering_interval  = var.buffering_interval
     buffering_size      = var.buffering_size
+    compression_format  = var.compression_format
     cloudwatch_logging_options {
       enabled         = true
       log_group_name  = aws_cloudwatch_log_group.firehose.name
