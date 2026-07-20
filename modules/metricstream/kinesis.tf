@@ -14,5 +14,19 @@ resource "aws_kinesis_firehose_delivery_stream" "this" {
       log_group_name  = aws_cloudwatch_log_group.firehose_log_group.name
       log_stream_name = aws_cloudwatch_log_stream.firehose_log_stream.name
     }
+
+    dynamic "processing_configuration" {
+      for_each = var.enable_tag_enrichment ? [1] : []
+      content {
+        enabled = true
+        processors {
+          type = "Lambda"
+          parameters {
+            parameter_name  = "LambdaArn"
+            parameter_value = "${aws_lambda_function.metrictag[0].arn}:$LATEST"
+          }
+        }
+      }
+    }
   }
 }
