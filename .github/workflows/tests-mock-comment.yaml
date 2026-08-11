@@ -1,0 +1,82 @@
+name: Post Mock Test Comment
+
+on:
+  workflow_run:
+    workflows: ["Mock Tests"]
+    types: [completed]
+
+permissions:
+  pull-requests: write
+  actions: read
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    # Only comment when the triggering event was a pull_request
+    if: github.event.workflow_run.event == 'pull_request'
+    steps:
+      - name: Download summary artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: mock-test-summary
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Build comment body
+        run: |
+          PR_NUMBER=$(cat pr-number.txt)
+          RUN_URL=$(cat run-url.txt)
+          OVERALL=$(cat overall-status.txt)
+
+          if [ "$OVERALL" = "success" ]; then
+            HEADLINE="✅ All mock tests passed"
+          else
+            HEADLINE="❌ Some mock tests failed"
+          fi
+
+          {
+            echo "<!-- mock-test-results -->"
+            echo "## Mock Test Results — ${HEADLINE}"
+            echo ""
+            echo "| Module / Example | Result |"
+            echo "|:---|:---|"
+            sort result_*.txt | while IFS='|' read -r dir icon summary; do
+              echo "| \`${dir}\` | ${icon} ${summary} |"
+            done
+            echo ""
+            echo "[View full run](${RUN_URL})"
+          } > comment.md
+
+          echo "PR_NUMBER=${PR_NUMBER}" >> "$GITHUB_ENV"
+
+      - name: Find existing comment
+        id: find_comment
+        run: |
+          COMMENT_ID=$(gh api \
+            "repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
+            --jq '[.[] | select(
+              .user.login == "github-actions[bot]" and
+              (.body | contains("<!-- mock-test-results -->"))
+            )] | first | .id // ""')
+          echo "comment_id=${COMMENT_ID}" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update existing comment
+        if: steps.find_comment.outputs.comment_id != ''
+        run: |
+          jq -Rs '{body: .}' comment.md | \
+            gh api "repos/${{ github.repository }}/issues/comments/${{ steps.find_comment.outputs.comment_id }}" \
+              --method PATCH \
+              --input -
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create new comment
+        if: steps.find_comment.outputs.comment_id == ''
+        run: |
+          jq -Rs '{body: .}' comment.md | \
+            gh api "repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
+              --input -
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
