@@ -1,9 +1,17 @@
+# [4.1.0](https://github.com/observeinc/terraform-aws-collection/compare/v4.0.0...v4.1.0) (2026-09-02)
+
+
+### Features
+
+* add variable to enable cloudwatch metric enrichment with resource tags ([#263](https://github.com/observeinc/terraform-aws-collection/issues/263)) ([0e23b0a](https://github.com/observeinc/terraform-aws-collection/commit/0e23b0a797be82039718fc7025bd70dd139158d7))
+
+
+
 # [4.0.0](https://github.com/observeinc/terraform-aws-collection/compare/v3.0.0...v4.0.0) (2026-06-23)
 
 
 ### Bug Fixes
 
-* bump AWS provider to >= 6.0 and replace deprecated data source attributes ([#262](https://github.com/observeinc/terraform-aws-collection/issues/262)) ([81ba1e4](https://github.com/observeinc/terraform-aws-collection/commit/81ba1e44db83dcfe729550a776d6b6e4d85a9f79))
 * use regional S3 endpoint in sam_asset URL ([#266](https://github.com/observeinc/terraform-aws-collection/issues/266)) ([1f538eb](https://github.com/observeinc/terraform-aws-collection/commit/1f538eb9af3894bb7bc5f6ab1eb36f590e3c49e8))
 
 
@@ -19,7 +27,6 @@
 
 ### BREAKING CHANGES
 
-* `hashicorp/aws` provider >= 6.0 is now required. Run `terraform init -upgrade` then `plan` / `apply` after upgrading this module. ([#262](https://github.com/observeinc/terraform-aws-collection/issues/262)) ([81ba1e4](https://github.com/observeinc/terraform-aws-collection/commit/81ba1e44db83dcfe729550a776d6b6e4d85a9f79))
 * Minimum supported Terraform version is now >= 1.11
 (previously >= 1.2 for the root module and >= 1.3 for most submodules).
 Upgrade Terraform to 1.11 or newer before upgrading this module.
