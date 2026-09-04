@@ -1,3 +1,12 @@
+## [4.1.1](https://github.com/observeinc/terraform-aws-collection/compare/v4.1.0...v4.1.1) (2026-09-04)
+
+
+### Bug Fixes
+
+* **subscriber:** use raw string for EventBridge input_template to preserve angle bracket substitution tokens ([#278](https://github.com/observeinc/terraform-aws-collection/issues/278)) ([01d423c](https://github.com/observeinc/terraform-aws-collection/commit/01d423c913803a6c3e6d1bdc8ea6f6de99ab3d98))
+
+
+
 # [4.1.0](https://github.com/observeinc/terraform-aws-collection/compare/v4.0.0...v4.1.0) (2026-09-02)
 
 
