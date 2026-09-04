@@ -28,14 +28,6 @@ resource "aws_cloudwatch_event_target" "discovery" {
       logGroupName = "$.detail.requestParameters.logGroupName"
     }
 
-    input_template = jsonencode({
-      "subscribe" : {
-        "logGroups" : [
-          {
-            "logGroupName" : "<logGroupName>"
-          }
-        ]
-      }
-    })
+    input_template = "{\"subscribe\":{\"logGroups\":[{\"logGroupName\":\"<logGroupName>\"}]}}"
   }
 }
