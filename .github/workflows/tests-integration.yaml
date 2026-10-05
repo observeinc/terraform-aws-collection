@@ -37,7 +37,7 @@ jobs:
     outputs:
       matrix: ${{ steps.find_hcl_files.outputs.matrix }}
     steps:
-    - uses: actions/checkout@v6.0.2
+    - uses: actions/checkout@v7
 
     - name: Setup the test matrix
       id: find_hcl_files
@@ -66,7 +66,7 @@ jobs:
         aws-region: us-west-2
 
     - name: checkout
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@v7
 
     - name: Terraform min/max versions
       id: minMax
