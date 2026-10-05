@@ -1,0 +1,104 @@
+name: Mock Tests
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - $default-branch
+
+jobs:
+  prepare_matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.find_mock_dirs.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup the test matrix
+        id: find_mock_dirs
+        run: |
+          echo "matrix=$( find . -type d -name mock_tests -print | sed 's:/[^/]*$::' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+
+  test-mock:
+    runs-on: ubuntu-latest
+    needs: [prepare_matrix]
+    strategy:
+      fail-fast: false
+      matrix:
+        testdir: ${{fromJson(needs.prepare_matrix.outputs.matrix)}}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Terraform min/max versions
+        id: minMax
+        uses: clowdhaus/terraform-min-max@v2.1.0
+        with:
+          directory: ${{ matrix.testdir }}
+
+      - name: Install Terraform v${{ steps.minMax.outputs.minVersion }}
+        uses: hashicorp/setup-terraform@v4.0.1
+        with:
+          terraform_version: ${{ steps.minMax.outputs.minVersion }}
+
+      - name: Mock test for ${{ matrix.testdir }}
+        id: run_tests
+        continue-on-error: true
+        run: |
+          DIR=${{ matrix.testdir }} make test-mock-dir 2>&1 \
+            | sed 's/\x1b\[[0-9;]*m//g' \
+            | tee test-output.txt
+          exit ${PIPESTATUS[0]}
+        env:
+          TF_VAR_test_run_id: ${{ github.run_id }}
+
+      - name: Save result
+        if: always()
+        run: |
+          SUMMARY=$(grep -E "^(Success|Failure)!" test-output.txt | tail -1 || echo "no output captured")
+          STATUS="${{ steps.run_tests.outcome }}"
+          ICON=$( [ "$STATUS" = "success" ] && echo "✅" || echo "❌" )
+          SAFE=$(echo "${{ matrix.testdir }}" | tr '/.' '_')
+          echo "${{ matrix.testdir }}|${ICON}|${SUMMARY}" > "result_${SAFE}.txt"
+
+      - name: Set artifact name
+        if: always()
+        id: artifact
+        run: |
+          echo "name=mock-result-$(echo '${{ matrix.testdir }}' | tr '/.' '-')" >> $GITHUB_OUTPUT
+
+      - name: Upload result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.artifact.outputs.name }}
+          path: result_*.txt
+
+  summarize:
+    runs-on: ubuntu-latest
+    needs: [test-mock]
+    if: always() && github.event_name == 'pull_request'
+    steps:
+      - name: Download all results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: mock-result-*
+          merge-multiple: true
+
+      - name: Write PR metadata
+        run: |
+          echo "${{ github.event.pull_request.number }}" > pr-number.txt
+          echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" > run-url.txt
+          echo "${{ needs.test-mock.result }}" > overall-status.txt
+
+      - name: Upload summary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mock-test-summary
+          path: |
+            result_*.txt
+            pr-number.txt
+            run-url.txt
+            overall-status.txt
+          retention-days: 1
+          overwrite: true

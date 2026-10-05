@@ -1,0 +1,37 @@
+mock_provider "aws" {
+  source = "../testing/aws_mock"
+}
+
+run "setup" {
+  module {
+    source = "../testing/setup"
+  }
+}
+
+run "create_bucket" {
+  module {
+    source = "../testing/s3_bucket"
+  }
+
+  variables {
+    setup = run.setup
+  }
+}
+
+run "install_logwriter" {
+  variables {
+    name                            = run.setup.short
+    bucket_arn                      = run.create_bucket.arn
+    code_uri                        = "s3://mock-bucket/mock-key"
+    discovery_rate                  = "10 minutes"
+    filter_name                     = "${run.setup.id}-filter"
+    log_group_name_patterns         = ["${run.setup.short}"]
+    exclude_log_group_name_patterns = ["^noisy-group"]
+    debug_endpoint                  = "http://localhost:8080"
+  }
+
+  assert {
+    condition     = output.subscriber != null
+    error_message = "subscriber should be created when patterns are set"
+  }
+}
