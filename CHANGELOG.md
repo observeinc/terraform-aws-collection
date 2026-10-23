@@ -1,3 +1,18 @@
+# [4.2.0](https://github.com/observeinc/terraform-aws-collection/compare/v4.1.1...v4.2.0) (2026-10-23)
+
+
+### Bug Fixes
+
+* **subscriber:** resolve code location from plain CloudFormation logwriter template ([cdae823](https://github.com/observeinc/terraform-aws-collection/commit/cdae823ec7a0d172a64be91c73083e1753fd70f7))
+
+
+### Features
+
+* update dependencies ([7ddf08a](https://github.com/observeinc/terraform-aws-collection/commit/7ddf08a4c9942158d7b8e60ccd59eabedfa59c85))
+* update dependencies ([ca27313](https://github.com/observeinc/terraform-aws-collection/commit/ca27313724772a4d11d468e07f258ce06737702d))
+
+
+
 ## [4.1.1](https://github.com/observeinc/terraform-aws-collection/compare/v4.1.0...v4.1.1) (2026-09-04)
 
 
