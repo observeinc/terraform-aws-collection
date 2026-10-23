@@ -46,6 +46,7 @@ resource "null_resource" "cleanup_on_destroy" {
         STAGNATION_SECONDS=180
       fi
       MAX_WAIT_SECONDS=1200
+      START_GRACE_SECONDS=60
 
       get_queue_attr() {
         local queue_url="$1"
@@ -80,8 +81,9 @@ resource "null_resource" "cleanup_on_destroy" {
 
       stable_polls=0
       elapsed=0
+      seen_pending=false
       best_pending=-1
-      last_decrease_elapsed=0
+      last_progress_elapsed=0
       while [ "$elapsed" -lt "$MAX_WAIT_SECONDS" ]; do
         visible=$(get_queue_attr "$QUEUE_URL" "ApproximateNumberOfMessages")
         not_visible=$(get_queue_attr "$QUEUE_URL" "ApproximateNumberOfMessagesNotVisible")
@@ -90,12 +92,22 @@ resource "null_resource" "cleanup_on_destroy" {
 
         echo "cleanup queue status: visible=$visible in_flight=$not_visible dlq_visible=$dlq_visible elapsed=$elapsed/$MAX_WAIT_SECONDS" >&2
 
-        if [ "$best_pending" -lt 0 ] || [ "$pending" -lt "$best_pending" ]; then
-          best_pending="$pending"
-          last_decrease_elapsed="$elapsed"
+        if [ "$pending" -gt 0 ]; then
+          seen_pending=true
         fi
 
-        if [ "$visible" -eq 0 ] && [ "$not_visible" -eq 0 ]; then
+        # Each invocation re-enqueues a continuation, so pending can sit at 1
+        # for the whole scan; in-flight messages also count as progress.
+        if [ "$best_pending" -lt 0 ] || [ "$pending" -lt "$best_pending" ]; then
+          best_pending="$pending"
+          last_progress_elapsed="$elapsed"
+        elif [ "$not_visible" -gt 0 ]; then
+          last_progress_elapsed="$elapsed"
+        fi
+
+        # Approximate queue counts can lag a just-sent message by up to a minute,
+        # so an empty reading only counts once work was seen or the grace period passed.
+        if [ "$visible" -eq 0 ] && [ "$not_visible" -eq 0 ] && { [ "$seen_pending" = true ] || [ "$elapsed" -ge "$START_GRACE_SECONDS" ]; }; then
           stable_polls=$((stable_polls + 1))
           if [ "$stable_polls" -ge "$REQUIRED_STABLE_POLLS" ]; then
             break
@@ -104,7 +116,7 @@ resource "null_resource" "cleanup_on_destroy" {
           stable_polls=0
         fi
 
-        if [ "$pending" -gt 0 ] && [ $((elapsed - last_decrease_elapsed)) -ge "$STAGNATION_SECONDS" ]; then
+        if [ "$pending" -gt 0 ] && [ $((elapsed - last_progress_elapsed)) -ge "$STAGNATION_SECONDS" ]; then
           echo "Cleanup made no progress for $STAGNATION_SECONDS seconds (pending=$pending, best_pending=$best_pending)." >&2
           exit 1
         fi
@@ -172,6 +184,7 @@ resource "null_resource" "discovery_on_apply" {
         STAGNATION_SECONDS=180
       fi
       MAX_WAIT_SECONDS=1200
+      START_GRACE_SECONDS=60
 
       get_queue_attr() {
         local queue_url="$1"
@@ -215,8 +228,9 @@ resource "null_resource" "discovery_on_apply" {
 
       stable_polls=0
       elapsed=0
+      seen_pending=false
       best_pending=-1
-      last_decrease_elapsed=0
+      last_progress_elapsed=0
       while [ "$elapsed" -lt "$MAX_WAIT_SECONDS" ]; do
         visible=$(get_queue_attr "$QUEUE_URL" "ApproximateNumberOfMessages")
         not_visible=$(get_queue_attr "$QUEUE_URL" "ApproximateNumberOfMessagesNotVisible")
@@ -225,12 +239,22 @@ resource "null_resource" "discovery_on_apply" {
 
         echo "discovery queue status: visible=$visible in_flight=$not_visible dlq_visible=$dlq_visible elapsed=$elapsed/$MAX_WAIT_SECONDS" >&2
 
-        if [ "$best_pending" -lt 0 ] || [ "$pending" -lt "$best_pending" ]; then
-          best_pending="$pending"
-          last_decrease_elapsed="$elapsed"
+        if [ "$pending" -gt 0 ]; then
+          seen_pending=true
         fi
 
-        if [ "$visible" -eq 0 ] && [ "$not_visible" -eq 0 ]; then
+        # Each invocation re-enqueues a continuation, so pending can sit at 1
+        # for the whole scan; in-flight messages also count as progress.
+        if [ "$best_pending" -lt 0 ] || [ "$pending" -lt "$best_pending" ]; then
+          best_pending="$pending"
+          last_progress_elapsed="$elapsed"
+        elif [ "$not_visible" -gt 0 ]; then
+          last_progress_elapsed="$elapsed"
+        fi
+
+        # Approximate queue counts can lag a just-sent message by up to a minute,
+        # so an empty reading only counts once work was seen or the grace period passed.
+        if [ "$visible" -eq 0 ] && [ "$not_visible" -eq 0 ] && { [ "$seen_pending" = true ] || [ "$elapsed" -ge "$START_GRACE_SECONDS" ]; }; then
           stable_polls=$((stable_polls + 1))
           if [ "$stable_polls" -ge "$REQUIRED_STABLE_POLLS" ]; then
             break
@@ -239,7 +263,7 @@ resource "null_resource" "discovery_on_apply" {
           stable_polls=0
         fi
 
-        if [ "$pending" -gt 0 ] && [ $((elapsed - last_decrease_elapsed)) -ge "$STAGNATION_SECONDS" ]; then
+        if [ "$pending" -gt 0 ] && [ $((elapsed - last_progress_elapsed)) -ge "$STAGNATION_SECONDS" ]; then
           echo "Discovery made no progress for $STAGNATION_SECONDS seconds (pending=$pending, best_pending=$best_pending)." >&2
           exit 1
         fi
