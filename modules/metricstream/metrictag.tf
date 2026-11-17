@@ -40,12 +40,14 @@ data "aws_iam_policy_document" "metrictag_logging" {
 data "aws_iam_policy_document" "metrictag_tagging" {
   count = var.enable_tag_enrichment ? 1 : 0
   # Follows YACE auth docs (yet-another-cloudwatch-exporter README
-  # #authentication) minus cloudwatch:* and iam:ListAccountAliases, which are
-  # not needed because this Lambda enriches Firehose records and does not
-  # scrape CloudWatch.
+  # #authentication) minus cloudwatch:*, which is not needed because this
+  # Lambda enriches Firehose records and does not scrape CloudWatch.
+  # iam:ListAccountAliases is used to add account_alias to records from the
+  # local account.
   statement {
     effect = "Allow"
     actions = [
+      "iam:ListAccountAliases",
       "tag:GetResources",
       "autoscaling:DescribeAutoScalingGroups",
       "apigateway:GET",
