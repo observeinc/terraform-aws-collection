@@ -12,6 +12,10 @@ resource "aws_s3_bucket_notification" "this" {
     topic_arn = aws_sns_topic.this.arn
     events    = ["s3:ObjectCreated:*"]
   }
+
+  # S3 sends the topic a test message when the notification is saved, and fails the request if
+  # the topic policy does not yet allow s3.amazonaws.com to publish.
+  depends_on = [aws_sns_topic_policy.this]
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "this" {
